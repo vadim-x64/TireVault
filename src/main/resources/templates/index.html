@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TireVault - Головна</title>
+</head>
+<body>
+
+<div class="app-layout">
+    <div th:replace="~{fragments/header :: navbar}"></div>
+    <div th:replace="~{fragments/sidebar :: menu}"></div>
+    <main class="content-area">
+        <h1>Ласкаво просимо до TireVault!</h1>
+        <p>Це головна сторінка вашої платформи. Тут згодом будуть виводитися актуальні акції, статистика для менеджера або панель керування для клієнта.</p>
+        <p>Як бачите, структура ідеальна: хедер і футер на всю ширину, меню зліва, а цей текст знаходиться в області контенту.</p>
+    </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</div>
+
+</body>
+</html>
