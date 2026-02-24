@@ -1,0 +1,28 @@
+<!--/*@thymesVar id="statusCode" type="java.lang.Integer"*/-->
+<!--/*@thymesVar id="errorMessage" type="java.lang.String"*/-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TireVault</title>
+</head>
+<body>
+
+<div class="container-fluid" th:fragment="content">
+  <div class="row min-vh-100">
+    <main class="col-md-10 p-5 d-flex align-items-center justify-content-center">
+      <div class="text-center">
+        <h1 class="display-1 fw-bold text-danger" th:text="${statusCode}"></h1>
+        <h2 class="mb-4"><i class="bi bi-exclamation-triangle-fill text-warning"></i>ОКАК!</h2>
+        <p class="lead text-muted mb-5" th:text="${errorMessage}"></p>
+        <a href="/" class="btn btn-primary btn-lg">
+          <i class="bi bi-house-door"></i> Повернутися на головну
+        </a>
+      </div>
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

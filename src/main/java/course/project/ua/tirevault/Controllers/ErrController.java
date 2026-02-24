@@ -30,7 +30,7 @@ public class ErrController implements ErrorController {
 
         model.addAttribute("statusCode", statusCode);
         model.addAttribute("errorMessage", errorMessage);
-
-        return "error";
+        model.addAttribute("page", "error");
+        return "index";
     }
 }
