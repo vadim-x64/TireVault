@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="content" class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg border-0 w-100" style="max-width: 500px;">
+        <div class="card-header bg-white pt-4 pb-0 border-0">
+            <!-- Визначаємо, яка вкладка активна (щоб при помилці реєстрації залишатись на ній) -->
+            <ul class="nav nav-tabs card-header-tabs w-100 d-flex" id="authTabs" role="tablist">
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button th:classappend="${activeTab == 'register' ? 'text-muted' : 'active'}" class="nav-link w-100 fw-bold" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Вхід</button>
+                </li>
+                <li class="nav-item flex-fill text-center" role="presentation">
+                    <button th:classappend="${activeTab == 'register' ? 'active' : 'text-muted'}" class="nav-link w-100 fw-bold" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Реєстрація</button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body p-4 p-md-5">
+            <div class="tab-content" id="authTabsContent">
+
+                <!-- ВХІД -->
+                <div class="tab-pane fade" th:classappend="${activeTab != 'register' ? 'show active' : ''}" id="login" role="tabpanel">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">З поверненням!</h3>
+                        <p class="text-muted">Увійдіть до свого облікового запису</p>
+                    </div>
+
+                    <!-- Блок виводу помилки логіну -->
+                    <div th:if="${loginError}" class="alert alert-danger" role="alert" th:text="${loginError}"></div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label fw-bold">Логін (Username)</label>
+                            <input type="text" class="form-control form-control-lg" id="loginUsername" name="username" placeholder="Введіть ваш логін" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="loginPassword" class="form-label fw-bold">Пароль</label>
+                            <input type="password" class="form-control form-control-lg" id="loginPassword" name="password" placeholder="Введіть пароль" required minlength="8">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="showLoginPassword" onclick="togglePassword('loginPassword')">
+                                <label class="form-check-label text-muted" for="showLoginPassword">Показати пароль</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3 fw-bold">Увійти</button>
+                    </form>
+                </div>
+
+                <!-- РЕЄСТРАЦІЯ -->
+                <div class="tab-pane fade" th:classappend="${activeTab == 'register' ? 'show active' : ''}" id="register" role="tabpanel">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">Створити акаунт</h3>
+                        <p class="text-muted">Заповніть дані для реєстрації</p>
+                    </div>
+
+                    <!-- Блок виводу помилки реєстрації -->
+                    <div th:if="${registerError}" class="alert alert-danger" role="alert" th:text="${registerError}"></div>
+
+                    <form th:action="@{/register}" method="post">
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label for="regFirstName" class="form-label fw-bold">Ім'я <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="regFirstName" name="firstName" placeholder="Іван" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="regLastName" class="form-label fw-bold">Прізвище <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="regLastName" name="lastName" placeholder="Шевченко" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="regMiddleName" class="form-label fw-bold">По-батькові <span class="text-muted fw-normal">(необов'язково)</span></label>
+                            <input type="text" class="form-control" id="regMiddleName" name="middleName" placeholder="Іванович">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="regPhone" class="form-label fw-bold">Номер телефону <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted">+38</span>
+                                <input type="tel" class="form-control" id="regPhone" name="phone" placeholder="(0XX)-XXX-XX-XX" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="regUsername" class="form-label fw-bold">Логін (Username) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="regUsername" name="username" placeholder="Придумайте логін" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="regPassword" class="form-label fw-bold">Пароль <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="regPassword" name="password" placeholder="Мінімум 8 символів" required minlength="8">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="showRegPassword" onclick="togglePassword('regPassword')">
+                                <label class="form-check-label text-muted" for="showRegPassword">Показати пароль</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Зареєструватися</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
