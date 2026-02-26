@@ -16,10 +16,8 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // Відображення сторінки
     @GetMapping("/auth")
     public String authPage(Model model, HttpSession session) {
-        // Якщо користувач вже авторизований - кидаємо на головну
         if (session.getAttribute("loggedUser") != null) {
             return "redirect:/";
         }
@@ -27,54 +25,45 @@ public class AuthController {
         return "index";
     }
 
-    // Обробка входу
     @PostMapping("/login")
-    public String login(@RequestParam String username,
-                        @RequestParam String password,
-                        HttpSession session,
-                        RedirectAttributes redirectAttributes) {
+    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             User user = authService.login(username, password);
-            // Зберігаємо юзера в сесію
             session.setAttribute("loggedUser", user);
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("loginError", e.getMessage());
+            redirectAttributes.addFlashAttribute("enteredUsername", username);
             return "redirect:/auth";
         }
     }
 
-    // Обробка реєстрації
     @PostMapping("/register")
-    public String register(@RequestParam String firstName,
-                           @RequestParam String lastName,
-                           @RequestParam(required = false) String middleName,
-                           @RequestParam String phone,
-                           @RequestParam String username,
-                           @RequestParam String password,
-                           HttpSession session,
+    public String register(@RequestParam String firstName, @RequestParam String lastName,
+                           @RequestParam(required = false) String middleName, @RequestParam String phone,
+                           @RequestParam String username, @RequestParam String password, HttpSession session,
                            RedirectAttributes redirectAttributes) {
         try {
-            // Оскільки в HTML ми винесли +38 окремо, додаємо його до збереження
-            String fullPhone = "+38 " + phone;
+            String cleanDigits = phone.replaceAll("\\D+", "");
+            String fullPhone = "+38" + cleanDigits;
             User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, password);
-
-            // Одразу авторизуємо після успішної реєстрації
             session.setAttribute("loggedUser", newUser);
             return "redirect:/";
         } catch (Exception e) {
-            // Передаємо помилку на фронт
             redirectAttributes.addFlashAttribute("registerError", e.getMessage());
-            // Перемикаємо вкладку на реєстрацію при поверненні
             redirectAttributes.addFlashAttribute("activeTab", "register");
+            redirectAttributes.addFlashAttribute("regFirstName", firstName);
+            redirectAttributes.addFlashAttribute("regLastName", lastName);
+            redirectAttributes.addFlashAttribute("regMiddleName", middleName);
+            redirectAttributes.addFlashAttribute("regPhone", phone);
+            redirectAttributes.addFlashAttribute("regUsername", username);
             return "redirect:/auth";
         }
     }
 
-    // Вихід з акаунту
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Знищуємо сесію
+        session.invalidate();
         return "redirect:/";
     }
 }

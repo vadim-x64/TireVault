@@ -17,8 +17,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Зв'язок 1:1 з таблицею Customers. Каскадне збереження дозволить
-    // зберігати User і Customer одночасно при реєстрації
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false, unique = true)
     private Customer customer;
@@ -29,7 +27,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Роль за умовчанням - USER
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role = UserRole.USER;
