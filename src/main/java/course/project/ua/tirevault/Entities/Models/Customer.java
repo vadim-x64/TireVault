@@ -12,10 +12,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
