@@ -112,11 +112,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 100);
     }
+
+    // Автоматичне відкриття модалки, якщо є помилка видалення
+    const deleteErrorAlert = document.getElementById('deleteAccountErrorAlert');
+    if (deleteErrorAlert && typeof bootstrap !== 'undefined') {
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+        deleteModal.show();
+    }
 });
 
-// Глобальна функція для перемикання видимості пароля у профілі
+// Глобальна функція для перемикання видимості пароля у профілі (Новий пароль)
 function toggleProfilePassword() {
     const pwdInput = document.getElementById('secPassword');
+    if (pwdInput) {
+        if (pwdInput.type === "password") {
+            pwdInput.type = "text";
+        } else {
+            pwdInput.type = "password";
+        }
+    }
+}
+
+// Глобальна функція для перемикання видимості пароля в модалці видалення
+function toggleDeleteModalPassword() {
+    const pwdInput = document.getElementById('deletePassword');
     if (pwdInput) {
         if (pwdInput.type === "password") {
             pwdInput.type = "text";

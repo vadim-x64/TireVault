@@ -79,4 +79,24 @@ public class ProfileService {
 
         return userRepository.save(user);
     }
+
+    // Новий метод для видалення акаунта
+    @Transactional
+    public void deleteAccount(Long userId, String password) throws Exception {
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            throw new Exception("Користувача не знайдено!");
+        }
+
+        User user = userOpt.get();
+
+        // Перевіряємо правильність введеного пароля
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new Exception("Невірний пароль! Акаунт не було видалено.");
+        }
+
+        // Видаляємо користувача (через CascadeType.ALL видалиться і клієнт, якщо налаштовано правильно)
+        userRepository.delete(user);
+    }
 }

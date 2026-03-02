@@ -105,4 +105,30 @@ public class ProfileController {
             return "redirect:/profile";
         }
     }
+
+    // Новий метод для видалення акаунта
+    @PostMapping("/profile/delete")
+    public String deleteAccount(@RequestParam String password,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("loggedUser");
+        if (currentUser == null) {
+            return "redirect:/auth";
+        }
+
+        try {
+            profileService.deleteAccount(currentUser.getId(), password);
+
+            // Очищуємо сесію після успішного видалення
+            session.invalidate();
+
+            // Перенаправляємо на головну сторінку або сторінку авторизації
+            return "redirect:/";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("deleteAccountError", e.getMessage());
+            redirectAttributes.addFlashAttribute("activeTab", "security");
+            return "redirect:/profile";
+        }
+    }
 }
