@@ -9,7 +9,7 @@ public class ManagerController {
 
     @GetMapping("/manager")
     public String managerPage(Model model) {
-        model.addAttribute("page", "manager");
+        model.addAttribute("page", "manager/services");
         return "index";
     }
 }
