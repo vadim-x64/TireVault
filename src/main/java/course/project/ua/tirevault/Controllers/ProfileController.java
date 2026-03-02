@@ -46,9 +46,20 @@ public class ProfileController {
         }
 
         try {
-            // Форматуємо телефон так само, як при реєстрації
+            // Залишаємо тільки цифри
             String cleanDigits = phone.replaceAll("\\D+", "");
-            String fullPhone = cleanDigits.startsWith("38") ? "+" + cleanDigits : "+38" + cleanDigits;
+
+            // Якщо номер починається з 38, відкидаємо їх для перевірки
+            if (cleanDigits.startsWith("38")) {
+                cleanDigits = cleanDigits.substring(2);
+            }
+
+            // Перевіряємо, чи залишилося рівно 10 цифр
+            if (cleanDigits.length() != 10) {
+                throw new IllegalArgumentException("Невірний формат телефону. Номер повинен містити рівно 10 цифр після коду країни.");
+            }
+
+            String fullPhone = "+38" + cleanDigits;
 
             // Оновлюємо профіль
             User updatedUser = profileService.updateProfile(currentUser.getId(), firstName, lastName, middleName, fullPhone);
@@ -84,7 +95,6 @@ public class ProfileController {
             session.invalidate();
 
             // Додаємо повідомлення про необхідність повторної авторизації
-            // Використовуємо loginError (або можна створити successAlert в auth.html)
             redirectAttributes.addFlashAttribute("loginError", "Дані безпеки успішно змінено. Будь ласка, авторизуйтесь знову з новими даними.");
             redirectAttributes.addFlashAttribute("enteredUsername", username);
 

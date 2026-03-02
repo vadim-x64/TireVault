@@ -44,8 +44,21 @@ public class AuthController {
                            @RequestParam String username, @RequestParam String password, HttpSession session,
                            RedirectAttributes redirectAttributes) {
         try {
+            // Залишаємо тільки цифри
             String cleanDigits = phone.replaceAll("\\D+", "");
+
+            // Якщо номер починається з 38 (наприклад, якщо хтось ввів з кодом або автозаповнення спрацювало), відкидаємо їх
+            if (cleanDigits.startsWith("38")) {
+                cleanDigits = cleanDigits.substring(2);
+            }
+
+            // Перевіряємо, чи залишилося рівно 10 цифр (наприклад: 0501234567)
+            if (cleanDigits.length() != 10) {
+                throw new IllegalArgumentException("Невірний формат телефону. Має бути рівно 10 цифр (наприклад, 050-123-45-67).");
+            }
+
             String fullPhone = "+38" + cleanDigits;
+
             User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, password);
             session.setAttribute("loggedUser", newUser);
             return "redirect:/";
