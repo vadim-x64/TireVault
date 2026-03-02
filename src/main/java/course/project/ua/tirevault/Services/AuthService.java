@@ -7,6 +7,7 @@ import course.project.ua.tirevault.Repositories.CustomerRepository;
 import course.project.ua.tirevault.Repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public class AuthService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     // Метод реєстрації
     @Transactional
@@ -42,8 +45,7 @@ public class AuthService {
         // Створюємо юзера
         User user = new User();
         user.setUsername(username);
-        // Поки що зберігаємо пароль як є. Пізніше тут буде BCrypt хешування!
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(UserRole.USER);
         user.setCustomer(customer);
 
@@ -60,8 +62,7 @@ public class AuthService {
         }
 
         User user = userOpt.get();
-        // Перевіряємо пароль (поки без хешування)
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new Exception("Невірний логін або пароль!");
         }
 
