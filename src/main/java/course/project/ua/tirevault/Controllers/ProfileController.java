@@ -23,6 +23,11 @@ public class ProfileController {
             return "redirect:/auth";
         }
 
+        // Встановлюємо вкладку за замовчуванням, якщо вона не задана через RedirectAttributes
+        if (!model.containsAttribute("activeTab")) {
+            model.addAttribute("activeTab", "main");
+        }
+
         model.addAttribute("page", "profile");
         return "index"; // Повертаємо базовий шаблон, який підтягне profile.html
     }
@@ -52,10 +57,42 @@ public class ProfileController {
             session.setAttribute("loggedUser", updatedUser);
 
             redirectAttributes.addFlashAttribute("profileSuccess", "Дані профілю успішно оновлено!");
+            redirectAttributes.addFlashAttribute("activeTab", "main");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("profileError", e.getMessage());
+            redirectAttributes.addFlashAttribute("activeTab", "main");
         }
 
         return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/security")
+    public String updateSecurity(@RequestParam String username,
+                                 @RequestParam(required = false) String password,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("loggedUser");
+        if (currentUser == null) {
+            return "redirect:/auth";
+        }
+
+        try {
+            profileService.updateSecurity(currentUser.getId(), username, password);
+
+            // Інвалідуємо сесію (робимо логаут), оскільки дані входу змінилися
+            session.invalidate();
+
+            // Додаємо повідомлення про необхідність повторної авторизації
+            // Використовуємо loginError (або можна створити successAlert в auth.html)
+            redirectAttributes.addFlashAttribute("loginError", "Дані безпеки успішно змінено. Будь ласка, авторизуйтесь знову з новими даними.");
+            redirectAttributes.addFlashAttribute("enteredUsername", username);
+
+            return "redirect:/auth";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("securityError", e.getMessage());
+            redirectAttributes.addFlashAttribute("activeTab", "security");
+            return "redirect:/profile";
+        }
     }
 }

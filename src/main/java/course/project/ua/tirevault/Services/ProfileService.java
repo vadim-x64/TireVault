@@ -6,6 +6,7 @@ import course.project.ua.tirevault.Repositories.CustomerRepository;
 import course.project.ua.tirevault.Repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -16,6 +17,8 @@ public class ProfileService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public User updateProfile(Long userId, String firstName, String lastName, String middleName, String phone) throws Exception {
@@ -42,7 +45,38 @@ public class ProfileService {
         customer.setMiddleName(middleName);
         customer.setPhone(phone);
 
-        // Зберігаємо зміни (завдяки CascadeType.ALL в сутності User, customer теж оновиться)
+        // Зберігаємо зміни
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User updateSecurity(Long userId, String username, String newPassword) throws Exception {
+        Optional<User> userOpt = userRepository.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            throw new Exception("Користувача не знайдено!");
+        }
+
+        User user = userOpt.get();
+
+        // Перевіряємо, чи змінився логін
+        if (!user.getUsername().equals(username)) {
+            // Перевіряємо, чи не зайнятий новий логін кимось іншим
+            Optional<User> existingUser = userRepository.findByUsername(username);
+            if (existingUser.isPresent()) {
+                throw new Exception("Користувач з таким логіном вже існує!");
+            }
+            user.setUsername(username);
+        }
+
+        // Якщо користувач ввів новий пароль, хешуємо та зберігаємо його
+        if (newPassword != null && !newPassword.trim().isEmpty()) {
+            if (newPassword.length() < 8) {
+                throw new Exception("Пароль має містити мінімум 8 символів!");
+            }
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
         return userRepository.save(user);
     }
 }
