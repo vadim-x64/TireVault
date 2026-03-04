@@ -115,7 +115,7 @@
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
-                    <div class="card border-0 shadow-sm h-100 manager-order-card"
+                    <div class="card border-0 shadow-sm h-100 manager-order-card position-relative"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
                                   data-name=${order.customerName},
@@ -126,6 +126,17 @@
                                   data-created=${order.formattedDate},
                                   data-scheduled=${order.formattedScheduledDate},
                                   data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
+
+                        <form th:action="@{/manager/services/{id}/delete(id=${order.id})}"
+                              method="post"
+                              onsubmit="return confirm('Видалити замовлення?')"
+                              onclick="event.stopPropagation()">
+                            <button type="submit"
+                                    class="btn btn-sm btn-close position-absolute"
+                                    style="bottom:8px;right:8px;z-index:10;"
+                                    title="Видалити">
+                            </button>
+                        </form>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>

@@ -74,6 +74,13 @@ public class ServiceRequestController {
         return "redirect:/manager/services";
     }
 
+    @PostMapping("/manager/services/{id}/delete")
+    public String deleteRequest(@PathVariable Long id, HttpSession session) {
+        if (!isManager(session)) return "redirect:/";
+        serviceRequestService.delete(id);
+        return "redirect:/manager/services";
+    }
+
     @PostMapping("/manager/services/{id}/schedule")
     public String scheduleRequest(@PathVariable Long id,
                                   @RequestParam String scheduledAt,

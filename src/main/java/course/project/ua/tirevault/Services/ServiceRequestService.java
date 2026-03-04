@@ -31,6 +31,10 @@ public class ServiceRequestService {
         return serviceRequestRepository.save(request);
     }
 
+    public void delete(Long id) {
+        serviceRequestRepository.deleteById(id);
+    }
+
     public List<ServiceRequest> getActiveByUser(User user) {
         return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
                 user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
