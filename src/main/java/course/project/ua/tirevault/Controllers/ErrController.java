@@ -15,9 +15,9 @@ public class ErrController implements ErrorController {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         String errorMessage = "Виникла невідома помилка";
         int statusCode = 0;
+
         if (status != null) {
             statusCode = Integer.parseInt(status.toString());
-
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 errorMessage = "Сторінку не знайдено. Можливо, ви ввели неправильну адресу.";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -26,6 +26,7 @@ public class ErrController implements ErrorController {
                 errorMessage = "У вас немає доступу до цієї сторінки.";
             }
         }
+
         model.addAttribute("statusCode", statusCode);
         model.addAttribute("errorMessage", errorMessage);
         model.addAttribute("page", "error");

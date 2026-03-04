@@ -18,12 +18,10 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profilePage(Model model, HttpSession session) {
-        // Перевіряємо чи авторизований користувач
         if (session.getAttribute("loggedUser") == null) {
             return "redirect:/auth";
         }
 
-        // Встановлюємо вкладку за замовчуванням, якщо вона не задана через RedirectAttributes
         if (!model.containsAttribute("activeTab")) {
             model.addAttribute("activeTab", "main");
         }
@@ -41,33 +39,26 @@ public class ProfileController {
                                 RedirectAttributes redirectAttributes) {
 
         User currentUser = (User) session.getAttribute("loggedUser");
+
         if (currentUser == null) {
             return "redirect:/auth";
         }
 
         try {
-            // Залишаємо тільки цифри
             String cleanDigits = phone.replaceAll("\\D+", "");
 
-            // Якщо номер починається з 38, відкидаємо їх для перевірки
             if (cleanDigits.startsWith("38")) {
                 cleanDigits = cleanDigits.substring(2);
             }
 
-            // Перевіряємо, чи залишилося рівно 10 цифр
             if (cleanDigits.length() != 10) {
-                throw new IllegalArgumentException("Невірний формат телефону. Номер повинен містити рівно 10 цифр після коду країни.");
+                throw new IllegalArgumentException("Невірний формат телефону. Має бути рівно 10 цифр (наприклад, 050-123-45-67).");
             }
 
             String fullPhone = "+38" + cleanDigits;
-
-            // Оновлюємо профіль
             User updatedUser = profileService.updateProfile(currentUser.getId(), firstName, lastName, middleName, fullPhone);
-
-            // Оновлюємо сесію, щоб нові дані одразу відобразилися на сайті
             session.setAttribute("loggedUser", updatedUser);
-
-            redirectAttributes.addFlashAttribute("profileSuccess", "Дані профілю успішно оновлено!");
+            redirectAttributes.addFlashAttribute("profileSuccess", "Дані профілю успішно оновлено.");
             redirectAttributes.addFlashAttribute("activeTab", "main");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("profileError", e.getMessage());
@@ -78,26 +69,20 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/security")
-    public String updateSecurity(@RequestParam String username,
-                                 @RequestParam(required = false) String password,
-                                 HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+    public String updateSecurity(@RequestParam String username, @RequestParam(required = false) String password,
+                                 HttpSession session, RedirectAttributes redirectAttributes) {
 
         User currentUser = (User) session.getAttribute("loggedUser");
+
         if (currentUser == null) {
             return "redirect:/auth";
         }
 
         try {
             profileService.updateSecurity(currentUser.getId(), username, password);
-
-            // Інвалідуємо сесію (робимо логаут), оскільки дані входу змінилися
             session.invalidate();
-
-            // Додаємо повідомлення про необхідність повторної авторизації
             redirectAttributes.addFlashAttribute("loginError", "Дані безпеки успішно змінено. Будь ласка, авторизуйтесь знову з новими даними.");
             redirectAttributes.addFlashAttribute("enteredUsername", username);
-
             return "redirect:/auth";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("securityError", e.getMessage());
@@ -106,24 +91,17 @@ public class ProfileController {
         }
     }
 
-    // Новий метод для видалення акаунта
     @PostMapping("/profile/delete")
-    public String deleteAccount(@RequestParam String password,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-
+    public String deleteAccount(@RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
+
         if (currentUser == null) {
             return "redirect:/auth";
         }
 
         try {
             profileService.deleteAccount(currentUser.getId(), password);
-
-            // Очищуємо сесію після успішного видалення
             session.invalidate();
-
-            // Перенаправляємо на головну сторінку або сторінку авторизації
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("deleteAccountError", e.getMessage());

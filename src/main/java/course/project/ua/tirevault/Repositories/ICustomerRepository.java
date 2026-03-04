@@ -1,12 +1,11 @@
 package course.project.ua.tirevault.Repositories;
 
-import course.project.ua.tirevault.Entities.Models.User;
+import course.project.ua.tirevault.Entities.Models.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+public interface ICustomerRepository extends JpaRepository<Customer, Long> {
+    Optional<Customer> findByPhone(String phone);
 }

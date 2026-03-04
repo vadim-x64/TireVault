@@ -1,11 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
-
-    // --- Вкладка: Основна ---
     const profileForm = document.getElementById('profileForm');
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     const phoneInput = document.getElementById('profPhone');
 
-    // Надійна функція форматування телефону
     function formatPhone(value) {
         let rawPhone = value.replace(/\D/g, '');
         if (rawPhone.startsWith('38') && rawPhone.length > 10) {
@@ -68,13 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Вкладка: Безпека ---
     const securityForm = document.getElementById('securityForm');
     const saveSecurityBtn = document.getElementById('saveSecurityBtn');
     const secUsernameInput = document.getElementById('secUsername');
     const secPasswordInput = document.getElementById('secPassword');
 
-    // Примусово очищуємо поле пароля, щоб браузер його не підтягував автоматично
     if (secPasswordInput) {
         secPasswordInput.value = '';
     }
@@ -88,15 +83,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const currentUsername = secUsernameInput.value;
         const currentPassword = secPasswordInput.value;
-
-        // Зміни є, якщо логін відрізняється від початкового (і не порожній) АБО якщо користувач ввів новий пароль
         let hasChanges = (currentUsername !== initialSecurityValues.username && currentUsername.trim() !== '') || (currentPassword.length > 0);
 
         saveSecurityBtn.disabled = !hasChanges;
     }
 
     if (securityForm) {
-        // Оновлюємо стан кнопки відразу
         checkSecurityChanges();
 
         const secInputs = securityForm.querySelectorAll('input:not([type="checkbox"])');
@@ -104,16 +96,14 @@ document.addEventListener('DOMContentLoaded', function() {
             input.addEventListener('input', checkSecurityChanges);
         });
 
-        // Захист від пізнього автозаповнення браузером (через 100мс)
         setTimeout(() => {
             if (secPasswordInput && secPasswordInput.value !== '') {
-                secPasswordInput.value = ''; // Ще раз очищаємо
-                checkSecurityChanges();      // Блокуємо кнопку знову
+                secPasswordInput.value = '';
+                checkSecurityChanges();
             }
         }, 100);
     }
 
-    // Автоматичне відкриття модалки, якщо є помилка видалення
     const deleteErrorAlert = document.getElementById('deleteAccountErrorAlert');
     if (deleteErrorAlert && typeof bootstrap !== 'undefined') {
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
@@ -121,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Глобальна функція для перемикання видимості пароля у профілі (Новий пароль)
 function toggleProfilePassword() {
     const pwdInput = document.getElementById('secPassword');
     if (pwdInput) {
@@ -133,7 +122,6 @@ function toggleProfilePassword() {
     }
 }
 
-// Глобальна функція для перемикання видимості пароля в модалці видалення
 function toggleDeleteModalPassword() {
     const pwdInput = document.getElementById('deletePassword');
     if (pwdInput) {

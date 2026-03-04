@@ -2,29 +2,36 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
-<div class="container-fluid py-4" th:fragment="content">
+<div th:fragment="content" class="container-fluid py-4">
     <div class="d-flex align-items-center mb-4">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-             class="bi bi-journal-text me-2 text-warning" viewBox="0 0 16 16">
-            <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+             class="bi bi-bag-check me-2 text-primary" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
         </svg>
-        <h3 class="fw-bold mb-0">Журнал записів</h3>
+        <h3 class="fw-bold mb-0">Мої замовлення</h3>
     </div>
-    <ul class="nav nav-tabs mb-4" id="managerOrdersTab" role="tablist">
+    <div th:if="${requestSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-check-circle-fill me-1" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+        <strong>Чудово!</strong> Ваше замовлення успішно відправлено. Менеджер зв'яжеться з вами найближчим часом.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <ul class="nav nav-tabs mb-4" id="ordersTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active fw-bold" id="m-active-tab" data-bs-toggle="tab"
-                    data-bs-target="#mActiveOrders" type="button" role="tab">
+            <button class="nav-link active fw-bold" id="active-tab" data-bs-toggle="tab"
+                    data-bs-target="#activeOrders" type="button" role="tab">
                 Активні
                 <span th:if="${#lists.size(activeOrders) > 0}"
-                      class="badge bg-danger rounded-pill ms-1"
+                      class="badge bg-primary rounded-pill ms-1"
                       th:text="${#lists.size(activeOrders)}"></span>
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold" id="m-completed-tab" data-bs-toggle="tab"
-                    data-bs-target="#mCompletedOrders" type="button" role="tab">
+            <button class="nav-link fw-bold" id="completed-tab" data-bs-toggle="tab"
+                    data-bs-target="#completedOrders" type="button" role="tab">
                 Завершені
                 <span th:if="${#lists.size(completedOrders) > 0}"
                       class="badge bg-success rounded-pill ms-1"
@@ -32,18 +39,19 @@
             </button>
         </li>
     </ul>
-    <div class="tab-content" id="managerOrdersTabContent">
-        <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
+    <div class="tab-content" id="ordersTabContent">
+        <div class="tab-pane fade show active" id="activeOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
                      class="bi bi-inbox mb-3 d-block mx-auto opacity-50" viewBox="0 0 16 16">
                     <path d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 0 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4H4.98zm9.954 5H10.45a2.5 2.5 0 0 1-4.9 0H1.066l.32 2.562a.5.5 0 0 0 .497.438h12.234a.5.5 0 0 0 .496-.438L14.933 9z"/>
                 </svg>
-                <p class="fs-5">Нових замовлень немає</p>
+                <p class="fs-5">Активних замовлень немає</p>
+                <a href="/" class="btn btn-primary">Записатися на послугу</a>
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(activeOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${activeOrders}">
-                    <div class="card border-0 shadow-sm h-100 manager-order-card"
+                    <div class="card border-0 shadow-sm h-100 order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
                         data-name=${order.customerName},
@@ -52,16 +60,11 @@
                         data-description=${order.description != null ? order.description : ''},
                         data-status=${order.status.name()},
                         data-created=${order.formattedDate}">
-                        <!-- Індикатор нового замовлення (PENDING) -->
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
                                 <span th:if="${order.status.name() == 'PENDING'}"
-                                      class="badge bg-danger d-flex align-items-center gap-1">
-                  <span class="rounded-circle bg-white d-inline-block"
-                        style="width:7px;height:7px;"></span>
-                  В очікуванні
-                </span>
+                                      class="badge bg-danger">В обробці</span>
                                 <span th:if="${order.status.name() == 'ACCEPTED'}"
                                       class="badge bg-warning text-dark">Прийнято</span>
                             </div>
@@ -93,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
+        <div class="tab-pane fade" id="completedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
                      class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50" viewBox="0 0 16 16">
@@ -104,7 +107,7 @@
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
-                    <div class="card border-0 shadow-sm h-100 manager-order-card"
+                    <div class="card border-0 shadow-sm h-100 order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
                         data-name=${order.customerName},
@@ -147,73 +150,49 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="managerOrderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header" style="background-color: #212529;">
-                    <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
+                    <h5 class="modal-title text-white fw-bold">Деталі замовлення</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="mb-3 text-center">
-                        <span id="mModalStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
+                        <span id="modalStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
                     </div>
                     <table class="table table-borderless">
                         <tbody>
                         <tr>
                             <td class="text-muted fw-bold" style="width:140px">Ім'я</td>
-                            <td id="mModalName" class="fw-bold"></td>
+                            <td id="modalName" class="fw-bold"></td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-bold">Телефон</td>
-                            <td id="mModalPhone"></td>
+                            <td id="modalPhone"></td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-bold">Місто</td>
-                            <td id="mModalCity"></td>
+                            <td id="modalCity"></td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-bold">Дата</td>
-                            <td id="mModalCreated"></td>
+                            <td id="modalCreated"></td>
                         </tr>
-                        <tr id="mModalDescRow">
+                        <tr id="modalDescRow">
                             <td class="text-muted fw-bold">Опис</td>
-                            <td id="mModalDescription" style="white-space: pre-wrap;"></td>
+                            <td id="modalDescription" style="white-space: pre-wrap;"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div id="mAcceptSection" class="modal-footer border-top d-none">
-                    <form id="mAcceptForm" method="post">
-                        <div class="form-check form-switch d-flex align-items-center gap-2 mb-0">
-                            <input class="form-check-input" type="checkbox" id="mAcceptCheck"
-                                   role="switch" style="width:2.5em;height:1.5em;cursor:pointer;"
-                                   onchange="document.getElementById('mAcceptForm').submit()">
-                            <label class="form-check-label fw-bold fs-6" for="mAcceptCheck">
-                                Прийняти замовлення
-                            </label>
-                        </div>
-                    </form>
-                </div>
-                <div id="mCompleteSection" class="modal-footer border-top d-none">
-                    <form id="mCompleteForm" method="post">
-                        <button type="submit" class="btn btn-success fw-bold px-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-check-lg me-1" viewBox="0 0 16 16">
-                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                            </svg>
-                            Виконано
-                        </button>
-                    </form>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
-                </div>
-                <div id="mDoneSection" class="modal-footer d-none">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
                 </div>
             </div>
         </div>
     </div>
-    <script th:src="@{/js/pages/manager/services.js}"></script>
+    <script th:src="@{/js/pages/myservices.js}"></script>
 </div>
 
 </body>
