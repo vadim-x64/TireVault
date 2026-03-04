@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.Manager;
 
+
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.ServiceRequestService;
 import jakarta.servlet.http.HttpSession;
@@ -7,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class ManagerController {
@@ -16,14 +22,20 @@ public class ManagerController {
     @GetMapping("/manager/services")
     public String managerPage(Model model, HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
-
-        if (loggedUser == null || !loggedUser.getRole().name().equals("MANAGER")) {
-            return "redirect:/";
-        }
+        if (loggedUser == null || !loggedUser.getRole().name().equals("MANAGER")) return "redirect:/";
 
         model.addAttribute("activeOrders", serviceRequestService.getAllActive());
         model.addAttribute("completedOrders", serviceRequestService.getAllCompleted());
         model.addAttribute("page", "manager/services");
         return "index";
+    }
+
+    // Повертає JSON: ["09:00","10:00"] — зайняті години для вказаної дати
+    @GetMapping("/api/slots")
+    @ResponseBody
+    public List<String> getBookedSlots(@RequestParam String date, HttpSession session) {
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser == null || !loggedUser.getRole().name().equals("MANAGER")) return List.of();
+        return serviceRequestService.getBookedHoursForDate(LocalDate.parse(date));
     }
 }

@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Entities.Models;
 
+import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,9 +45,22 @@ public class ServiceRequest {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "scheduled_at")
+    private LocalDateTime scheduledAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
+
     public String getFormattedDate() {
         return createdAt != null
                 ? createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
+                : "";
+    }
+
+    public String getFormattedScheduledDate() {
+        return scheduledAt != null
+                ? scheduledAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
                 : "";
     }
 }

@@ -12,6 +12,7 @@
         </svg>
         <h3 class="fw-bold mb-0">Журнал записів</h3>
     </div>
+
     <ul class="nav nav-tabs mb-4" id="managerOrdersTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active fw-bold" id="m-active-tab" data-bs-toggle="tab"
@@ -32,7 +33,10 @@
             </button>
         </li>
     </ul>
+
     <div class="tab-content" id="managerOrdersTabContent">
+
+        <!-- ===== АКТИВНІ ===== -->
         <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
@@ -46,24 +50,29 @@
                     <div class="card border-0 shadow-sm h-100 manager-order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
-                        data-name=${order.customerName},
-                        data-phone=${order.phone},
-                        data-city=${order.city},
-                        data-description=${order.description != null ? order.description : ''},
-                        data-status=${order.status.name()},
-                        data-created=${order.formattedDate}">
-                        <!-- Індикатор нового замовлення (PENDING) -->
+                                  data-name=${order.customerName},
+                                  data-phone=${order.phone},
+                                  data-city=${order.city},
+                                  data-description=${order.description != null ? order.description : ''},
+                                  data-status=${order.status.name()},
+                                  data-created=${order.formattedDate},
+                                  data-scheduled=${order.formattedScheduledDate},
+                                  data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
                                 <span th:if="${order.status.name() == 'PENDING'}"
                                       class="badge bg-danger d-flex align-items-center gap-1">
-                  <span class="rounded-circle bg-white d-inline-block"
-                        style="width:7px;height:7px;"></span>
-                  В очікуванні
-                </span>
+                                    <span class="rounded-circle bg-white d-inline-block"
+                                          style="width:7px;height:7px;"></span>
+                                    В очікуванні
+                                </span>
                                 <span th:if="${order.status.name() == 'ACCEPTED'}"
                                       class="badge bg-warning text-dark">Прийнято</span>
+                                <span th:if="${order.status.name() == 'SCHEDULED'}"
+                                      class="badge bg-info text-dark">
+                                    📅 <span th:text="${order.formattedScheduledDate}"></span>
+                                </span>
                             </div>
                             <p class="text-muted small mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
@@ -93,6 +102,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== ЗАВЕРШЕНІ ===== -->
         <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
@@ -107,16 +118,21 @@
                     <div class="card border-0 shadow-sm h-100 manager-order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
-                        data-name=${order.customerName},
-                        data-phone=${order.phone},
-                        data-city=${order.city},
-                        data-description=${order.description != null ? order.description : ''},
-                        data-status=${order.status.name()},
-                        data-created=${order.formattedDate}">
+                                  data-name=${order.customerName},
+                                  data-phone=${order.phone},
+                                  data-city=${order.city},
+                                  data-description=${order.description != null ? order.description : ''},
+                                  data-status=${order.status.name()},
+                                  data-created=${order.formattedDate},
+                                  data-scheduled=${order.formattedScheduledDate},
+                                  data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
-                                <span class="badge bg-success">Виконано</span>
+                                <span th:if="${order.status.name() == 'COMPLETED'}"
+                                      class="badge bg-success">Виконано</span>
+                                <span th:if="${order.status.name() == 'CANCELLED'}"
+                                      class="badge bg-secondary">Скасовано</span>
                             </div>
                             <p class="text-muted small mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
@@ -146,7 +162,10 @@
                 </div>
             </div>
         </div>
+
     </div>
+
+    <!-- ===== МОДАЛКА МЕНЕДЖЕРА ===== -->
     <div class="modal fade" id="managerOrderModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -154,6 +173,7 @@
                     <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body p-4">
                     <div class="mb-3 text-center">
                         <span id="mModalStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
@@ -173,7 +193,7 @@
                             <td id="mModalCity"></td>
                         </tr>
                         <tr>
-                            <td class="text-muted fw-bold">Дата</td>
+                            <td class="text-muted fw-bold">Дата запису</td>
                             <td id="mModalCreated"></td>
                         </tr>
                         <tr id="mModalDescRow">
@@ -183,6 +203,8 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- PENDING: прийняти -->
                 <div id="mAcceptSection" class="modal-footer border-top d-none">
                     <form id="mAcceptForm" method="post">
                         <div class="form-check form-switch d-flex align-items-center gap-2 mb-0">
@@ -195,24 +217,81 @@
                         </div>
                     </form>
                 </div>
-                <div id="mCompleteSection" class="modal-footer border-top d-none">
-                    <form id="mCompleteForm" method="post">
-                        <button type="submit" class="btn btn-success fw-bold px-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+
+                <!-- ACCEPTED: призначити дату -->
+                <div id="mScheduleSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
+                    <form id="mScheduleForm" method="post" class="w-100">
+                        <input type="hidden" id="mScheduledAt" name="scheduledAt">
+                        <label class="fw-bold mb-1">Призначити дату прийому:</label>
+                        <input type="date" id="mScheduleDate" class="form-control mb-2" style="max-width:200px;">
+                        <div id="mSlotsContainer" class="mb-2">
+                            <p class="text-muted small mb-0">Оберіть дату</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm fw-bold"
+                                onclick="if(!document.getElementById('mScheduledAt').value){alert('Оберіть час');return false;}">
+                            Заброньювати
+                        </button>
+                    </form>
+                    <hr class="w-100 my-1">
+                    <form id="mCancelFromAcceptedForm" method="post" class="w-100"
+                          onsubmit="return confirm('Скасувати замовлення?')">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати запис</button>
+                    </form>
+                </div>
+
+                <!-- SCHEDULED: вказати оплату і завершити -->
+                <div id="mCompleteSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
+                    <form id="mCompleteForm" method="post" class="w-100">
+                        <label class="fw-bold mb-1">Спосіб оплати:</label>
+                        <div class="d-flex gap-3 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                       id="payCard" value="CARD" required>
+                                <label class="form-check-label" for="payCard">💳 Карта</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod"
+                                       id="payCash" value="CASH">
+                                <label class="form-check-label" for="payCash">💵 Готівка</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm fw-bold px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                                  class="bi bi-check-lg me-1" viewBox="0 0 16 16">
                                 <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                             </svg>
                             Виконано
                         </button>
                     </form>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
+                    <hr class="w-100 my-1">
+                    <form id="mUnscheduleForm" method="post" class="w-100">
+                        <button type="submit" class="btn btn-outline-warning btn-sm">
+                            Скасувати бронювання
+                        </button>
+                    </form>
+                    <form id="mCancelFromScheduledForm" method="post" class="w-100"
+                          onsubmit="return confirm('Скасувати замовлення?')">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати запис</button>
+                    </form>
                 </div>
-                <div id="mDoneSection" class="modal-footer d-none">
+
+                <!-- COMPLETED -->
+                <div id="mDoneSection" class="modal-footer flex-column align-items-start d-none">
+                    <p class="mb-2 fw-bold">
+                        Оплата: <span id="mDonePayment" class="text-success"></span>
+                    </p>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Закрити</button>
+                </div>
+
+                <!-- CANCELLED -->
+                <div id="mCancelledSection" class="modal-footer d-none">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
                 </div>
+
             </div>
         </div>
     </div>
+
     <script th:src="@{/js/pages/manager/services.js}"></script>
 </div>
 

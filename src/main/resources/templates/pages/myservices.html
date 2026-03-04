@@ -11,6 +11,7 @@
         </svg>
         <h3 class="fw-bold mb-0">Мої замовлення</h3>
     </div>
+
     <div th:if="${requestSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
              class="bi bi-check-circle-fill me-1" viewBox="0 0 16 16">
@@ -19,6 +20,12 @@
         <strong>Чудово!</strong> Ваше замовлення успішно відправлено. Менеджер зв'яжеться з вами найближчим часом.
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+
+    <div th:if="${cancelError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Помилка:</strong> <span th:text="${cancelError}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
     <ul class="nav nav-tabs mb-4" id="ordersTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active fw-bold" id="active-tab" data-bs-toggle="tab"
@@ -39,7 +46,10 @@
             </button>
         </li>
     </ul>
+
     <div class="tab-content" id="ordersTabContent">
+
+        <!-- ===== АКТИВНІ ===== -->
         <div class="tab-pane fade show active" id="activeOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
@@ -54,12 +64,14 @@
                     <div class="card border-0 shadow-sm h-100 order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
-                        data-name=${order.customerName},
-                        data-phone=${order.phone},
-                        data-city=${order.city},
-                        data-description=${order.description != null ? order.description : ''},
-                        data-status=${order.status.name()},
-                        data-created=${order.formattedDate}">
+                                  data-name=${order.customerName},
+                                  data-phone=${order.phone},
+                                  data-city=${order.city},
+                                  data-description=${order.description != null ? order.description : ''},
+                                  data-status=${order.status.name()},
+                                  data-created=${order.formattedDate},
+                                  data-scheduled=${order.formattedScheduledDate},
+                                  data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
@@ -67,6 +79,10 @@
                                       class="badge bg-danger">В обробці</span>
                                 <span th:if="${order.status.name() == 'ACCEPTED'}"
                                       class="badge bg-warning text-dark">Прийнято</span>
+                                <span th:if="${order.status.name() == 'SCHEDULED'}"
+                                      class="badge bg-info text-dark">
+                                    📅 <span th:text="${order.formattedScheduledDate}"></span>
+                                </span>
                             </div>
                             <p class="text-muted small mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
@@ -96,6 +112,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== ЗАВЕРШЕНІ ===== -->
         <div class="tab-pane fade" id="completedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
@@ -110,16 +128,21 @@
                     <div class="card border-0 shadow-sm h-100 order-card"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
-                        data-name=${order.customerName},
-                        data-phone=${order.phone},
-                        data-city=${order.city},
-                        data-description=${order.description != null ? order.description : ''},
-                        data-status=${order.status.name()},
-                        data-created=${order.formattedDate}">
+                                  data-name=${order.customerName},
+                                  data-phone=${order.phone},
+                                  data-city=${order.city},
+                                  data-description=${order.description != null ? order.description : ''},
+                                  data-status=${order.status.name()},
+                                  data-created=${order.formattedDate},
+                                  data-scheduled=${order.formattedScheduledDate},
+                                  data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
-                                <span class="badge bg-success">Виконано</span>
+                                <span th:if="${order.status.name() == 'COMPLETED'}"
+                                      class="badge bg-success">Виконано</span>
+                                <span th:if="${order.status.name() == 'CANCELLED'}"
+                                      class="badge bg-secondary">Скасовано</span>
                             </div>
                             <p class="text-muted small mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
@@ -149,7 +172,10 @@
                 </div>
             </div>
         </div>
+
     </div>
+
+    <!-- ===== МОДАЛКА КЛІЄНТА ===== -->
     <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -157,6 +183,7 @@
                     <h5 class="modal-title text-white fw-bold">Деталі замовлення</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body p-4">
                     <div class="mb-3 text-center">
                         <span id="modalStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
@@ -176,8 +203,16 @@
                             <td id="modalCity"></td>
                         </tr>
                         <tr>
-                            <td class="text-muted fw-bold">Дата</td>
+                            <td class="text-muted fw-bold">Дата запису</td>
                             <td id="modalCreated"></td>
+                        </tr>
+                        <tr id="modalScheduledRow" class="d-none">
+                            <td class="text-muted fw-bold">Дата прийому</td>
+                            <td id="modalScheduled" class="fw-bold text-info"></td>
+                        </tr>
+                        <tr id="modalPaymentRow" class="d-none">
+                            <td class="text-muted fw-bold">Оплата</td>
+                            <td id="modalPayment" class="fw-bold text-success"></td>
                         </tr>
                         <tr id="modalDescRow">
                             <td class="text-muted fw-bold">Опис</td>
@@ -186,12 +221,23 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+
+                <div class="modal-footer d-flex justify-content-between align-items-center">
+                    <div id="modalCancelSection" class="d-none">
+                        <form id="modalCancelForm" method="post"
+                              onsubmit="return confirm('Ви впевнені, що хочете скасувати запис?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                Скасувати запис
+                            </button>
+                        </form>
+                    </div>
+                    <button type="button" class="btn btn-secondary ms-auto" data-bs-dismiss="modal">Закрити</button>
                 </div>
+
             </div>
         </div>
     </div>
+
     <script th:src="@{/js/pages/myservices.js}"></script>
 </div>
 

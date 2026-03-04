@@ -1,13 +1,18 @@
 package course.project.ua.tirevault.Services;
 
+import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus;
 import course.project.ua.tirevault.Entities.Models.ServiceRequest;
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Repositories.IServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceRequestService {
@@ -28,32 +33,89 @@ public class ServiceRequestService {
 
     public List<ServiceRequest> getActiveByUser(User user) {
         return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
-                user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED));
+                user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
     }
 
     public List<ServiceRequest> getCompletedByUser(User user) {
-        return serviceRequestRepository.findByUserAndStatusOrderByCreatedAtDesc(user, ServiceRequestStatus.COMPLETED);
+        return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
+                user, List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
     }
 
     public List<ServiceRequest> getAllActive() {
         return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(
-                List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED));
+                List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
     }
 
     public List<ServiceRequest> getAllCompleted() {
-        return serviceRequestRepository.findByStatusOrderByCreatedAtDesc(ServiceRequestStatus.COMPLETED);
+        return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(
+                List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
     }
 
     public void accept(Long id) {
-        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         request.setStatus(ServiceRequestStatus.ACCEPTED);
         request.setSeen(false);
         serviceRequestRepository.save(request);
     }
 
-    public void complete(Long id) {
-        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+    public void schedule(Long id, LocalDateTime scheduledAt) {
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+
+        List<ServiceRequestStatus> excluded = List.of(ServiceRequestStatus.CANCELLED, ServiceRequestStatus.COMPLETED);
+        boolean slotTaken = serviceRequestRepository
+                .findByScheduledAtBetweenAndStatusNotIn(
+                        scheduledAt.minusMinutes(1), scheduledAt.plusMinutes(1), excluded)
+                .stream()
+                .anyMatch(r -> !r.getId().equals(id));
+
+        if (slotTaken) {
+            throw new RuntimeException("Цей час вже заброньований. Оберіть інший.");
+        }
+
+        request.setScheduledAt(scheduledAt);
+        request.setStatus(ServiceRequestStatus.SCHEDULED);
+        request.setSeen(false);
+        serviceRequestRepository.save(request);
+    }
+
+    public void unschedule(Long id) {
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        request.setScheduledAt(null);
+        request.setStatus(ServiceRequestStatus.ACCEPTED);
+        request.setSeen(false);
+        serviceRequestRepository.save(request);
+    }
+
+    public void complete(Long id, PaymentMethod paymentMethod) {
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         request.setStatus(ServiceRequestStatus.COMPLETED);
+        request.setPaymentMethod(paymentMethod);
+        request.setSeen(false);
+        serviceRequestRepository.save(request);
+    }
+
+    public void cancel(Long id, User user) {
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+
+        boolean isOwner = request.getUser() != null && request.getUser().getId().equals(user.getId());
+        boolean isManager = user.getRole().name().equals("MANAGER");
+
+        if (!isOwner && !isManager) {
+            throw new RuntimeException("Немає доступу.");
+        }
+
+        List<ServiceRequestStatus> cancellable = List.of(
+                ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED);
+        if (!cancellable.contains(request.getStatus())) {
+            throw new RuntimeException("Це замовлення не можна скасувати.");
+        }
+
+        request.setStatus(ServiceRequestStatus.CANCELLED);
         request.setSeen(false);
         serviceRequestRepository.save(request);
     }
@@ -71,5 +133,18 @@ public class ServiceRequestService {
         List<ServiceRequest> unseen = serviceRequestRepository.findByUserAndSeenFalse(user);
         unseen.forEach(r -> r.setSeen(true));
         serviceRequestRepository.saveAll(unseen);
+    }
+
+    // Повертає зайняті години на вказану дату (формат "HH:mm")
+    public List<String> getBookedHoursForDate(LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(LocalTime.MAX);
+        List<ServiceRequestStatus> excluded = List.of(ServiceRequestStatus.CANCELLED, ServiceRequestStatus.COMPLETED);
+
+        return serviceRequestRepository
+                .findByScheduledAtBetweenAndStatusNotIn(start, end, excluded)
+                .stream()
+                .map(r -> r.getScheduledAt().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")))
+                .collect(Collectors.toList());
     }
 }

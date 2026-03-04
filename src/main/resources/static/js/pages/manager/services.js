@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const WORK_HOURS = ['08:00','09:00','10:00','11:00','12:00',
+        '13:00','14:00','15:00','16:00','17:00','18:00'];
+
     document.querySelectorAll('.manager-order-card').forEach(function (card) {
         card.addEventListener('click', function () {
             const id          = this.dataset.id;
@@ -8,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const description = this.dataset.description;
             const status      = this.dataset.status;
             const created     = this.dataset.created;
+            const scheduled   = this.dataset.scheduled;
+            const payment     = this.dataset.payment;
 
             document.getElementById('mModalName').textContent    = name;
             document.getElementById('mModalPhone').textContent   = phone;
@@ -22,32 +27,115 @@ document.addEventListener('DOMContentLoaded', function () {
                 descRow.classList.add('d-none');
             }
 
-            const badge = document.getElementById('mModalStatusBadge');
-            const acceptSection   = document.getElementById('mAcceptSection');
-            const completeSection = document.getElementById('mCompleteSection');
-            const doneSection     = document.getElementById('mDoneSection');
+            const badge               = document.getElementById('mModalStatusBadge');
+            const acceptSection       = document.getElementById('mAcceptSection');
+            const scheduleSection     = document.getElementById('mScheduleSection');
+            const completeSection     = document.getElementById('mCompleteSection');
+            const doneSection         = document.getElementById('mDoneSection');
+            const cancelledSection    = document.getElementById('mCancelledSection');
 
-            acceptSection.classList.add('d-none');
-            completeSection.classList.add('d-none');
-            doneSection.classList.add('d-none');
+            // Скидаємо всі секції
+            [acceptSection, scheduleSection, completeSection, doneSection, cancelledSection]
+                .forEach(s => s.classList.add('d-none'));
             document.getElementById('mAcceptCheck').checked = false;
 
+            // Скидаємо форму бронювання
+            document.getElementById('mScheduledAt').value = '';
+            document.getElementById('mScheduleDate').value = '';
+            document.getElementById('mSlotsContainer').innerHTML =
+                '<p class="text-muted small mb-0">Оберіть дату вище</p>';
+
             if (status === 'PENDING') {
-                badge.className = 'badge fs-6 px-3 py-2 bg-danger';
+                badge.className   = 'badge fs-6 px-3 py-2 bg-danger';
                 badge.textContent = 'В очікуванні';
-                document.getElementById('mAcceptForm').action = '/manager/services/' + id + '/accept';
+                document.getElementById('mAcceptForm').action =
+                    '/manager/services/' + id + '/accept';
                 acceptSection.classList.remove('d-none');
 
             } else if (status === 'ACCEPTED') {
-                badge.className = 'badge fs-6 px-3 py-2 bg-warning text-dark';
+                badge.className   = 'badge fs-6 px-3 py-2 bg-warning text-dark';
                 badge.textContent = 'Прийнято';
-                document.getElementById('mCompleteForm').action = '/manager/services/' + id + '/complete';
+                document.getElementById('mScheduleForm').action =
+                    '/manager/services/' + id + '/schedule';
+                document.getElementById('mCancelFromAcceptedForm').action =
+                    '/manager/services/' + id + '/cancel';
+
+                // Мінімальна дата — сьогодні
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('mScheduleDate').min = today;
+
+                // Вішаємо обробник зміни дати (клонуємо елемент щоб прибрати старі обробники)
+                const oldDateInput = document.getElementById('mScheduleDate');
+                const newDateInput = oldDateInput.cloneNode(true);
+                newDateInput.min = today;
+                oldDateInput.parentNode.replaceChild(newDateInput, oldDateInput);
+
+                newDateInput.addEventListener('change', function () {
+                    const date = this.value;
+                    if (!date) return;
+
+                    const container = document.getElementById('mSlotsContainer');
+                    container.innerHTML = '<p class="text-muted small">Завантаження слотів...</p>';
+                    document.getElementById('mScheduledAt').value = '';
+
+                    fetch('/api/slots?date=' + date)
+                        .then(r => r.json())
+                        .then(bookedHours => {
+                            container.innerHTML = '';
+                            WORK_HOURS.forEach(hour => {
+                                const isBooked = bookedHours.includes(hour);
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.dataset.time = hour;
+
+                                if (isBooked) {
+                                    btn.className   = 'btn btn-sm btn-danger me-1 mb-1 disabled';
+                                    btn.textContent = hour + ' — заброньовано';
+                                } else {
+                                    btn.className   = 'btn btn-sm btn-outline-primary me-1 mb-1 slot-btn';
+                                    btn.textContent = hour;
+                                    btn.addEventListener('click', function () {
+                                        document.querySelectorAll('.slot-btn')
+                                            .forEach(b => b.classList.remove('active','btn-primary'));
+                                        this.classList.add('active', 'btn-primary');
+                                        document.getElementById('mScheduledAt').value =
+                                            date + 'T' + hour;
+                                    });
+                                }
+                                container.appendChild(btn);
+                            });
+                        })
+                        .catch(() => {
+                            container.innerHTML =
+                                '<p class="text-danger small">Помилка завантаження слотів</p>';
+                        });
+                });
+
+                scheduleSection.classList.remove('d-none');
+
+            } else if (status === 'SCHEDULED') {
+                badge.className   = 'badge fs-6 px-3 py-2 bg-info text-dark';
+                badge.textContent = '📅 Заброньовано: ' + scheduled;
+                document.getElementById('mCompleteForm').action =
+                    '/manager/services/' + id + '/complete';
+                document.getElementById('mUnscheduleForm').action =
+                    '/manager/services/' + id + '/unschedule';
+                document.getElementById('mCancelFromScheduledForm').action =
+                    '/manager/services/' + id + '/cancel';
                 completeSection.classList.remove('d-none');
 
             } else if (status === 'COMPLETED') {
-                badge.className = 'badge fs-6 px-3 py-2 bg-success';
+                badge.className   = 'badge fs-6 px-3 py-2 bg-success';
                 badge.textContent = 'Виконано';
+                const payLabel = payment === 'CARD' ? '💳 Карта'
+                    : payment === 'CASH' ? '💵 Готівка' : '—';
+                document.getElementById('mDonePayment').textContent = payLabel;
                 doneSection.classList.remove('d-none');
+
+            } else if (status === 'CANCELLED') {
+                badge.className   = 'badge fs-6 px-3 py-2 bg-secondary';
+                badge.textContent = 'Скасовано';
+                cancelledSection.classList.remove('d-none');
             }
 
             const modal = new bootstrap.Modal(document.getElementById('managerOrderModal'));
