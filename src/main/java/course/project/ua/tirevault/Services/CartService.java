@@ -38,8 +38,14 @@ public class CartService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Товар не знайдено"));
 
-        Cart cart = getOrCreateCart(user);
+        if (product.getQuantity() < quantity)
+            throw new RuntimeException(
+                    product.getQuantity() <= 0
+                            ? "Товар закінчився на складі"
+                            : "На складі доступно лише " + product.getQuantity() + " шт."
+            );
 
+        Cart cart = getOrCreateCart(user);
         Optional<CartItem> existing =
                 cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);
 
@@ -53,7 +59,13 @@ public class CartService {
             item.setProduct(product);
             item.setQuantity(quantity);
             cartItemRepository.save(item);
+            cart.getItems().add(item);
         }
+
+        // Резервуємо товар одразу при додаванні в кошик
+        product.setQuantity(product.getQuantity() - quantity);
+        product.setAvailability(product.getQuantity() > 0); // <-- ось де оновлюється статус
+        productRepository.save(product);
 
         return recalculate(cart);
     }
@@ -67,9 +79,26 @@ public class CartService {
         if (!item.getCart().getId().equals(cart.getId()))
             throw new RuntimeException("Доступ заборонено");
 
+        Product product = item.getProduct();
+        int delta = quantity - item.getQuantity(); // різниця: скільки ще треба або повернути
+
         if (quantity <= 0) {
+            // Повертаємо весь резерв назад на склад
+            product.setQuantity(product.getQuantity() + item.getQuantity());
+            product.setAvailability(true);
+            productRepository.save(product);
+
             cartItemRepository.delete(item);
+            cart.getItems().remove(item);
         } else {
+            if (delta > 0 && product.getQuantity() < delta)
+                throw new RuntimeException("На складі лише " + product.getQuantity() + " шт.");
+
+            // Коригуємо резерв на різницю
+            product.setQuantity(product.getQuantity() - delta);
+            product.setAvailability(product.getQuantity() > 0);
+            productRepository.save(product);
+
             item.setQuantity(quantity);
             cartItemRepository.save(item);
         }
@@ -86,8 +115,28 @@ public class CartService {
         if (!item.getCart().getId().equals(cart.getId()))
             throw new RuntimeException("Доступ заборонено");
 
+        // Повертаємо резерв назад на склад
+        Product product = item.getProduct();
+        product.setQuantity(product.getQuantity() + item.getQuantity());
+        product.setAvailability(true);
+        productRepository.save(product);
+
         cartItemRepository.delete(item);
+        cart.getItems().remove(item);
         return recalculate(cart);
+    }
+
+    /**
+     * Оформлення замовлення: списує товари зі складу і очищає кошик.
+     */
+    @Transactional
+    public void checkout(User user) {
+        Cart cart = getOrCreateCart(user);
+        if (cart.getItems().isEmpty())
+            throw new RuntimeException("Кошик порожній");
+
+        // Quantity вже списано при addToCart — просто зберігаємо, кошик не чистимо
+        cartRepository.save(cart);
     }
 
     public int getCartItemCount(User user) {
@@ -97,9 +146,8 @@ public class CartService {
                 .orElse(0);
     }
 
+    // recalculate більше НЕ робить findById — рахує з поточного стану cart.getItems()
     private Cart recalculate(Cart cart) {
-        // Перезавантажуємо щоб отримати актуальні items
-        cart = cartRepository.findById(cart.getId()).orElse(cart);
         BigDecimal total = cart.getItems().stream()
                 .map(CartItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

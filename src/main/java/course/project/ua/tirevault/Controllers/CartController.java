@@ -56,10 +56,28 @@ public class CartController {
         if (user == null)
             return ResponseEntity.ok(Map.of("success", false, "message", "Потрібна авторизація"));
 
-        Cart cart = cartService.addToCart(user, productId, quantity);
-        int count = cart.getItems().stream().mapToInt(i -> i.getQuantity()).sum();
+        try {
+            Cart cart = cartService.addToCart(user, productId, quantity);
+            int count = cart.getItems().stream().mapToInt(i -> i.getQuantity()).sum();
+            return ResponseEntity.ok(Map.of("success", true, "cartCount", count));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
 
-        return ResponseEntity.ok(Map.of("success", true, "cartCount", count));
+    @PostMapping("/cart/checkout")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> checkout(HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        if (user == null)
+            return ResponseEntity.status(401).body(Map.of("success", false));
+
+        try {
+            cartService.checkout(user);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(Map.of("success", false, "message", e.getMessage()));
+        }
     }
 
     @PostMapping("/cart/update")

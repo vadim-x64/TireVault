@@ -135,8 +135,30 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- Оформити замовлення ---
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
-            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
-            modal.show();
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Обробка...';
+
+            fetch('/cart/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        updateCartBadge(0);
+                        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                        modal.show();
+                    } else {
+                        alert(data.message || 'Помилка оформлення. Спробуйте ще раз.');
+                        checkoutBtn.disabled = false;
+                        checkoutBtn.innerHTML = 'Оформити замовлення';
+                    }
+                })
+                .catch(() => {
+                    alert('Помилка з\'єднання.');
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.innerHTML = 'Оформити замовлення';
+                });
         });
     }
 });
