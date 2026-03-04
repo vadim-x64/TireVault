@@ -1,4 +1,4 @@
-package course.project.ua.tirevault.Entities.Models;
+package course.project.ua.tirevault.Entities.Models.Client;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

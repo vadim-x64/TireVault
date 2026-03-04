@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="content">
+
+    <!-- Хлібні крихти -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products" class="text-decoration-none">Автотовари</a></li>
+            <li class="breadcrumb-item">
+                <a th:href="@{/products/category/{id}(id=${product.category.id})}"
+                   th:text="${product.category.name}"
+                   class="text-decoration-none"></a>
+            </li>
+            <li class="breadcrumb-item active" th:text="${product.name}"></li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Фото -->
+        <div class="col-md-5">
+            <div class="border rounded-3 overflow-hidden bg-light d-flex align-items-center justify-content-center"
+                 style="height: 380px;">
+                <img th:src="${product.imageUrl != null ? product.imageUrl : '/img/no-image.png'}"
+                     th:alt="${product.name}"
+                     class="img-fluid object-fit-contain"
+                     style="max-height: 360px;">
+            </div>
+        </div>
+
+        <!-- Деталі -->
+        <div class="col-md-7">
+            <h2 class="fw-bold mb-1" th:text="${product.name}"></h2>
+            <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                Артикул: <span th:text="${product.article}"></span>
+            </p>
+
+            <!-- Наявність -->
+            <span th:if="${product.availability}"
+                  class="badge bg-success-subtle text-success border border-success-subtle mb-3"
+                  style="font-size: 0.85rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                     class="bi bi-check-circle-fill me-1" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                </svg>
+                В наявності
+            </span>
+            <span th:unless="${product.availability}"
+                  class="badge bg-danger-subtle text-danger border border-danger-subtle mb-3"
+                  style="font-size: 0.85rem;">
+                Немає в наявності
+            </span>
+
+            <!-- Ціна -->
+            <div class="mb-3">
+                <span class="fs-3 fw-bold" th:text="${product.price} + ' ₴'"></span>
+            </div>
+
+            <!-- Опис -->
+            <p th:if="${product.description != null}"
+               th:text="${product.description}"
+               class="text-secondary mb-4" style="line-height: 1.6;"></p>
+
+            <!-- Лічильник + Кошик -->
+            <div class="d-flex align-items-center gap-3 flex-wrap" th:if="${product.availability}">
+                <div class="d-flex align-items-center border rounded-2 overflow-hidden">
+                    <button class="btn btn-light px-3 py-2 border-0" id="qty-minus" type="button">−</button>
+                    <input type="number" id="qty-input" value="1" min="1"
+                           th:max="${product.quantity}"
+                           class="form-control border-0 text-center fw-bold"
+                           style="width: 60px; box-shadow: none;">
+                    <button class="btn btn-light px-3 py-2 border-0" id="qty-plus" type="button">+</button>
+                </div>
+                <button class="btn btn-dark px-4 py-2 fw-bold flex-grow-1" style="max-width: 220px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-cart-plus me-2" viewBox="0 0 16 16">
+                        <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5z"/>
+                    </svg>
+                    В кошик
+                </button>
+            </div>
+            <div th:unless="${product.availability}">
+                <button class="btn btn-secondary px-4 py-2 fw-bold" disabled>Немає в наявності</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/pages/productdetail.js}"></script>
+</div>
+
+</body>
+</html>

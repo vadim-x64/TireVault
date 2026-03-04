@@ -1,4 +1,4 @@
-package course.project.ua.tirevault.Entities.Models;
+package course.project.ua.tirevault.Entities.Models.Client;
 
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import jakarta.persistence.*;

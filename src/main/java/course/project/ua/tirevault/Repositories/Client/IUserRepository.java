@@ -1,6 +1,6 @@
-package course.project.ua.tirevault.Repositories;
+package course.project.ua.tirevault.Repositories.Client;
 
-import course.project.ua.tirevault.Entities.Models.User;
+import course.project.ua.tirevault.Entities.Models.Client.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

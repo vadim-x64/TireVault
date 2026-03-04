@@ -1,9 +1,9 @@
 package course.project.ua.tirevault.Services;
 
-import course.project.ua.tirevault.Entities.Models.Customer;
-import course.project.ua.tirevault.Entities.Models.User;
-import course.project.ua.tirevault.Repositories.ICustomerRepository;
-import course.project.ua.tirevault.Repositories.IUserRepository;
+import course.project.ua.tirevault.Entities.Models.Client.Customer;
+import course.project.ua.tirevault.Entities.Models.Client.User;
+import course.project.ua.tirevault.Repositories.Client.ICustomerRepository;
+import course.project.ua.tirevault.Repositories.Client.IUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
