@@ -1,6 +1,6 @@
-package course.project.ua.tirevault.Repositories.Store;
+package course.project.ua.tirevault.Repositories;
 
-import course.project.ua.tirevault.Entities.Models.Store.Product;
+import course.project.ua.tirevault.Entities.Models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package course.project.ua.tirevault.Controllers;
 
-import course.project.ua.tirevault.Entities.Models.Client.User;
+import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.ProfileService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

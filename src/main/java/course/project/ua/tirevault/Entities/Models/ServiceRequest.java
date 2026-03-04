@@ -1,8 +1,7 @@
-package course.project.ua.tirevault.Entities.Models.Service;
+package course.project.ua.tirevault.Entities.Models;
 
 import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus;
-import course.project.ua.tirevault.Entities.Models.Client.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

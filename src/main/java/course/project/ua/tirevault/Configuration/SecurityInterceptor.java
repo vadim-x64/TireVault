@@ -1,7 +1,7 @@
 package course.project.ua.tirevault.Configuration;
 
 import course.project.ua.tirevault.Entities.Enums.UserRole;
-import course.project.ua.tirevault.Entities.Models.Client.User;
+import course.project.ua.tirevault.Entities.Models.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

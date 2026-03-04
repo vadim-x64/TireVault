@@ -2,9 +2,9 @@ package course.project.ua.tirevault.Services;
 
 import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus;
-import course.project.ua.tirevault.Entities.Models.Service.ServiceRequest;
-import course.project.ua.tirevault.Entities.Models.Client.User;
-import course.project.ua.tirevault.Repositories.Service.IServiceRequestRepository;
+import course.project.ua.tirevault.Entities.Models.ServiceRequest;
+import course.project.ua.tirevault.Entities.Models.User;
+import course.project.ua.tirevault.Repositories.IServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

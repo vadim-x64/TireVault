@@ -1,9 +1,9 @@
 package course.project.ua.tirevault.Services;
 
-import course.project.ua.tirevault.Entities.Models.Store.Product;
-import course.project.ua.tirevault.Entities.Models.Store.ProductCategory;
-import course.project.ua.tirevault.Repositories.Store.IProductCategoryRepository;
-import course.project.ua.tirevault.Repositories.Store.IProductRepository;
+import course.project.ua.tirevault.Entities.Models.Product;
+import course.project.ua.tirevault.Entities.Models.ProductCategory;
+import course.project.ua.tirevault.Repositories.IProductCategoryRepository;
+import course.project.ua.tirevault.Repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

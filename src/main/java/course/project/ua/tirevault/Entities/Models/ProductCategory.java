@@ -1,4 +1,4 @@
-package course.project.ua.tirevault.Entities.Models.Store;
+package course.project.ua.tirevault.Entities.Models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

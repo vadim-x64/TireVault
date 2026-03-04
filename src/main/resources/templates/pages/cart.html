@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="content">
+
+    <h4 class="fw-bold mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+             class="bi bi-cart3 me-2" viewBox="0 0 16 16">
+            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102z"/>
+            <path d="M5.5 14a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-3-1.5a3 3 0 1 0 6 0 3 3 0 0 0-6 0zm9.5 1.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-3-1.5a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/>
+        </svg>
+        Кошик
+    </h4>
+
+    <!-- Не авторизований -->
+    <div th:if="${session.loggedUser == null}"
+         class="alert alert-warning d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+             class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+        </svg>
+        <div>Щоб переглянути кошик, потрібно <a href="/auth" class="fw-bold alert-link">увійти в акаунт</a>.</div>
+    </div>
+
+    <!-- Авторизований -->
+    <div th:if="${session.loggedUser != null}">
+
+        <!-- Порожній кошик -->
+        <div th:if="${cart == null or cart.items.isEmpty()}" class="text-center py-5 text-muted">
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="currentColor"
+                 class="bi bi-cart-x mb-3 d-block mx-auto" viewBox="0 0 16 16">
+                <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5z"/>
+            </svg>
+            <h5>Кошик порожній</h5>
+            <p>Додайте товари з <a href="/products" class="alert-link">каталогу автотоварів</a></p>
+        </div>
+
+        <!-- Кошик з товарами -->
+        <div th:if="${cart != null and !cart.items.isEmpty()}" class="row g-4">
+
+            <!-- Ліва колонка: товари -->
+            <div class="col-lg-8" id="cart-items-container">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0 align-middle">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 80px;"></th>
+                                    <th>Товар</th>
+                                    <th class="text-center">Ціна</th>
+                                    <th class="text-center">Кількість</th>
+                                    <th class="text-end">Сума</th>
+                                    <th style="width: 40px;"></th>
+                                </tr>
+                                </thead>
+                                <tbody id="cart-tbody">
+                                <tr th:each="item : ${cart.items}"
+                                    th:id="'row-' + ${item.id}"
+                                    class="cart-row">
+                                    <!-- Фото -->
+                                    <td class="p-2">
+                                        <img th:src="${item.product.imageUrl != null ?
+                                                       item.product.imageUrl : '/img/no-image.png'}"
+                                             class="rounded object-fit-cover"
+                                             style="width:64px; height:64px;"
+                                             th:alt="${item.product.name}">
+                                    </td>
+                                    <!-- Назва -->
+                                    <td>
+                                        <a th:href="@{/products/{id}(id=${item.product.id})}"
+                                           th:text="${item.product.name}"
+                                           class="text-dark fw-semibold text-decoration-none"
+                                           style="font-size: 0.9rem;"></a>
+                                        <div class="text-muted" style="font-size: 0.78rem;"
+                                             th:text="'Арт. ' + ${item.product.article}"></div>
+                                    </td>
+                                    <!-- Ціна за 1 -->
+                                    <td class="text-center text-muted" style="font-size: 0.9rem;"
+                                        th:text="${item.product.price} + ' ₴'"></td>
+                                    <!-- Кількість -->
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center gap-1">
+                                            <button class="btn btn-outline-secondary btn-sm px-2 py-0 qty-btn"
+                                                    th:data-item-id="${item.id}"
+                                                    th:data-delta="-1">−</button>
+                                            <span class="fw-bold px-2 qty-value"
+                                                  th:id="'qty-' + ${item.id}"
+                                                  th:text="${item.quantity}"></span>
+                                            <button class="btn btn-outline-secondary btn-sm px-2 py-0 qty-btn"
+                                                    th:data-item-id="${item.id}"
+                                                    th:data-delta="1">+</button>
+                                        </div>
+                                    </td>
+                                    <!-- Сума -->
+                                    <td class="text-end fw-bold"
+                                        th:id="'subtotal-' + ${item.id}"
+                                        th:text="${item.subtotal} + ' ₴'"></td>
+                                    <!-- Видалити -->
+                                    <td class="text-center">
+                                        <button class="btn btn-link text-danger p-0 remove-btn"
+                                                th:data-item-id="${item.id}" title="Видалити">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                 fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Права колонка: підсумок + оформлення -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 16px;">
+                    <div class="card-header py-3" style="background-color: #212529;">
+                        <h6 class="mb-0 text-white fw-bold">Оформлення замовлення</h6>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Разом -->
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Разом:</span>
+                            <span class="fs-5 fw-bold" id="cart-total"
+                                  th:text="${cart.total} + ' ₴'"></span>
+                        </div>
+
+                        <!-- Відділення СТО -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="font-size: 0.9rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                     fill="currentColor" class="bi bi-geo-alt-fill me-1" viewBox="0 0 16 16">
+                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                                </svg>
+                                Відділення СТО <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select form-select-sm" id="station-select">
+                                <option value="">— Оберіть відділення —</option>
+                                <option th:each="s : ${stations}" th:value="${s}" th:text="${s}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Спосіб оплати -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" style="font-size: 0.9rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                     fill="currentColor" class="bi bi-credit-card me-1" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
+                                    <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
+                                </svg>
+                                Спосіб оплати <span class="text-danger">*</span>
+                            </label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payMethod"
+                                           id="payCard" value="card">
+                                    <label class="form-check-label" for="payCard">💳 Карткою</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payMethod"
+                                           id="payCash" value="cash">
+                                    <label class="form-check-label" for="payCash">💵 Готівка на СТО</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Форма картки -->
+                        <div id="card-form-block" class="mb-3" style="display:none;">
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Номер картки</label>
+                                <input type="text" class="form-control form-control-sm"
+                                       id="card-number" placeholder="0000 0000 0000 0000"
+                                       maxlength="19" inputmode="numeric">
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Термін дії</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                           id="card-expiry" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">CVV</label>
+                                    <input type="text" class="form-control form-control-sm"
+                                           id="card-cvv" placeholder="•••" maxlength="3"
+                                           inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка -->
+                        <button class="btn btn-dark w-100 fw-bold" id="checkout-btn" disabled>
+                            Оформити замовлення
+                        </button>
+                        <p class="text-muted text-center mt-2 mb-0" style="font-size: 0.75rem;">
+                            * Заповніть усі поля для оформлення
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно підтвердження -->
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">✅ Замовлення прийнято!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-muted">
+                    Дякуємо за замовлення! Наш менеджер зв'яжеться з вами найближчим часом
+                    для підтвердження деталей.
+                </div>
+                <div class="modal-footer border-0">
+                    <a href="/products" class="btn btn-outline-dark">Продовжити покупки</a>
+                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Закрити</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/pages/cart.js}"></script>
+</div>
+
+</body>
+</html>
