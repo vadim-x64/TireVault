@@ -85,13 +85,15 @@
                                         <div class="d-flex align-items-center justify-content-center gap-1">
                                             <button class="btn btn-outline-secondary btn-sm px-2 py-0 qty-btn"
                                                     th:data-item-id="${item.id}"
-                                                    th:data-delta="-1">−</button>
+                                                    th:data-delta="-1">−
+                                            </button>
                                             <span class="fw-bold px-2 qty-value"
                                                   th:id="'qty-' + ${item.id}"
                                                   th:text="${item.quantity}"></span>
                                             <button class="btn btn-outline-secondary btn-sm px-2 py-0 qty-btn"
                                                     th:data-item-id="${item.id}"
-                                                    th:data-delta="1">+</button>
+                                                    th:data-delta="1">+
+                                            </button>
                                         </div>
                                     </td>
                                     <!-- Сума -->
@@ -185,8 +187,15 @@
                                            id="card-expiry" placeholder="MM/YY" maxlength="5">
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold">CVV</label>
-                                    <input type="text" class="form-control form-control-sm"
+                                    <label class="form-label small fw-semibold d-flex justify-content-between align-items-center">
+                                        CVV
+                                        <span class="fw-normal text-muted d-flex align-items-center gap-1"
+                                              style="font-size:0.75rem;">
+                                            <input type="checkbox" id="cvv-show" class="form-check-input m-0">
+                                            <span>показати</span>
+                                        </span>
+                                    </label>
+                                    <input type="password" class="form-control form-control-sm"
                                            id="card-cvv" placeholder="•••" maxlength="3"
                                            inputmode="numeric">
                                 </div>

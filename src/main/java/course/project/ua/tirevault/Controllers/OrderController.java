@@ -41,4 +41,17 @@ public class OrderController {
         }
         return "redirect:/myorders";
     }
+
+    @PostMapping("/myorders/{id}/delete")
+    public String deleteByClient(@PathVariable Long id, HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser == null) return "redirect:/auth";
+        try {
+            orderService.deleteByUser(id, loggedUser);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("cancelError", e.getMessage());
+        }
+        return "redirect:/myorders";
+    }
 }

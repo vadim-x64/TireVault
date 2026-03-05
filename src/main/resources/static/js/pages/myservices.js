@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
+    function formatPhone(phone) {
+        if (!phone) return phone;
+        const d = phone.replace(/\D/g, '');
+        if (d.length === 12 && d.startsWith('38')) {
+            const p = d.substring(2);
+            return `+38 (${p.substring(0,3)})-${p.substring(3,6)}-${p.substring(6,8)}-${p.substring(8,10)}`;
+        }
+        return phone;
+    }
+
     document.querySelectorAll('.order-card').forEach(function (card) {
         card.addEventListener('click', function () {
             const id          = this.dataset.id;
@@ -12,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const payment     = this.dataset.payment;
 
             document.getElementById('modalName').textContent    = name;
-            document.getElementById('modalPhone').textContent   = phone;
+            document.getElementById('modalPhone').textContent   = formatPhone(phone);
             document.getElementById('modalCity').textContent    = city;
             document.getElementById('modalCreated').textContent = created;
 

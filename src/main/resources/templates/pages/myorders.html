@@ -64,7 +64,7 @@
                                   data-items=${order.itemsJson}">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.id}"></span></span>
+                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
                 <span th:if="${order.status.name() == 'PENDING'}"
                       class="badge bg-danger">В обробці</span>
                 <span th:if="${order.status.name() == 'PROCESSING'}"
@@ -92,7 +92,7 @@
       </div>
       <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
         <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
-          <div class="card border-0 shadow-sm h-100 myorder-card"
+          <div class="card border-0 shadow-sm h-100 myorder-card position-relative"
                style="cursor:pointer;"
                th:attr="data-id=${order.id},
                                   data-status=${order.status.name()},
@@ -101,9 +101,16 @@
                                   data-station=${order.station != null ? order.station : ''},
                                   data-paymethod=${order.payMethod != null ? order.payMethod : ''},
                                   data-items=${order.itemsJson}">
+            <form th:action="@{/myorders/{id}/delete(id=${order.id})}"
+                  method="post"
+                  onsubmit="return confirm('Видалити замовлення зі списку?')"
+                  onclick="event.stopPropagation()">
+              <button type="submit" class="btn btn-sm btn-close position-absolute"
+                      style="bottom:8px;right:8px;z-index:10;" title="Видалити"></button>
+            </form>
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.id}"></span></span>
+                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
                 <span th:if="${order.status.name() == 'COMPLETED'}"
                       class="badge bg-success">Виконано</span>
                 <span th:if="${order.status.name() == 'CANCELLED'}"

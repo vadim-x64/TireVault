@@ -35,6 +35,17 @@ public class ServiceRequestService {
         serviceRequestRepository.deleteById(id);
     }
 
+    public void deleteByUser(Long id, User user) {
+        ServiceRequest request = serviceRequestRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        if (request.getUser() == null || !request.getUser().getId().equals(user.getId()))
+            throw new RuntimeException("Немає доступу.");
+        if (!List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED)
+                .contains(request.getStatus()))
+            throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
+        serviceRequestRepository.deleteById(id);
+    }
+
     public List<ServiceRequest> getActiveByUser(User user) {
         return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
                 user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));

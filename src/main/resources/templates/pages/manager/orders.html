@@ -56,7 +56,7 @@
                                   data-items=${order.itemsJson}">
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.id}"></span></span>
+                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
                 <span th:if="${order.status.name() == 'PENDING'}"
                       class="badge bg-danger d-flex align-items-center gap-1">
                                     <span class="rounded-circle bg-white d-inline-block"
@@ -112,7 +112,7 @@
             </form>
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.id}"></span></span>
+                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
                 <span th:if="${order.status.name() == 'COMPLETED'}"
                       class="badge bg-success">Виконано</span>
                 <span th:if="${order.status.name() == 'CANCELLED'}"
@@ -150,7 +150,7 @@
           <table class="table table-borderless mb-3">
             <tbody>
             <tr>
-              <td class="text-muted fw-bold" style="width:160px;">Логін</td>
+              <td class="text-muted fw-bold" style="width:160px;">Користувач</td>
               <td id="mgrOrderUsername" class="fw-bold"></td>
             </tr>
             <tr>

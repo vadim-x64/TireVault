@@ -6,8 +6,8 @@ import course.project.ua.tirevault.Repositories.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class OrderService {
@@ -18,6 +18,7 @@ public class OrderService {
     @Transactional
     public Order createFromCart(User user, Cart cart, String station, String payMethod) {
         Order order = new Order();
+        order.setOrderNumber(generateOrderNumber());
         order.setUser(user);
         order.setTotal(cart.getTotal());
         order.setStation(station);
@@ -35,6 +36,11 @@ public class OrderService {
         }
 
         return orderRepository.save(order);
+    }
+
+    private String generateOrderNumber() {
+        long num = ThreadLocalRandom.current().nextLong(100_000_000_000L, 1_000_000_000_000L);
+        return String.valueOf(num);
     }
 
     public List<Order> getActiveByUser(User user) {
@@ -87,6 +93,16 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
+    public void deleteByUser(Long id, User user) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        if (!order.getUser().getId().equals(user.getId()))
+            throw new RuntimeException("Немає доступу.");
+        if (!List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED).contains(order.getStatus()))
+            throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
+        orderRepository.deleteById(id);
+    }
+
     public long countPending() {
         return orderRepository.countByStatus(OrderStatus.PENDING);
     }
@@ -101,4 +117,6 @@ public class OrderService {
         unseen.forEach(o -> o.setSeen(true));
         orderRepository.saveAll(unseen);
     }
+
+
 }

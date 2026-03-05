@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const WORK_HOURS = ['08:00','09:00','10:00','11:00','12:00',
         '13:00','14:00','15:00','16:00','17:00','18:00'];
 
+    function formatPhone(phone) {
+        if (!phone) return phone;
+        const d = phone.replace(/\D/g, '');
+        if (d.length === 12 && d.startsWith('38')) {
+            const p = d.substring(2);
+            return `+38 (${p.substring(0,3)})-${p.substring(3,6)}-${p.substring(6,8)}-${p.substring(8,10)}`;
+        }
+        return phone;
+    }
+
     document.querySelectorAll('.manager-order-card').forEach(function (card) {
         card.addEventListener('click', function () {
             const id          = this.dataset.id;
@@ -15,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const payment     = this.dataset.payment;
 
             document.getElementById('mModalName').textContent    = name;
-            document.getElementById('mModalPhone').textContent   = phone;
+            document.getElementById('mModalPhone').textContent   = formatPhone(phone);
             document.getElementById('mModalCity').textContent    = city;
             document.getElementById('mModalCreated').textContent = created;
 

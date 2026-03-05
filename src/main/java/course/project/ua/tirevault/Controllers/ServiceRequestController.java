@@ -136,6 +136,19 @@ public class ServiceRequestController {
         return "redirect:/myservices";
     }
 
+    @PostMapping("/myservices/{id}/delete")
+    public String deleteByClient(@PathVariable Long id, HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser == null) return "redirect:/auth";
+        try {
+            serviceRequestService.deleteByUser(id, loggedUser);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("cancelError", e.getMessage());
+        }
+        return "redirect:/myservices";
+    }
+
     private boolean isManager(HttpSession session) {
         User u = (User) session.getAttribute("loggedUser");
         return u != null && u.getRole().name().equals("MANAGER");

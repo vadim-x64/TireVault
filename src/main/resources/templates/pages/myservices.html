@@ -9,7 +9,7 @@
             <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
         </svg>
-        <h3 class="fw-bold mb-0">Мої замовлення</h3>
+        <h3 class="fw-bold mb-0">Мої записи</h3>
     </div>
 
     <div th:if="${requestSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -125,7 +125,7 @@
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
-                    <div class="card border-0 shadow-sm h-100 order-card"
+                    <div class="card border-0 shadow-sm h-100 order-card position-relative"
                          style="cursor: pointer;"
                          th:attr="data-id=${order.id},
                                   data-name=${order.customerName},
@@ -136,6 +136,13 @@
                                   data-created=${order.formattedDate},
                                   data-scheduled=${order.formattedScheduledDate},
                                   data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
+                        <form th:action="@{/myservices/{id}/delete(id=${order.id})}"
+                              method="post"
+                              onsubmit="return confirm('Видалити запис зі списку?')"
+                              onclick="event.stopPropagation()">
+                            <button type="submit" class="btn btn-sm btn-close position-absolute"
+                                    style="bottom:8px;right:8px;z-index:10;" title="Видалити"></button>
+                        </form>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>

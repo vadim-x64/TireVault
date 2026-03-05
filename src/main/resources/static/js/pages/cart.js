@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // --- Оновлення бейджу кошика ---
     function updateCartBadge(count) {
         const badge = document.getElementById('cart-badge');
         if (!badge) return;
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(r => r.json())
                 .then(data => {
                     if (!data.success) return;
-
                     if (data.removed) {
                         document.getElementById('row-' + itemId)?.remove();
                         checkEmpty();
@@ -39,36 +37,102 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // --- Видалення товару ---
+    function doRemove(itemId) {
+        fetch('/cart/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `itemId=${itemId}`
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.success) return;
+                document.getElementById('row-' + itemId)?.remove();
+                document.getElementById('cart-total').textContent = formatPrice(data.total);
+                updateCartBadge(data.cartCount);
+                if (data.empty) checkEmpty();
+            });
+    }
+
+// Замість трьох змінних — Map для кожного товару окремо
+    const pendingRemovals = new Map(); // itemId -> { timer, row, intervalId, barEl, cdEl }
+
+    function showUndoBar(itemId, row) {
+        // Якщо цей товар вже в черзі — ігноруємо
+        if (pendingRemovals.has(itemId)) return;
+
+        row.style.opacity = '0.35';
+        row.style.pointerEvents = 'none';
+
+        // Створюємо окремий undo-bar для кожного товару
+        const bar = document.createElement('div');
+        bar.className = 'position-fixed translate-middle-x bg-dark text-white rounded shadow-lg px-3 py-2 d-flex align-items-center gap-3';
+        bar.style.cssText = `bottom:${20 + pendingRemovals.size * 60}px; left:50%; transform:translateX(-50%); z-index:1055; min-width:300px;`;
+        bar.innerHTML = `<span class="small">Видалення через <strong class="countdown">5</strong> с...</span>
+                     <button type="button" class="btn btn-sm btn-outline-light ms-auto undo-btn-inner">↩ Скасувати</button>`;
+        document.body.appendChild(bar);
+
+        const cd = bar.querySelector('.countdown');
+        let seconds = 5;
+
+        const intervalId = setInterval(() => {
+            seconds--;
+            cd.textContent = seconds;
+            if (seconds <= 0) {
+                clearRemoval(itemId, true);
+            }
+        }, 1000);
+
+        const entry = { row, intervalId, bar };
+        pendingRemovals.set(itemId, entry);
+
+        bar.querySelector('.undo-btn-inner').addEventListener('click', () => {
+            clearRemoval(itemId, false);
+        });
+    }
+
+    function clearRemoval(itemId, execute) {
+        const entry = pendingRemovals.get(itemId);
+        if (!entry) return;
+
+        clearInterval(entry.intervalId);
+        entry.bar.remove();
+        pendingRemovals.delete(itemId);
+
+        if (execute) {
+            doRemove(itemId);
+        } else {
+            entry.row.style.opacity = '';
+            entry.row.style.pointerEvents = '';
+        }
+    }
+
     document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const itemId = this.dataset.itemId;
-
-            fetch('/cart/remove', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `itemId=${itemId}`
-            })
-                .then(r => r.json())
-                .then(data => {
-                    if (!data.success) return;
-                    document.getElementById('row-' + itemId)?.remove();
-                    document.getElementById('cart-total').textContent = formatPrice(data.total);
-                    updateCartBadge(data.cartCount);
-                    if (data.empty) checkEmpty();
-                });
+            const row    = document.getElementById('row-' + itemId);
+            if (!row) return;
+            showUndoBar(itemId, row);
         });
     });
 
     function checkEmpty() {
         const tbody = document.getElementById('cart-tbody');
         if (tbody && tbody.querySelectorAll('.cart-row').length === 0) {
-            location.reload(); // перезавантажуємо щоб показати "кошик порожній"
+            location.reload();
         }
     }
 
     function formatPrice(val) {
         return parseFloat(val).toFixed(2) + ' ₴';
+    }
+
+    // --- CVV показати/сховати ---
+    const cvvShow = document.getElementById('cvv-show');
+    const cardCvv = document.getElementById('card-cvv');
+    if (cvvShow && cardCvv) {
+        cvvShow.addEventListener('change', function () {
+            cardCvv.type = this.checked ? 'text' : 'password';
+        });
     }
 
     // --- Спосіб оплати ---
@@ -85,7 +149,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- Форматування картки ---
     const cardNumber = document.getElementById('card-number');
     const cardExpiry = document.getElementById('card-expiry');
-    const cardCvv    = document.getElementById('card-cvv');
 
     if (cardNumber) {
         cardNumber.addEventListener('input', function () {
@@ -110,25 +173,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // --- Валідація форми ---
-    const stationSelect  = document.getElementById('station-select');
-    const checkoutBtn    = document.getElementById('checkout-btn');
+    const stationSelect = document.getElementById('station-select');
+    const checkoutBtn   = document.getElementById('checkout-btn');
 
     if (stationSelect) stationSelect.addEventListener('change', validateForm);
 
     function validateForm() {
         if (!checkoutBtn) return;
-
-        const stationOk  = stationSelect?.value !== '';
-        const payMethod  = document.querySelector('input[name="payMethod"]:checked');
-        const payOk      = !!payMethod;
-
+        const stationOk = stationSelect?.value !== '';
+        const payMethod = document.querySelector('input[name="payMethod"]:checked');
+        const payOk     = !!payMethod;
         let cardOk = true;
         if (payMethod?.value === 'card') {
             cardOk = cardNumber?.value.replace(/\s/g, '').length === 16 &&
                 cardExpiry?.value.length === 5 &&
                 cardCvv?.value.length === 3;
         }
-
         checkoutBtn.disabled = !(stationOk && payOk && cardOk);
     }
 
@@ -137,11 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
         checkoutBtn.addEventListener('click', function () {
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Обробка...';
-
-            // Читаємо вибране відділення та спосіб оплати
             const station   = stationSelect?.value || '';
             const payMethod = document.querySelector('input[name="payMethod"]:checked')?.value || '';
-
             fetch('/cart/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -153,11 +210,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         updateCartBadge(0);
                         const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
                         confirmModal.show();
-
-                        // При закритті модалки — переходимо на головну
                         document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
                             window.location.href = '/';
-                        }, { once: true }); // once:true — спрацює тільки раз
+                        }, { once: true });
                     }
                 })
                 .catch(() => {
