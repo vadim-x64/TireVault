@@ -67,6 +67,37 @@
                       th:text="${pendingOrdersCount}">0</span>
             </a>
         </li>
+        <li>
+            <a th:href="${session.loggedUser != null ? '/myorders' : '/auth'}"
+               class="nav-link text-white d-flex align-items-center justify-content-between">
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-cart-check me-2" viewBox="0 0 16 16">
+                <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5z"/>
+            </svg>
+            Мої замовлення
+        </span>
+                <span th:if="${session.loggedUser != null and unseenProductOrdersCount != null and unseenProductOrdersCount > 0}"
+                      class="badge rounded-pill bg-warning text-dark"
+                      th:text="${unseenProductOrdersCount}">0</span>
+            </a>
+        </li>
+
+        <li th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'MANAGER'}">
+            <a href="/manager/orders" class="nav-link text-warning fw-bold d-flex align-items-center justify-content-between">
+        <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-bag me-2" viewBox="0 0 16 16">
+                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+            </svg>
+            Журнал замовлень
+        </span>
+                <span th:if="${pendingProductOrdersCount != null and pendingProductOrdersCount > 0}"
+                      class="badge rounded-pill bg-danger"
+                      th:text="${pendingProductOrdersCount}">0</span>
+            </a>
+        </li>
     </ul>
     <hr>
     <div th:if="${session.loggedUser == null}">

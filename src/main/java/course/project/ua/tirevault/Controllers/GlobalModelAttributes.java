@@ -2,6 +2,7 @@ package course.project.ua.tirevault.Controllers;
 
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.CartService;
+import course.project.ua.tirevault.Services.OrderService;
 import course.project.ua.tirevault.Services.ServiceRequestService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +18,9 @@ public class GlobalModelAttributes {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private OrderService orderService;
+
     @ModelAttribute("pendingOrdersCount")
     public long pendingOrdersCount() {
         return serviceRequestService.countPending();
@@ -29,6 +33,20 @@ public class GlobalModelAttributes {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) return 0;
         return serviceRequestService.countUnseenByUser(loggedUser);
+    }
+
+    @ModelAttribute("pendingProductOrdersCount")
+    public long pendingProductOrdersCount() {
+        return orderService.countPending();
+    }
+
+    @ModelAttribute("unseenProductOrdersCount")
+    public long unseenProductOrdersCount(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return 0;
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser == null) return 0;
+        return orderService.countUnseenByUser(loggedUser);
     }
 
     @ModelAttribute("cartItemCount")

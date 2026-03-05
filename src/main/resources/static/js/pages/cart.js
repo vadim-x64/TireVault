@@ -138,20 +138,26 @@ document.addEventListener("DOMContentLoaded", function () {
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Обробка...';
 
+            // Читаємо вибране відділення та спосіб оплати
+            const station   = stationSelect?.value || '';
+            const payMethod = document.querySelector('input[name="payMethod"]:checked')?.value || '';
+
             fetch('/cart/checkout', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `station=${encodeURIComponent(station)}&payMethod=${encodeURIComponent(payMethod)}`
             })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
                         updateCartBadge(0);
-                        const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
-                        modal.show();
-                    } else {
-                        alert(data.message || 'Помилка оформлення. Спробуйте ще раз.');
-                        checkoutBtn.disabled = false;
-                        checkoutBtn.innerHTML = 'Оформити замовлення';
+                        const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                        confirmModal.show();
+
+                        // При закритті модалки — переходимо на головну
+                        document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
+                            window.location.href = '/';
+                        }, { once: true }); // once:true — спрацює тільки раз
                     }
                 })
                 .catch(() => {

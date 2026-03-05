@@ -67,13 +67,17 @@ public class CartController {
 
     @PostMapping("/cart/checkout")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> checkout(HttpSession session) {
+    public ResponseEntity<Map<String, Object>> checkout(
+            @RequestParam(required = false) String station,
+            @RequestParam(required = false) String payMethod,
+            HttpSession session) {
+
         User user = (User) session.getAttribute("loggedUser");
         if (user == null)
             return ResponseEntity.status(401).body(Map.of("success", false));
 
         try {
-            cartService.checkout(user);
+            cartService.checkout(user, station, payMethod);
             return ResponseEntity.ok(Map.of("success", true));
         } catch (RuntimeException e) {
             return ResponseEntity.ok(Map.of("success", false, "message", e.getMessage()));

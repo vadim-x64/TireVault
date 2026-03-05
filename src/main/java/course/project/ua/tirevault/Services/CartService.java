@@ -24,6 +24,9 @@ public class CartService {
     @Autowired
     private IProductRepository productRepository;
 
+    @Autowired
+    private OrderService orderService;
+
     public Cart getOrCreateCart(User user) {
         return cartRepository.findByUserId(user.getId()).orElseGet(() -> {
             Cart cart = new Cart();
@@ -126,17 +129,14 @@ public class CartService {
         return recalculate(cart);
     }
 
-    /**
-     * Оформлення замовлення: списує товари зі складу і очищає кошик.
-     */
     @Transactional
-    public void checkout(User user) {
+    public void checkout(User user, String station, String payMethod) {
         Cart cart = getOrCreateCart(user);
         if (cart.getItems().isEmpty())
             throw new RuntimeException("Кошик порожній");
 
-        // Quantity вже списано при addToCart — просто зберігаємо, кошик не чистимо
-        cartRepository.save(cart);
+        orderService.createFromCart(user, cart, station, payMethod);
+        // кошик НЕ чистимо — товари вже списані зі складу при addToCart
     }
 
     public int getCartItemCount(User user) {

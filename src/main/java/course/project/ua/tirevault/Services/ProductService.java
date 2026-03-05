@@ -27,11 +27,11 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllByOrderByIdAsc(); // було findAll()
     }
 
     public List<Product> getProductsByCategory(Long categoryId) {
-        return productRepository.findByCategoryId(categoryId);
+        return productRepository.findByCategoryIdOrderByIdAsc(categoryId); // було findByCategoryId()
     }
 
     public Optional<Product> getProductById(Long id) {
