@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="content">
+
+  <!-- Хлібні крихти -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="/services" class="text-decoration-none">Послуги</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a th:href="@{/services/category/{id}(id=${workService.category.id})}"
+           th:text="${workService.category.name}"
+           class="text-decoration-none"></a>
+      </li>
+      <li class="breadcrumb-item active" th:text="${workService.name}"></li>
+    </ol>
+  </nav>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-header py-3" style="background-color: #212529;">
+          <span class="badge bg-secondary me-2" th:text="${workService.category.name}"></span>
+          <span class="fs-5 fw-bold text-white" th:text="${workService.name}"></span>
+        </div>
+        <div class="card-body p-4">
+
+          <!-- Ціна -->
+          <div class="mb-4">
+            <span class="text-muted" style="font-size: 0.85rem;">Вартість послуги</span>
+            <div class="fs-3 fw-bold" th:text="${workService.price} + ' ₴'"></div>
+          </div>
+
+          <!-- Опис -->
+          <div th:if="${workService.description != null}" class="mb-4">
+            <h6 class="fw-bold text-uppercase text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+              Опис
+            </h6>
+            <p class="text-secondary" style="line-height: 1.7;"
+               th:text="${workService.description}"></p>
+          </div>
+
+          <!-- Години роботи -->
+          <div th:if="${workService.workingHours != null}" class="mb-4">
+            <h6 class="fw-bold text-uppercase text-muted mb-2" style="font-size: 0.75rem; letter-spacing: 1px;">
+              Години роботи
+            </h6>
+            <p class="text-secondary" th:text="${workService.workingHours}"></p>
+          </div>
+
+          <hr>
+
+          <!-- Кнопка запису -->
+          <div class="d-flex align-items-center gap-3 flex-wrap">
+            <a href="/" class="btn btn-primary fw-bold px-4 py-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                   class="bi bi-calendar-check me-2" viewBox="0 0 16 16">
+                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+              </svg>
+              Записатися на послугу
+            </a>
+            <a th:href="@{/services/category/{id}(id=${workService.category.id})}"
+               class="btn btn-outline-secondary px-4 py-2">
+              Інші послуги категорії
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
