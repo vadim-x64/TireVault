@@ -54,55 +54,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 // Замість трьох змінних — Map для кожного товару окремо
-    const pendingRemovals = new Map(); // itemId -> { timer, row, intervalId, barEl, cdEl }
+    const pendingRemovals = new Map(); // itemId -> { timer, btn, originalHtml }
 
     function showUndoBar(itemId, row) {
-        // Якщо цей товар вже в черзі — ігноруємо
         if (pendingRemovals.has(itemId)) return;
 
-        row.style.opacity = '0.35';
-        row.style.pointerEvents = 'none';
+        const btn = row.querySelector('.remove-btn');
+        const originalHtml = btn.innerHTML;
+        const originalTitle = btn.title;
 
-        // Створюємо окремий undo-bar для кожного товару
-        const bar = document.createElement('div');
-        bar.className = 'position-fixed translate-middle-x bg-dark text-white rounded shadow-lg px-3 py-2 d-flex align-items-center gap-3';
-        bar.style.cssText = `bottom:${20 + pendingRemovals.size * 60}px; left:50%; transform:translateX(-50%); z-index:1055; min-width:300px;`;
-        bar.innerHTML = `<span class="small">Видалення через <strong class="countdown">5</strong> с...</span>
-                     <button type="button" class="btn btn-sm btn-outline-light ms-auto undo-btn-inner">↩ Скасувати</button>`;
-        document.body.appendChild(bar);
+        const r = 8;
+        const circumference = +(2 * Math.PI * r).toFixed(2);
 
-        const cd = bar.querySelector('.countdown');
-        let seconds = 5;
+        btn.title = 'Скасувати';
+        btn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="${r}" fill="none" stroke="#dee2e6" stroke-width="2"/>
+            <circle class="progress-ring" cx="10" cy="10" r="${r}" fill="none"
+                    stroke="#dc3545" stroke-width="2"
+                    stroke-dasharray="${circumference}"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                    transform="rotate(-90 10 10)"/>
+            <path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>`;
 
-        const intervalId = setInterval(() => {
-            seconds--;
-            cd.textContent = seconds;
-            if (seconds <= 0) {
-                clearRemoval(itemId, true);
-            }
-        }, 1000);
-
-        const entry = { row, intervalId, bar };
-        pendingRemovals.set(itemId, entry);
-
-        bar.querySelector('.undo-btn-inner').addEventListener('click', () => {
-            clearRemoval(itemId, false);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const circle = btn.querySelector('.progress-ring');
+                if (circle) {
+                    circle.style.transition = 'stroke-dashoffset 5s linear';
+                    circle.style.strokeDashoffset = `${circumference}`;
+                }
+            });
         });
+
+        const timer = setTimeout(() => clearRemoval(itemId, true), 5000);
+        pendingRemovals.set(itemId, { timer, btn, originalHtml, originalTitle });
     }
 
     function clearRemoval(itemId, execute) {
         const entry = pendingRemovals.get(itemId);
         if (!entry) return;
 
-        clearInterval(entry.intervalId);
-        entry.bar.remove();
+        clearTimeout(entry.timer);
         pendingRemovals.delete(itemId);
+
+        entry.btn.innerHTML = entry.originalHtml;
+        entry.btn.title = entry.originalTitle;
 
         if (execute) {
             doRemove(itemId);
-        } else {
-            entry.row.style.opacity = '';
-            entry.row.style.pointerEvents = '';
         }
     }
 
@@ -111,7 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const itemId = this.dataset.itemId;
             const row    = document.getElementById('row-' + itemId);
             if (!row) return;
-            showUndoBar(itemId, row);
+
+            // Повторний клік = скасування
+            if (pendingRemovals.has(itemId)) {
+                clearRemoval(itemId, false);
+            } else {
+                showUndoBar(itemId, row);
+            }
         });
     });
 
