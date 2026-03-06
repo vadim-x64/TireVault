@@ -98,6 +98,16 @@
                       th:text="${pendingProductOrdersCount}">0</span>
             </a>
         </li>
+
+
+
+        <li th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'ADMIN'}">
+            <a href="/admin" class="nav-link text-warning fw-bold d-flex align-items-center justify-content-between">
+                <span>
+                    Адмін панель
+                </span>
+            </a>
+        </li>
     </ul>
     <hr>
     <div th:if="${session.loggedUser == null}">

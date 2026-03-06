@@ -14,17 +14,29 @@ public class SecurityInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedUser");
+        String requestURI = request.getRequestURI();
 
         if (user == null) {
             response.sendRedirect("/auth");
             return false;
         }
 
-        if (user.getRole() != UserRole.MANAGER) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return false;
+        UserRole userRole = user.getRole();
+
+        if (requestURI.startsWith("/admin")) {
+            if (userRole == UserRole.ADMIN) {
+                return true; // Allow admin access to admin pages
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return false; // Forbid non-admin access to admin pages
+            }
         }
 
-        return true;
+        if (userRole == UserRole.ADMIN || userRole == UserRole.MANAGER) {
+            return true; // Allow admin and manager access to non-admin pages
+        }
+
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        return false; // Forbid all other users
     }
 }
