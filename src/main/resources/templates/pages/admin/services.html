@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div class="container-fluid py-4" th:fragment="content">
+
+    <div class="d-flex align-items-center mb-2">
+        <a href="/admin" class="text-decoration-none text-muted small">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                 class="bi bi-arrow-left me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Назад до адмін панелі
+        </a>
+    </div>
+
+    <div class="d-flex align-items-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+             class="bi bi-tools me-2 text-info" viewBox="0 0 16 16">
+            <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3q0-.405-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"/>
+        </svg>
+        <h3 class="fw-bold mb-0">Записи на СТО</h3>
+    </div>
+
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold" data-bs-toggle="tab"
+                    data-bs-target="#adminActiveServices" type="button">
+                Активні
+                <span th:if="${#lists.size(activeOrders) > 0}"
+                      class="badge bg-danger rounded-pill ms-1"
+                      th:text="${#lists.size(activeOrders)}"></span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold" data-bs-toggle="tab"
+                    data-bs-target="#adminCompletedServices" type="button">
+                Завершені
+                <span th:if="${#lists.size(completedOrders) > 0}"
+                      class="badge bg-success rounded-pill ms-1"
+                      th:text="${#lists.size(completedOrders)}"></span>
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- АКТИВНІ -->
+        <div class="tab-pane fade show active" id="adminActiveServices" role="tabpanel">
+            <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
+                <p class="fs-5">Активних записів немає</p>
+            </div>
+            <div class="row g-3" th:if="${!#lists.isEmpty(activeOrders)}">
+                <div class="col-md-6 col-lg-4" th:each="req : ${activeOrders}">
+                    <div class="card border-0 shadow-sm h-100 admin-service-card"
+                         style="cursor:pointer;"
+                         th:attr="data-id=${req.id},
+                        data-name=${req.customerName},
+                        data-phone=${req.phone},
+                        data-city=${req.city},
+                        data-description=${req.description != null ? req.description : ''},
+                        data-status=${req.status.name()},
+                        data-created=${req.formattedDate},
+                        data-scheduled=${req.formattedScheduledDate},
+                        data-payment=${req.paymentMethod != null ? req.paymentMethod.name() : ''},
+                        data-username=${req.user != null ? req.user.username : ''}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="fw-bold" th:text="${req.customerName}"></span>
+                                <span th:if="${req.status.name() == 'PENDING'}"
+                                      class="badge bg-danger d-flex align-items-center gap-1">
+                  <span class="rounded-circle bg-white d-inline-block"
+                        style="width:7px;height:7px;"></span>
+                  Нове
+                </span>
+                                <span th:if="${req.status.name() == 'ACCEPTED'}"
+                                      class="badge bg-warning text-dark">Прийнято</span>
+                                <span th:if="${req.status.name() == 'SCHEDULED'}"
+                                      class="badge bg-info text-dark">📅 Заброньовано</span>
+                            </div>
+                            <p class="text-muted small mb-1" th:if="${req.user != null}">
+                                👤 <a th:href="@{/admin/users}" class="text-decoration-none text-dark fw-semibold"
+                                     onclick="event.stopPropagation()"
+                                     th:text="${req.user.username}"></a>
+                            </p>
+                            <p class="text-muted small mb-1">
+                                📍 <span th:text="${req.city}"></span>
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                                     class="bi bi-clock me-1" viewBox="0 0 16 16">
+                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                                </svg>
+                                <span th:text="${req.formattedDate}"></span>
+                            </p>
+                            <p class="text-muted small mb-0" th:if="${req.formattedScheduledDate != null and !#strings.isEmpty(req.formattedScheduledDate)}">
+                                🗓 <span th:text="${req.formattedScheduledDate}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ЗАВЕРШЕНІ -->
+        <div class="tab-pane fade" id="adminCompletedServices" role="tabpanel">
+            <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
+                <p class="fs-5">Завершених записів немає</p>
+            </div>
+            <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
+                <div class="col-md-6 col-lg-4" th:each="req : ${completedOrders}">
+                    <div class="card border-0 shadow-sm h-100 admin-service-card"
+                         style="cursor:pointer;"
+                         th:attr="data-id=${req.id},
+                        data-name=${req.customerName},
+                        data-phone=${req.phone},
+                        data-city=${req.city},
+                        data-description=${req.description != null ? req.description : ''},
+                        data-status=${req.status.name()},
+                        data-created=${req.formattedDate},
+                        data-scheduled=${req.formattedScheduledDate},
+                        data-payment=${req.paymentMethod != null ? req.paymentMethod.name() : ''},
+                        data-username=${req.user != null ? req.user.username : ''}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="fw-bold" th:text="${req.customerName}"></span>
+                                <span th:if="${req.status.name() == 'COMPLETED'}"
+                                      class="badge bg-success">Виконано</span>
+                                <span th:if="${req.status.name() == 'CANCELLED'}"
+                                      class="badge bg-secondary">Скасовано</span>
+                            </div>
+                            <p class="text-muted small mb-1" th:if="${req.user != null}">
+                                👤 <a th:href="@{/admin/users}" class="text-decoration-none text-dark fw-semibold"
+                                     onclick="event.stopPropagation()"
+                                     th:text="${req.user.username}"></a>
+                            </p>
+                            <p class="text-muted small mb-1">
+                                📍 <span th:text="${req.city}"></span>
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+                                     class="bi bi-clock me-1" viewBox="0 0 16 16">
+                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                                </svg>
+                                <span th:text="${req.formattedDate}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА АДМІНА (тільки перегляд) -->
+    <div class="modal fade" id="adminServiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header" style="background-color:#212529;">
+                    <h5 class="modal-title text-white fw-bold">Деталі запису на СТО</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3 text-center">
+                        <span id="adminServiceStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
+                    </div>
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                        <tr>
+                            <td class="text-muted fw-bold" style="width:160px;">Користувач</td>
+                            <td>
+                                <a id="adminServiceUsernameLink" href="/admin/users"
+                                   class="fw-bold text-decoration-none text-dark"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Ім'я клієнта</td>
+                            <td id="adminServiceName"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Телефон</td>
+                            <td id="adminServicePhone"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Місто</td>
+                            <td id="adminServiceCity"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold">Дата подачі</td>
+                            <td id="adminServiceCreated"></td>
+                        </tr>
+                        <tr id="adminServiceScheduledRow" class="d-none">
+                            <td class="text-muted fw-bold">Заплановано на</td>
+                            <td id="adminServiceScheduled"></td>
+                        </tr>
+                        <tr id="adminServicePaymentRow" class="d-none">
+                            <td class="text-muted fw-bold">Оплата</td>
+                            <td id="adminServicePayment"></td>
+                        </tr>
+                        <tr id="adminServiceDescRow" class="d-none">
+                            <td class="text-muted fw-bold">Опис</td>
+                            <td id="adminServiceDescription"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/pages/admin/services.js}"></script>
+</div>
+
+</body>
+</html>
