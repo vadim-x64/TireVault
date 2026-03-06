@@ -54,6 +54,10 @@ public class AuthService {
 
         User user = userOpt.get();
 
+        if (user.isBlocked()) {
+            throw new Exception("Ваш акаунт заблоковано адміністратором.");
+        }
+
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new Exception("Невірний логін або пароль.");
         }

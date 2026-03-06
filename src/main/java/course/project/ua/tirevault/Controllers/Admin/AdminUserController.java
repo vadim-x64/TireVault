@@ -37,4 +37,13 @@ public class AdminUserController {
         });
         return "redirect:/admin/users";
     }
+
+    @PostMapping("/admin/users/{id}/block")
+    public String toggleBlock(@PathVariable Long id) {
+        userRepository.findById(id).ifPresent(user -> {
+            user.setBlocked(!user.isBlocked());
+            userRepository.save(user);
+        });
+        return "redirect:/admin/users";
+    }
 }
