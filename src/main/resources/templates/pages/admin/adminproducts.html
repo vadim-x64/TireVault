@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+<div th:fragment="content">
+
+  <h2 class="fw-bold mb-4">Управління каталогом товарів</h2>
+  <a href="/admin" class="btn btn-outline-secondary btn-sm mb-4">← Назад до панелі</a>
+
+  <!-- ══════════  КАТЕГОРІЇ  ══════════ -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-header py-3 d-flex align-items-center justify-content-between"
+         style="background-color:#212529; color:white;">
+      <h5 class="mb-0">Категорії товарів</h5>
+    </div>
+    <div class="card-body">
+
+      <form th:action="@{/admin/products/categories/add}" method="post"
+            class="d-flex gap-2 mb-3">
+        <input type="text" name="name" class="form-control" style="max-width:300px;"
+               placeholder="Назва нової категорії" required>
+        <button type="submit" class="btn btn-dark">Додати</button>
+      </form>
+
+      <div th:if="${categories.isEmpty()}" class="text-muted">Категорій ще немає</div>
+
+      <table th:unless="${categories.isEmpty()}" class="table table-sm align-middle mb-0">
+        <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Назва</th>
+          <th>Товарів</th>
+          <th style="width:220px;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cat : ${categories}">
+          <td th:text="${cat.id}"></td>
+          <td th:text="${cat.name}"></td>
+          <td th:text="${cat.products != null ? cat.products.size() : 0}"></td>
+          <td class="text-end">
+            <button type="button" class="btn btn-sm btn-outline-secondary me-1"
+                    data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                    th:data-id="${cat.id}"
+                    th:data-name="${cat.name}">
+              Редагувати
+            </button>
+            <form th:action="@{/admin/products/categories/{id}/delete(id=${cat.id})}"
+                  method="post" class="d-inline"
+                  onsubmit="return confirm('Видалити категорію разом з усіма її товарами?')">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════  ТОВАРИ  ══════════ -->
+  <div class="card shadow border-0">
+    <div class="card-header py-3" style="background-color:#212529; color:white;">
+      <h5 class="mb-0">Товари</h5>
+    </div>
+    <div class="card-body">
+
+      <!-- Форма додавання -->
+      <form th:action="@{/admin/products/add}" method="post"
+            class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
+        <h6 class="fw-bold mb-1">Новий товар</h6>
+
+        <div class="col-md-2">
+          <label class="form-label small mb-1">Категорія</label>
+          <select name="categoryId" class="form-select form-select-sm" required>
+            <option value="" disabled selected>— обрати —</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}" th:text="${cat.name}"></option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small mb-1">Назва</label>
+          <input type="text" name="name" class="form-control form-control-sm"
+                 placeholder="Назва товару" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small mb-1">Артикул</label>
+          <input type="text" name="article" class="form-control form-control-sm"
+                 placeholder="Унікальний артикул" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small mb-1">Ціна (₴)</label>
+          <input type="number" name="price" class="form-control form-control-sm"
+                 step="0.01" min="0" placeholder="0.00" required>
+        </div>
+        <div class="col-md-1">
+          <label class="form-label small mb-1">К-сть</label>
+          <input type="number" name="quantity" class="form-control form-control-sm"
+                 min="0" value="0">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small mb-1">URL фото</label>
+          <input type="text" name="imageUrl" class="form-control form-control-sm"
+                 placeholder="https://...">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small mb-1">Опис</label>
+          <input type="text" name="description" class="form-control form-control-sm"
+                 placeholder="Короткий опис">
+        </div>
+        <div class="col-md-1">
+          <button type="submit" class="btn btn-dark btn-sm w-100 mt-3">Додати</button>
+        </div>
+      </form>
+
+      <div th:if="${products.isEmpty()}" class="text-muted">Товарів ще немає</div>
+
+      <div th:unless="${products.isEmpty()}" class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Фото</th>
+            <th>Категорія</th>
+            <th>Назва</th>
+            <th>Артикул</th>
+            <th>Ціна</th>
+            <th>К-сть</th>
+            <th>Статус</th>
+            <th style="width:130px;"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="p : ${products}">
+            <td th:text="${p.id}"></td>
+            <td>
+              <img th:src="${p.imageUrl != null ? p.imageUrl : '/img/no-image.png'}"
+                   th:alt="${p.name}"
+                   class="rounded object-fit-cover"
+                   style="width:48px; height:48px;">
+            </td>
+            <td th:text="${p.category.name}"></td>
+            <td>
+              <div th:text="${p.name}" class="fw-semibold" style="font-size:0.88rem;"></div>
+              <div th:if="${p.description != null}"
+                   class="text-muted" style="font-size:0.75rem;"
+                   th:text="${#strings.abbreviate(p.description, 50)}"></div>
+            </td>
+            <td class="text-muted small" th:text="${p.article}"></td>
+            <td th:text="${p.price} + ' ₴'"></td>
+            <td th:text="${p.quantity}"></td>
+            <td>
+                            <span th:if="${p.availability}"
+                                  class="badge bg-success-subtle text-success border border-success-subtle">
+                                В наявності
+                            </span>
+              <span th:unless="${p.availability}"
+                    class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                Немає
+                            </span>
+            </td>
+            <td class="text-end">
+              <button type="button" class="btn btn-sm btn-outline-secondary me-1"
+                      data-bs-toggle="modal" data-bs-target="#editProductModal"
+                      th:data-id="${p.id}"
+                      th:data-category-id="${p.category.id}"
+                      th:data-name="${p.name}"
+                      th:data-article="${p.article}"
+                      th:data-description="${p.description}"
+                      th:data-price="${p.price}"
+                      th:data-quantity="${p.quantity}"
+                      th:data-image-url="${p.imageUrl}">
+                Ред.
+              </button>
+              <form th:action="@{/admin/products/{id}/delete(id=${p.id})}"
+                    method="post" class="d-inline"
+                    onsubmit="return confirm('Видалити товар? Він буде прибраний з усіх кошиків.')">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Вид.</button>
+              </form>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════  МОДАЛКИ  ══════════ -->
+
+  <!-- Редагування категорії -->
+  <div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="post" id="editCategoryForm">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#212529; color:white;">
+            <h5 class="modal-title">Редагувати категорію</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label">Назва</label>
+            <input type="text" name="name" id="editCategoryName" class="form-control" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+            <button type="submit" class="btn btn-dark">Зберегти</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Редагування товару -->
+  <div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <form method="post" id="editProductForm">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#212529; color:white;">
+            <h5 class="modal-title">Редагувати товар</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Категорія</label>
+              <select name="categoryId" id="editProductCategory" class="form-select" required>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}" th:text="${cat.name}"></option>
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label">Назва</label>
+              <input type="text" name="name" id="editProductName" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Артикул</label>
+              <input type="text" name="article" id="editProductArticle" class="form-control">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Ціна (₴)</label>
+              <input type="number" name="price" id="editProductPrice"
+                     class="form-control" step="0.01" min="0" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Кількість</label>
+              <input type="number" name="quantity" id="editProductQuantity"
+                     class="form-control" min="0">
+            </div>
+            <div class="col-12">
+              <label class="form-label">URL фото</label>
+              <input type="text" name="imageUrl" id="editProductImageUrl" class="form-control">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Опис</label>
+              <input type="text" name="description" id="editProductDescription" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+            <button type="submit" class="btn btn-dark">Зберегти</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('editCategoryModal').addEventListener('show.bs.modal', function (e) {
+      const btn = e.relatedTarget;
+      document.getElementById('editCategoryForm').action =
+              '/admin/products/categories/' + btn.dataset.id + '/edit';
+      document.getElementById('editCategoryName').value = btn.dataset.name;
+    });
+
+    document.getElementById('editProductModal').addEventListener('show.bs.modal', function (e) {
+      const btn = e.relatedTarget;
+      document.getElementById('editProductForm').action =
+              '/admin/products/' + btn.dataset.id + '/edit';
+      document.getElementById('editProductName').value        = btn.dataset.name;
+      document.getElementById('editProductArticle').value     = btn.dataset.article || '';
+      document.getElementById('editProductDescription').value = btn.dataset.description || '';
+      document.getElementById('editProductPrice').value       = btn.dataset.price;
+      document.getElementById('editProductQuantity').value    = btn.dataset.quantity;
+      document.getElementById('editProductImageUrl').value    = btn.dataset.imageUrl || '';
+
+      const sel = document.getElementById('editProductCategory');
+      for (let opt of sel.options) {
+        opt.selected = opt.value === btn.dataset.categoryId;
+      }
+    });
+  </script>
+
+</div>
+</body>
+</html>

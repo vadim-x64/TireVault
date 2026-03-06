@@ -37,4 +37,20 @@ public class ProductService {
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
+
+    public void saveCategory(ProductCategory category) {
+        categoryRepository.save(category);
+    }
+
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
+
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    public void deleteCategoryById(Long id) {
+        categoryRepository.deleteById(id);
+    }
 }
