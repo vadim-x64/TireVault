@@ -20,7 +20,7 @@ public class WorkServiceManager {
     private IWorkServiceCategoryRepository categoryRepository;
 
     public List<WorkServiceCategory> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllByOrderByIdAsc();
     }
 
     public List<WorkService> getAllWorkServices() {
@@ -33,5 +33,28 @@ public class WorkServiceManager {
 
     public Optional<WorkService> getWorkServiceById(Long id) {
         return workServiceRepository.findById(id);
+    }
+
+    public Optional<WorkServiceCategory> getCategoryById(Long id) {
+        return categoryRepository.findById(id);
+    }
+
+    public void saveCategory(WorkServiceCategory category) {
+        categoryRepository.save(category);
+    }
+
+    public void deleteCategoryById(Long id) {
+        // спочатку видаляємо всі послуги категорії, щоб не було constraint violation
+        workServiceRepository.findByCategoryIdOrderByIdAsc(id)
+                .forEach(workServiceRepository::delete);
+        categoryRepository.deleteById(id);
+    }
+
+    public void saveWorkService(WorkService workService) {
+        workServiceRepository.save(workService);
+    }
+
+    public void deleteWorkServiceById(Long id) {
+        workServiceRepository.deleteById(id);
     }
 }
