@@ -19,7 +19,7 @@ public class ProductService {
     private IProductCategoryRepository categoryRepository;
 
     public List<ProductCategory> getAllCategories() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllByOrderByIdAsc();
     }
 
     public Optional<ProductCategory> getCategoryById(Long id) {
