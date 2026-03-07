@@ -40,7 +40,7 @@
                 <i class="bi bi-cart2 fs-4"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                       id="cart-badge"
-                      th:classappend="${cartItemCount != null && cartItemCount > 0} ? '' : 'd-none'"
+                      th:style="${cartItemCount != null && cartItemCount > 0} ? '' : 'd-none'"
                       th:text="${cartItemCount ?: 0}">0</span>
             </div>
         </a>
