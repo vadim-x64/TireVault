@@ -20,6 +20,17 @@
         </div>
     </div>
     <div th:replace="~{fragments/footer :: footer}"></div>
+    <a href="/contacts"
+       class="position-fixed bottom-0 start-0 m-4 text-white lh-1"
+       title="Контакти">
+        <i class="bi bi-telephone fs-2"></i>
+    </a>
+    <button id="scrollTopBtn"
+            class="position-fixed bottom-0 end-0 m-4 bg-transparent border-0 text-danger lh-1 p-0"
+            title="Вгору">
+        <i class="bi bi-arrow-up fs-1"></i>
+    </button>
+    <script th:src="@{/js/index.js}"></script>
     <script th:src="@{/js/cart.js}"></script>
 </div>
 
