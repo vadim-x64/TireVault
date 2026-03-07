@@ -3,103 +3,196 @@
 <body>
 
 <div th:fragment="content">
-  <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-    <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
-      <h1 class="display-4 fw-bold lh-1 text-body-emphasis">Border hero with cropped image and shadows</h1>
-      <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap...</p>
-      <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-        <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Primary</button>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Default</button>
-      </div>
-    </div>
-    <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-      <img class="rounded-lg-3" src="bootstrap-docs.png" alt="" width="720">
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-lg-8 mx-auto">
-      <div th:if="${requestError}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Помилка:</strong> <span th:text="${requestError}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-      <div class="card shadow border-0">
-        <div class="card-header py-3" style="background-color: #212529;">
-          <h5 class="mb-0 fw-bold text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                 class="bi bi-wrench-adjustable-circle me-2" viewBox="0 0 16 16">
-              <path d="M12.496 8a4.491 4.491 0 0 1-1.703 3.526L9.497 8.35a2.5 2.5 0 0 0-1.6-4.098L9.3 2.05A4.5 4.5 0 0 1 12.496 8z"/>
-              <path d="M6.5 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-              <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-            </svg>
-            Записатися на послугу
-          </h5>
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5"><h1 class="display-5 fw-bold">Custom jumbotron</h1>
+            <p class="col-md-8 fs-4">Using a series of utilities, you can create this jumbotron, just like the one in
+                previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to
+                your liking.</p>
+            <button class="btn btn-primary btn-lg" type="button">Example button</button>
         </div>
-        <div class="card-body p-4">
-          <div th:if="${session.loggedUser == null}" class="alert alert-warning d-flex align-items-center" role="alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                 class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-            <div>
-              Щоб записатися на послугу, потрібно <a href="/auth" class="fw-bold alert-link">увійти в акаунт</a>.
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-8 mx-auto">
+            <div th:if="${requestError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Помилка:</strong> <span th:text="${requestError}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-          </div>
-          <form th:action="@{/service/request}" method="post">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="homeCustomerName" class="form-label fw-bold">
-                  Ім'я <span class="text-danger">*</span>
-                </label>
-                <input type="text" class="form-control" id="homeCustomerName" name="customerName"
-                       placeholder="Іван Шевченко" maxlength="100"
-                       th:disabled="${session.loggedUser == null}" required>
-              </div>
-              <div class="col-md-6">
-                <label for="homeCity" class="form-label fw-bold">
-                  Місто <span class="text-danger">*</span>
-                </label>
-                <input type="text" class="form-control" id="homeCity" name="city"
-                       placeholder="Київ" maxlength="100"
-                       th:disabled="${session.loggedUser == null}" required>
-              </div>
-              <div class="col-12">
-                <label for="homePhone" class="form-label fw-bold">
-                  Телефон <span class="text-danger">*</span>
-                </label>
-                <div class="input-group">
-                  <span class="input-group-text bg-light text-muted">+38</span>
-                  <input type="tel" class="form-control" id="homePhone" name="phone"
-                         placeholder="(0XX)-XXX-XX-XX"
-                         th:disabled="${session.loggedUser == null}" required>
+            <div class="card shadow border-0">
+                <div class="card-header py-3" style="background-color: #212529;">
+                    <h5 class="mb-0 fw-bold text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-wrench-adjustable-circle me-2" viewBox="0 0 16 16">
+                            <path d="M12.496 8a4.491 4.491 0 0 1-1.703 3.526L9.497 8.35a2.5 2.5 0 0 0-1.6-4.098L9.3 2.05A4.5 4.5 0 0 1 12.496 8z"/>
+                            <path d="M6.5 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                        Записатися на послугу
+                    </h5>
                 </div>
-              </div>
-              <div class="col-12">
-                <label for="homeDescription" class="form-label fw-bold">
-                  Опис проблеми
-                  <span class="text-muted fw-normal">(необов'язково)</span>
-                </label>
-                <textarea class="form-control" id="homeDescription" name="description"
-                          rows="3" maxlength="1000"
-                          placeholder="Опишіть вашу проблему детально..."
-                          th:disabled="${session.loggedUser == null}"></textarea>
-              </div>
-              <div class="col-12">
-                <button type="submit" class="btn btn-primary fw-bold px-4"
-                        th:disabled="${session.loggedUser == null}">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                       class="bi bi-send me-1" viewBox="0 0 16 16">
-                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                  </svg>
-                  Записатися
-                </button>
-              </div>
+                <div class="card-body p-4">
+                    <div th:if="${session.loggedUser == null}" class="alert alert-warning d-flex align-items-center"
+                         role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <div>
+                            Щоб записатися на послугу, потрібно <a href="/auth" class="fw-bold alert-link">увійти в
+                            акаунт</a>.
+                        </div>
+                    </div>
+                    <form th:action="@{/service/request}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="homeCustomerName" class="form-label fw-bold">
+                                    Ім'я <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="homeCustomerName" name="customerName"
+                                       placeholder="Іван Шевченко" maxlength="100"
+                                       th:disabled="${session.loggedUser == null}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="homeCity" class="form-label fw-bold">
+                                    Місто <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="homeCity" name="city"
+                                       placeholder="Київ" maxlength="100"
+                                       th:disabled="${session.loggedUser == null}" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="homePhone" class="form-label fw-bold">
+                                    Телефон <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted">+38</span>
+                                    <input type="tel" class="form-control" id="homePhone" name="phone"
+                                           placeholder="(0XX)-XXX-XX-XX"
+                                           th:disabled="${session.loggedUser == null}" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="homeDescription" class="form-label fw-bold">
+                                    Опис проблеми
+                                    <span class="text-muted fw-normal">(необов'язково)</span>
+                                </label>
+                                <textarea class="form-control" id="homeDescription" name="description"
+                                          rows="3" maxlength="1000"
+                                          placeholder="Опишіть вашу проблему детально..."
+                                          th:disabled="${session.loggedUser == null}"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary fw-bold px-4"
+                                        th:disabled="${session.loggedUser == null}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-send me-1" viewBox="0 0 16 16">
+                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                                    </svg>
+                                    Записатися
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
-  <script th:src="@{/js/pages/home.js}"></script>
+    <div class="container px-4 py-5" id="featured-3"><h2 class="pb-2 border-bottom">Columns with icons</h2>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+            <div class="feature col">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                        <use xlink:href="#collection"></use>
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+                <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence
+                    and probably just keep going until we run out of words.</p> <a href="#" class="icon-link">
+                Call to action
+                <svg class="bi" aria-hidden="true">
+                    <use xlink:href="#chevron-right"></use>
+                </svg>
+            </a></div>
+            <div class="feature col">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                        <use xlink:href="#people-circle"></use>
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+                <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence
+                    and probably just keep going until we run out of words.</p> <a href="#" class="icon-link">
+                Call to action
+                <svg class="bi" aria-hidden="true">
+                    <use xlink:href="#chevron-right"></use>
+                </svg>
+            </a></div>
+            <div class="feature col">
+                <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+                    <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                        <use xlink:href="#toggles2"></use>
+                    </svg>
+                </div>
+                <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+                <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence
+                    and probably just keep going until we run out of words.</p> <a href="#" class="icon-link">
+                Call to action
+                <svg class="bi" aria-hidden="true">
+                    <use xlink:href="#chevron-right"></use>
+                </svg>
+            </a></div>
+        </div>
+    </div>
+    <div class="container px-4 py-5"><h2 class="pb-2 border-bottom">Features with title</h2>
+        <div class="row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
+            <div class="col d-flex flex-column align-items-start gap-2"><h2 class="fw-bold text-body-emphasis">
+                Left-aligned title explaining these awesome features</h2>
+                <p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading. We'll add
+                    onto it with another sentence and probably just keep going until we run out of words.</p> <a
+                        href="#" class="btn btn-primary btn-lg">Primary button</a></div>
+            <div class="col">
+                <div class="row row-cols-1 row-cols-sm-2 g-4">
+                    <div class="col d-flex flex-column gap-2">
+                        <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+                            <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                                <use xlink:href="#collection"></use>
+                            </svg>
+                        </div>
+                        <h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+                        <p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+                    </div>
+                    <div class="col d-flex flex-column gap-2">
+                        <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+                            <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                                <use xlink:href="#gear-fill"></use>
+                            </svg>
+                        </div>
+                        <h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+                        <p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+                    </div>
+                    <div class="col d-flex flex-column gap-2">
+                        <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+                            <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                                <use xlink:href="#speedometer"></use>
+                            </svg>
+                        </div>
+                        <h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+                        <p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+                    </div>
+                    <div class="col d-flex flex-column gap-2">
+                        <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-4 rounded-3">
+                            <svg class="bi" width="1em" height="1em" aria-hidden="true">
+                                <use xlink:href="#table"></use>
+                            </svg>
+                        </div>
+                        <h4 class="fw-semibold mb-0 text-body-emphasis">Featured title</h4>
+                        <p class="text-body-secondary">Paragraph of text beneath the heading to explain the heading.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/pages/home.js}"></script>
 </div>
 
 </body>

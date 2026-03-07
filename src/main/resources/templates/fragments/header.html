@@ -2,19 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" th:fragment="navbar"><a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-    <svg class="bi me-2" width="40" height="32" aria-hidden="true">
-        <use xlink:href="#bootstrap"></use>
-    </svg>
-    <span class="fs-4">TireVault</span> </a>
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" th:fragment="navbar">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <img th:src="@{/assets/logo/logo1.png}" alt="Logo" width="100">
+    </a>
     <ul class="nav nav-pills">
-        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Про нас</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Контакти</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Доставка та оплата</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Графік роботи</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Локація</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Галерея</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Блог</a></li>
+        <li class="nav-item"><a href="/about" class="nav-link" aria-current="page">Про нас</a></li>
+        <li class="nav-item"><a href="/contacts" class="nav-link">Контакти</a></li>
+        <li class="nav-item"><a href="/delivery" class="nav-link">Доставка та оплата</a></li>
+        <li class="nav-item"><a href="/gallery" class="nav-link">Галерея</a></li>
+        <li class="nav-item"><a href="/blog" class="nav-link">Блог</a></li>
     </ul>
     <a href="/cart" class="nav-link position-relative text-dark px-2" title="Кошик">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
