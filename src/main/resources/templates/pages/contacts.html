@@ -2,63 +2,122 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
-<div th:fragment="content" class="container px-4 py-5" id="icon-grid"><h2 class="pb-2 border-bottom">Icon grid</h2>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-5">
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#bootstrap"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
+<div th:fragment="content">
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-person-badge-fill text-danger fs-2 me-3"></i>
+                        <h5 class="fw-bold mb-0 text-dark">Менеджер</h5>
+                    </div>
+                    <ul class="list-unstyled text-muted small mb-0">
+                        <li class="mb-2">Коваленко Олексій Іванович</li>
+                        <li class="mb-2">+38 (067) 321-00-11</li>
+                        <li class="mb-2">manager@tirevault.ua</li>
+                        <li>Пн–Пт: 09:00 – 18:00</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#cpu-fill"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-headset text-danger fs-2 me-3"></i>
+                        <h5 class="fw-bold mb-0 text-dark">Кол-центр</h5>
+                    </div>
+                    <ul class="list-unstyled text-muted small mb-0">
+                        <li class="mb-2">+38 (063) 123-45-67</li>
+                        <li class="mb-2">+38 (050) 987-65-43</li>
+                        <li class="mb-2">support@tirevault.ua</li>
+                        <li>Пн–Сб: 08:00 – 20:00</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#calendar3"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-calculator-fill text-danger fs-2 me-3"></i>
+                        <h5 class="fw-bold mb-0 text-dark">Бухгалтерія</h5>
+                    </div>
+                    <ul class="list-unstyled text-muted small mb-0">
+                        <li class="mb-2">Мельник Тетяна Василівна</li>
+                        <li class="mb-2">+38 (044) 456-78-90</li>
+                        <li class="mb-2">buh@tirevault.ua</li>
+                        <li>Пн–Пт: 09:00 – 17:00</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#home"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
+    </div>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-1 text-dark">
+                        <i class="bi bi-geo-alt-fill text-danger me-2"></i>Наше розташування
+                    </h5>
+                    <p class="text-muted small mb-1">
+                        TireVault — Станція технічного обслуговування
+                    </p>
+                    <p class="text-muted small mb-3">
+                        м. Київ, вул. Автозаводська, 1
+                    </p>
+                    <div class="ratio ratio-1x1 rounded overflow-hidden">
+                        <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.9!2d30.523!3d50.4501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf4ee15a4505%3A0x764931d2170146fe!2z0JrQuNGX0LIsINC60YDQsNGY0L3QsCDQstGD0LvQuNGG0Y8!5e0!3m2!1suk!2sua!4v1710000000000"
+                                allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#speedometer2"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#toggles2"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#geo-fill"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
-        </div>
-        <div class="col d-flex align-items-start">
-            <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em" aria-hidden="true">
-                <use xlink:href="#tools"></use>
-            </svg>
-            <div><h3 class="fw-bold mb-0 fs-4 text-body-emphasis">Featured title</h3>
-                <p>Paragraph of text beneath the heading to explain the heading.</p></div>
+        <div class="col-12 col-lg-6 d-flex flex-column gap-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3 text-dark">
+                        <i class="bi bi-clock-fill text-danger me-2"></i>Графік роботи
+                    </h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between border-bottom py-2">
+                            <span class="text-muted small">Понеділок – П'ятниця</span>
+                            <span class="text-dark fw-bold small">08:00 – 20:00</span>
+                        </li>
+                        <li class="d-flex justify-content-between border-bottom py-2">
+                            <span class="text-muted small">Субота</span>
+                            <span class="text-dark fw-bold small">09:00 – 18:00</span>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted small">Неділя</span>
+                            <span class="text-danger fw-bold small">Вихідний</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm flex-grow-1">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3 text-dark">
+                        <i class="bi bi-share-fill text-danger me-2"></i>Ми в соцмережах
+                    </h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" aria-label="Instagram">
+                            <img src="https://cdn.simpleicons.org/instagram/dc3545" alt="..." width="36" height="36">
+                        </a>
+                        <a href="#" aria-label="YouTube">
+                            <img src="https://cdn.simpleicons.org/youtube/dc3545" alt="..." width="36" height="36">
+                        </a>
+                        <a href="#" aria-label="Telegram">
+                            <img src="https://cdn.simpleicons.org/telegram/dc3545" alt="..." width="36" height="36">
+                        </a>
+                        <a href="#" aria-label="Viber">
+                            <img src="https://cdn.simpleicons.org/viber/dc3545" alt="..." width="36" height="36">
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
