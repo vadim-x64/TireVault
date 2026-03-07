@@ -5,68 +5,82 @@
 <div class="bg-dark text-white mt-auto" th:fragment="footer">
     <div class="container py-5">
         <div class="row g-4">
-            <div class="col-12 col-md-2">
-                <h6 class="fw-bold text-uppercase text-danger mb-3">Навігація</h6>
-                <ul class="nav flex-column gap-1">
-                    <li><a href="/" class="nav-link p-0 text-white-50"><i class="bi bi-house me-2"></i>Головна</a></li>
-                    <li><a href="/services" class="nav-link p-0 text-white-50"><i
-                            class="bi bi-wrench-adjustable me-2"></i>Послуги</a></li>
-                    <li><a href="/products" class="nav-link p-0 text-white-50"><i class="bi bi-grid me-2"></i>Автотовари</a>
-                    </li>
-                    <li><a href="/about" class="nav-link p-0 text-white-50"><i class="bi bi-info-circle me-2"></i>Про
-                        нас</a></li>
-                    <li><a href="/gallery" class="nav-link p-0 text-white-50"><i
-                            class="bi bi-images me-2"></i>Галерея</a></li>
-                    <li><a href="/blog" class="nav-link p-0 text-white-50"><i class="bi bi-newspaper me-2"></i>Блог</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-12 col-md-2">
-                <h6 class="fw-bold text-uppercase text-danger mb-3">Інформація</h6>
-                <ul class="nav flex-column gap-1">
-                    <li><a href="/delivery" class="nav-link p-0 text-white-50"><i class="bi bi-truck me-2"></i>Доставка
-                        та оплата</a></li>
-                    <li><a href="/contacts" class="nav-link p-0 text-white-50"><i class="bi bi-telephone me-2"></i>Контакти</a>
-                    </li>
-                </ul>
-                <h6 class="fw-bold text-uppercase text-danger mb-3 mt-4">Графік роботи</h6>
-                <ul class="list-unstyled text-white-50 small">
-                    <li class="mb-1"><i class="bi bi-clock me-2"></i>Пн–Пт: 09:00 – 17:00</li>
-                    <li class="mb-1"><i class="bi bi-clock me-2"></i>Сб: 10:00 – 15:00</li>
-                    <li><i class="bi bi-x-circle me-2"></i>Нд: вихідний</li>
-                </ul>
-            </div>
-            <div class="col-12 col-md-4">
-                <h6 class="fw-bold text-uppercase text-danger mb-3">Контакти</h6>
-                <ul class="list-unstyled text-white-50 small mb-3">
-                    <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-danger"></i>+38 (063) 123-45-67</li>
-                    <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-danger"></i>info@tirevault.ua</li>
-                    <li class="mb-2"><i class="bi bi-geo-alt-fill me-2 text-danger"></i>м. Київ, вул. Автозаводська, 1
-                    </li>
-                </ul>
-                <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.9!2d30.523!3d50.4501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf4ee15a4505%3A0x764931d2170146fe!2z0JrQuNGX0LIsINC60YDQsNGY0L3QsCDQstGD0LvQuNGG0Y8!5e0!3m2!1suk!2sua!4v1710000000000"
-                        width="100%" height="160" class="rounded border-0" allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-            <div class="col-12 col-md-4">
-                <h6 class="fw-bold text-uppercase text-danger mb-3">Ми в соцмережах</h6>
-                <div class="d-flex gap-3 mb-4">
-                    <a href="#" aria-label="Instagram">
-                        <img src="https://cdn.simpleicons.org/instagram/dc3545" alt="..." width="36" height="36">
-                    </a>
-                    <a href="#" aria-label="YouTube">
-                        <img src="https://cdn.simpleicons.org/youtube/dc3545" alt="..." width="36" height="36">
-                    </a>
-                    <a href="#" aria-label="Telegram">
-                        <img src="https://cdn.simpleicons.org/telegram/dc3545" alt="..." width="36" height="36">
-                    </a>
-                    <a href="#" aria-label="Viber">
-                        <img src="https://cdn.simpleicons.org/viber/dc3545" alt="..." width="36" height="36">
-                    </a>
+
+            <!-- Ліва частина: весь контент -->
+            <div class="col-12 col-md-9">
+                <div class="row g-4">
+
+                    <div class="col-6 col-md-3">
+                        <h6 class="fw-bold text-uppercase text-danger mb-3">Навігація</h6>
+                        <ul class="nav flex-column gap-1">
+                            <li><a href="/" class="nav-link p-0 text-white-50"><i class="bi bi-house me-2"></i>Головна</a></li>
+                            <li><a href="/services" class="nav-link p-0 text-white-50"><i class="bi bi-wrench-adjustable me-2"></i>Послуги</a></li>
+                            <li><a href="/products" class="nav-link p-0 text-white-50"><i class="bi bi-grid me-2"></i>Автотовари</a></li>
+                            <li><a href="/about" class="nav-link p-0 text-white-50"><i class="bi bi-info-circle me-2"></i>Про нас</a></li>
+                            <li><a href="/gallery" class="nav-link p-0 text-white-50"><i class="bi bi-images me-2"></i>Галерея</a></li>
+                            <li><a href="/blog" class="nav-link p-0 text-white-50"><i class="bi bi-newspaper me-2"></i>Блог</a></li>
+                        </ul>
+                        <h6 class="fw-bold text-uppercase text-danger mb-3 mt-4">Інформація</h6>
+                        <ul class="nav flex-column gap-1">
+                            <li><a href="/delivery" class="nav-link p-0 text-white-50"><i class="bi bi-truck me-2"></i>Доставка та оплата</a></li>
+                            <li><a href="/contacts" class="nav-link p-0 text-white-50"><i class="bi bi-telephone me-2"></i>Контакти</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <h6 class="fw-bold text-uppercase text-danger mb-3">Контакти</h6>
+                        <ul class="list-unstyled text-white-50 small mb-0">
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-danger"></i>+38 (063) 123-45-67</li>
+                            <li class="mb-2"><i class="bi bi-telephone-fill me-2 text-danger"></i>+38 (050) 987-65-43</li>
+                            <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-danger"></i>info@tirevault.ua</li>
+                            <li class="mb-2"><i class="bi bi-envelope-fill me-2 text-danger"></i>support@tirevault.ua</li>
+                            <li><i class="bi bi-geo-alt-fill me-2 text-danger"></i>м. Київ, вул. Автозаводська, 1</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <h6 class="fw-bold text-uppercase text-danger mb-3">Графік роботи</h6>
+                        <ul class="list-unstyled text-white-50 small mb-0">
+                            <li class="mb-1"><i class="bi bi-clock me-2"></i>Пн–Пт: 09:00 – 17:00</li>
+                            <li class="mb-1"><i class="bi bi-clock me-2"></i>Сб: 10:00 – 15:00</li>
+                            <li><i class="bi bi-x-circle me-2"></i>Нд: вихідний</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <h6 class="fw-bold text-uppercase text-danger mb-3">Ми в соцмережах</h6>
+                        <div class="d-flex gap-3">
+                            <a href="#" aria-label="Instagram">
+                                <img src="https://cdn.simpleicons.org/instagram/dc3545" alt="Instagram" width="32" height="32">
+                            </a>
+                            <a href="#" aria-label="YouTube">
+                                <img src="https://cdn.simpleicons.org/youtube/dc3545" alt="YouTube" width="32" height="32">
+                            </a>
+                            <a href="#" aria-label="Telegram">
+                                <img src="https://cdn.simpleicons.org/telegram/dc3545" alt="Telegram" width="32" height="32">
+                            </a>
+                            <a href="#" aria-label="Viber">
+                                <img src="https://cdn.simpleicons.org/viber/dc3545" alt="Viber" width="32" height="32">
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
+            <!-- Права частина: квадратна мапа -->
+            <div class="col-12 col-md-3">
+                <h6 class="fw-bold text-uppercase text-danger mb-3">Де нас знайти</h6>
+                <div class="ratio ratio-1x1 rounded overflow-hidden">
+                    <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2540.9!2d30.523!3d50.4501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4cf4ee15a4505%3A0x764931d2170146fe!2z0JrQuNGX0LIsINC60YDQsNGY0L3QsCDQstGD0LvQuNGG0Y8!5e0!3m2!1suk!2sua!4v1710000000000"
+                            class="border-0" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
         </div>
+
         <div class="border-top border-secondary pt-4 mt-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
             <p class="text-white-50 small mb-0">© 2026 TireVault, Ltd. Усі права захищено.</p>
         </div>
