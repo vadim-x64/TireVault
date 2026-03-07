@@ -78,6 +78,23 @@ public class ServiceRequestService {
         ServiceRequest request = serviceRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
 
+        // --- НОВА ПЕРЕВІРКА ---
+        java.time.DayOfWeek dow = scheduledAt.getDayOfWeek();
+        LocalTime time = scheduledAt.toLocalTime();
+
+        if (dow == java.time.DayOfWeek.SUNDAY) {
+            throw new RuntimeException("Неділя — вихідний день.");
+        }
+        if (dow == java.time.DayOfWeek.SATURDAY) {
+            if (time.isBefore(LocalTime.of(10, 0)) || time.isAfter(LocalTime.of(15, 0))) {
+                throw new RuntimeException("У суботу прийом з 10:00 до 15:00.");
+            }
+        } else {
+            if (time.isBefore(LocalTime.of(9, 0)) || time.isAfter(LocalTime.of(17, 0))) {
+                throw new RuntimeException("У будні прийом з 09:00 до 17:00.");
+            }
+        }
+
         List<ServiceRequestStatus> excluded = List.of(ServiceRequestStatus.CANCELLED, ServiceRequestStatus.COMPLETED);
         boolean slotTaken = serviceRequestRepository
                 .findByScheduledAtBetweenAndStatusNotIn(
