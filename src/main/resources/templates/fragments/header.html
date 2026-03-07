@@ -2,28 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
-<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom" th:fragment="navbar">
+<header class="d-flex flex-wrap align-items-center justify-content-center py-3 border-bottom px-3 px-md-4 bg-white"
+        th:fragment="navbar">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-        <img th:src="@{/assets/logo/logo1.png}" alt="Logo" width="100">
+        <img th:src="@{/assets/logo/logo1.png}" alt="..." width="100">
     </a>
     <ul class="nav nav-pills">
-        <li class="nav-item"><a href="/about" class="nav-link" aria-current="page">Про нас</a></li>
-        <li class="nav-item"><a href="/contacts" class="nav-link">Контакти</a></li>
-        <li class="nav-item"><a href="/delivery" class="nav-link">Доставка та оплата</a></li>
-        <li class="nav-item"><a href="/gallery" class="nav-link">Галерея</a></li>
-        <li class="nav-item"><a href="/blog" class="nav-link">Блог</a></li>
+        <li class="nav-item">
+            <a href="/about" class="nav-link text-dark">
+                <i class="bi bi-info-circle me-1"></i>Про нас
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/contacts" class="nav-link text-dark">
+                <i class="bi bi-telephone me-1"></i>Контакти
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/delivery" class="nav-link text-dark">
+                <i class="bi bi-truck me-1"></i>Доставка та оплата
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/gallery" class="nav-link text-dark">
+                <i class="bi bi-images me-1"></i>Галерея
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/blog" class="nav-link text-dark">
+                <i class="bi bi-newspaper me-1"></i>Блог
+            </a>
+        </li>
     </ul>
-    <a href="/cart" class="nav-link position-relative text-dark px-2" title="Кошик">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
-             class="bi bi-cart3" viewBox="0 0 16 16">
-            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102z"/>
-            <path d="M5.5 14a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-3-1.5a3 3 0 1 0 6 0 3 3 0 0 0-6 0zm9.5 1.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-3-1.5a3 3 0 1 0 6 0 3 3 0 0 0-6 0z"/>
-        </svg>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              id="cart-badge"
-              th:style="${cartItemCount > 0} ? 'display:inline-block;font-size:0.65rem;' : 'display:none;font-size:0.65rem;'"
-              th:text="${cartItemCount}">0</span>
-    </a>
+    <div class="d-flex align-items-center ms-4 me-3">
+        <a href="/cart" class="text-dark text-decoration-none" title="Кошик">
+            <div class="position-relative d-inline-block">
+                <i class="bi bi-cart2 fs-4"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                      id="cart-badge"
+                      th:classappend="${cartItemCount != null && cartItemCount > 0} ? '' : 'd-none'"
+                      th:text="${cartItemCount ?: 0}">0</span>
+            </div>
+        </a>
+    </div>
 </header>
 
 </body>
