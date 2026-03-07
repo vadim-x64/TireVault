@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function validateForm() {
         if (!checkoutBtn) return;
-        const stationOk = stationSelect?.value !== '';
+        const stationOk = stationSelect?.value.trim() !== '';
         const payMethod = document.querySelector('input[name="payMethod"]:checked');
         const payOk     = !!payMethod;
         let cardOk = true;

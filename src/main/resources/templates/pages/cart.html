@@ -142,10 +142,12 @@
                                 </svg>
                                 Відділення СТО <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select form-select-sm" id="station-select">
-                                <option value="">— Оберіть відділення —</option>
-                                <option th:each="s : ${stations}" th:value="${s}" th:text="${s}"></option>
-                            </select>
+                            <input type="text"
+                                   id="station-select"
+                                   name="station"
+                                   class="form-control"
+                                   placeholder="Наприклад: вул. Шевченка, 12, кв. 5, Київ"
+                                   maxlength="200">
                         </div>
 
                         <!-- Спосіб оплати -->
