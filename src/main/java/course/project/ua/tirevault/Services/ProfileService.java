@@ -1,13 +1,15 @@
 package course.project.ua.tirevault.Services;
 
 import course.project.ua.tirevault.Entities.Models.Customer;
+import course.project.ua.tirevault.Entities.Models.ServiceRequest;
 import course.project.ua.tirevault.Entities.Models.User;
-import course.project.ua.tirevault.Repositories.ICustomerRepository;
-import course.project.ua.tirevault.Repositories.IUserRepository;
+import course.project.ua.tirevault.Repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +19,18 @@ public class ProfileService {
 
     @Autowired
     private ICustomerRepository customerRepository;
+
+    @Autowired
+    private ICartRepository cartRepository;
+
+    @Autowired
+    private IServiceRequestRepository serviceRequestRepository;
+
+    @Autowired
+    private IOrderRepository orderRepository;
+
+    @Autowired
+    private IOrderItemRepository orderItemRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -80,17 +94,25 @@ public class ProfileService {
     @Transactional
     public void deleteAccount(Long userId, String password) throws Exception {
         Optional<User> userOpt = userRepository.findById(userId);
-
-        if (userOpt.isEmpty()) {
-            throw new Exception("Користувача не знайдено.");
-        }
+        if (userOpt.isEmpty()) throw new Exception("Користувача не знайдено.");
 
         User user = userOpt.get();
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword()))
             throw new Exception("Невірний пароль! Акаунт не було видалено.");
-        }
 
+        // 1. Відв'язуємо service_requests (зберігаємо для менеджера)
+        List<ServiceRequest> requests = serviceRequestRepository.findByUser(user);
+        requests.forEach(r -> r.setUser(null));
+        serviceRequestRepository.saveAll(requests);
+
+        // 2. Спочатку OrderItem, потім Order — напряму через JPQL
+        orderItemRepository.deleteByOrderUserId(userId);
+        orderRepository.deleteByUserId(userId);
+
+        // 3. Кошик (CartItem видалиться каскадно)
+        cartRepository.findByUserId(userId).ifPresent(cartRepository::delete);
+
+        // 4. Юзер (Customer видалиться каскадно)
         userRepository.delete(user);
     }
 }
