@@ -9,26 +9,37 @@
                 <div class="card-header bg-white pt-4 pb-0 border-0">
                     <ul class="nav nav-tabs card-header-tabs w-100 d-flex" id="profileTabs" role="tablist">
                         <li class="nav-item flex-fill text-center" role="presentation">
-                            <button th:classappend="${activeTab == 'main' ? 'active' : 'text-muted'}" class="nav-link w-100 fw-bold" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab">Основна</button>
+                            <button th:classappend="${activeTab == 'main' ? 'active' : 'text-muted'}"
+                                    class="nav-link w-100 fw-bold" id="main-tab" data-bs-toggle="tab"
+                                    data-bs-target="#main" type="button" role="tab">Основна
+                            </button>
                         </li>
                         <li class="nav-item flex-fill text-center" role="presentation">
-                            <button th:classappend="${activeTab == 'security' ? 'active' : 'text-muted'}" class="nav-link w-100 fw-bold" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">Безпека</button>
+                            <button th:classappend="${activeTab == 'security' ? 'active' : 'text-muted'}"
+                                    class="nav-link w-100 fw-bold" id="security-tab" data-bs-toggle="tab"
+                                    data-bs-target="#security" type="button" role="tab">Безпека
+                            </button>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body p-4">
                     <div class="tab-content" id="profileTabsContent">
-                        <div class="tab-pane fade" th:classappend="${activeTab == 'main' ? 'show active' : ''}" id="main" role="tabpanel">
-                            <div th:if="${profileSuccess}" class="alert alert-success" role="alert" th:text="${profileSuccess}"></div>
-                            <div th:if="${profileError}" class="alert alert-danger" role="alert" th:text="${profileError}"></div>
+                        <div class="tab-pane fade" th:classappend="${activeTab == 'main' ? 'show active' : ''}"
+                             id="main" role="tabpanel">
+                            <div th:if="${profileSuccess}" class="alert alert-success" role="alert"
+                                 th:text="${profileSuccess}"></div>
+                            <div th:if="${profileError}" class="alert alert-danger" role="alert"
+                                 th:text="${profileError}"></div>
                             <form id="profileForm" th:action="@{/profile/update}" method="post">
                                 <div class="mb-3">
-                                    <label for="profFirstName" class="form-label fw-bold">Ім'я <span class="text-danger">*</span></label>
+                                    <label for="profFirstName" class="form-label fw-bold">Ім'я <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="profFirstName" name="firstName"
                                            th:value="${session.loggedUser.customer.firstName}" maxlength="50" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="profLastName" class="form-label fw-bold">Прізвище <span class="text-danger">*</span></label>
+                                    <label for="profLastName" class="form-label fw-bold">Прізвище <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="profLastName" name="lastName"
                                            th:value="${session.loggedUser.customer.lastName}" maxlength="50" required>
                                 </div>
@@ -38,39 +49,51 @@
                                            th:value="${session.loggedUser.customer.middleName}" maxlength="50">
                                 </div>
                                 <div class="mb-4">
-                                    <label for="profPhone" class="form-label fw-bold">Номер телефону <span class="text-danger">*</span></label>
+                                    <label for="profPhone" class="form-label fw-bold">Номер телефону <span
+                                            class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light text-muted">+38</span>
-                                        <input type="tel" class="form-control" id="profPhone" name="phone" placeholder="(0XX) XXX-XX-XX"
+                                        <input type="tel" class="form-control" id="profPhone" name="phone"
+                                               placeholder="(0XX) XXX-XX-XX"
                                                th:value="${session.loggedUser.customer.phone}" required>
                                     </div>
                                 </div>
-                                <button type="submit" id="saveProfileBtn" class="btn btn-primary btn-lg w-100 fw-bold" disabled>
+                                <button type="submit" id="saveProfileBtn" class="btn btn-danger btn-lg w-100 fw-bold"
+                                        disabled>
                                     Зберегти зміни
                                 </button>
                             </form>
                         </div>
-                        <div class="tab-pane fade" th:classappend="${activeTab == 'security' ? 'show active' : ''}" id="security" role="tabpanel">
-                            <div th:if="${securityError}" class="alert alert-danger" role="alert" th:text="${securityError}"></div>
-                            <div class="alert alert-warning small mb-4">
-                                <strong>Увага!</strong> При зміні логіна або пароля вам доведеться увійти в систему заново.
+                        <div class="tab-pane fade" th:classappend="${activeTab == 'security' ? 'show active' : ''}"
+                             id="security" role="tabpanel">
+                            <div th:if="${securityError}" class="alert alert-danger" role="alert"
+                                 th:text="${securityError}"></div>
+                            <div class="alert alert-secondary small mb-4">
+                                <strong>Увага!</strong> При зміні логіна або пароля вам доведеться увійти в систему
+                                заново.
                             </div>
                             <form id="securityForm" th:action="@{/profile/security}" method="post" autocomplete="off">
                                 <div class="mb-3">
-                                    <label for="secUsername" class="form-label fw-bold">Логін (Username) <span class="text-danger">*</span></label>
+                                    <label for="secUsername" class="form-label fw-bold">Логін (Username) <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="secUsername" name="username"
-                                           th:value="${session.loggedUser.username}" maxlength="50" autocomplete="off" required>
+                                           th:value="${session.loggedUser.username}" maxlength="50" autocomplete="off"
+                                           required>
                                 </div>
                                 <div class="mb-4">
                                     <label for="secPassword" class="form-label fw-bold">Новий пароль</label>
                                     <input type="password" class="form-control" id="secPassword" name="password"
-                                           placeholder="Залиште пустим, якщо не хочете змінювати" minlength="8" maxlength="255" autocomplete="new-password">
+                                           placeholder="Залиште пустим, якщо не хочете змінювати" minlength="8"
+                                           maxlength="255" autocomplete="new-password">
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" id="showSecPassword" onclick="toggleProfilePassword()">
-                                        <label class="form-check-label text-muted" for="showSecPassword">Показати пароль</label>
+                                        <input class="form-check-input" type="checkbox" id="showSecPassword"
+                                               onclick="toggleProfilePassword()">
+                                        <label class="form-check-label text-muted" for="showSecPassword">Показати
+                                            пароль</label>
                                     </div>
                                 </div>
-                                <button type="submit" id="saveSecurityBtn" class="btn btn-primary btn-lg w-100 fw-bold" disabled>
+                                <button type="submit" id="saveSecurityBtn" class="btn btn-danger btn-lg w-100 fw-bold"
+                                        disabled>
                                     Зберегти зміни
                                 </button>
                             </form>
@@ -78,9 +101,11 @@
                             <div class="d-flex justify-content-between align-items-center bg-danger bg-opacity-10 p-4 rounded-4 shadow-sm border border-danger border-opacity-25">
                                 <div>
                                     <h5 class="text-danger mb-1 fw-bold">Небезпечна зона</h5>
-                                    <p class="text-muted mb-0 small">Після видалення акаунта відновити ваші дані буде неможливо.</p>
+                                    <p class="text-muted mb-0 small">Після видалення акаунта відновити ваші дані буде
+                                        неможливо.</p>
                                 </div>
-                                <button type="button" class="btn btn-outline-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                <button type="button" class="btn btn-outline-danger fw-bold" data-bs-toggle="modal"
+                                        data-bs-target="#deleteAccountModal">
                                     Видалити акаунт
                                 </button>
                             </div>
@@ -90,30 +115,39 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header border-bottom-0">
-                    <h1 class="modal-title fs-5 fw-bold text-danger" id="deleteAccountModalLabel">Підтвердження видалення</h1>
+                    <h1 class="modal-title fs-5 fw-bold text-danger" id="deleteAccountModalLabel">Підтвердження
+                        видалення</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form th:action="@{/profile/delete}" method="post">
                     <div class="modal-body py-0">
-                        <div th:if="${deleteAccountError}" id="deleteAccountErrorAlert" class="alert alert-danger" role="alert" th:text="${deleteAccountError}"></div>
-                        <p class="mb-3">Ця дія є незворотною. Для підтвердження видалення облікового запису, будь ласка, введіть ваш поточний пароль.</p>
+                        <div th:if="${deleteAccountError}" id="deleteAccountErrorAlert" class="alert alert-danger"
+                             role="alert" th:text="${deleteAccountError}"></div>
+                        <p class="mb-3">Ця дія є незворотною. Для підтвердження видалення облікового запису, будь ласка,
+                            введіть ваш поточний пароль.</p>
 
                         <div class="mb-4">
                             <label for="deletePassword" class="form-label fw-bold">Поточний пароль</label>
-                            <input type="password" class="form-control form-control-lg" id="deletePassword" name="password" required>
+                            <input type="password" class="form-control form-control-lg" id="deletePassword"
+                                   name="password" required>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="showDeletePassword" onclick="toggleDeleteModalPassword()">
-                                <label class="form-check-label text-muted" for="showDeletePassword">Показати пароль</label>
+                                <input class="form-check-input" type="checkbox" id="showDeletePassword"
+                                       onclick="toggleDeleteModalPassword()">
+                                <label class="form-check-label text-muted" for="showDeletePassword">Показати
+                                    пароль</label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
                         <button type="submit" class="btn btn-lg btn-danger fw-bold">Видалити назавжди</button>
-                        <button type="button" class="btn btn-lg btn-secondary fw-bold" data-bs-dismiss="modal">Скасувати</button>
+                        <button type="button" class="btn btn-lg btn-secondary fw-bold" data-bs-dismiss="modal">
+                            Скасувати
+                        </button>
                     </div>
                 </form>
             </div>
