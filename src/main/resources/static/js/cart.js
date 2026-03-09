@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     function updateCartBadge(count) {
         const badge = document.getElementById('cart-badge');
         if (!badge) return;
@@ -14,23 +13,21 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.btn-add-to-cart').forEach(btn => {
         btn.addEventListener('click', function () {
             const productId = this.dataset.productId;
-            const qtyInput  = document.getElementById('qty-input');
-            const quantity  = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-
+            const qtyInput = document.getElementById('qty-input');
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
             const originalHtml = this.innerHTML;
             this.disabled = true;
             this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Додаємо...';
-
             fetch('/cart/add', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `productId=${productId}&quantity=${quantity}`
             })
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
                         updateCartBadge(data.cartCount);
-                        this.innerHTML = '✓ Додано!';
+                        this.innerHTML = 'Додано';
                         this.classList.remove('btn-dark');
                         this.classList.add('btn-success');
                         setTimeout(() => {

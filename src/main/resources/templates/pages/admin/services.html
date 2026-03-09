@@ -24,10 +24,7 @@
             </button>
         </li>
     </ul>
-
     <div class="tab-content">
-
-        <!-- АКТИВНІ -->
         <div class="tab-pane fade show active" id="adminActiveServices" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-inbox mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -62,12 +59,13 @@
                                       class="badge bg-info text-dark">📅 Заброньовано</span>
                             </div>
                             <p class="text-muted small mb-1" th:if="${req.user != null}">
-                                <i class="bi bi-person me-2"></i> <a th:href="@{/admin/users}" class="text-decoration-none text-dark fw-semibold"
-                                     onclick="event.stopPropagation()"
-                                     th:text="${req.user.username}"></a>
+                                <i class="bi bi-person me-2"></i> <a th:href="@{/admin/users}"
+                                                                     class="text-decoration-none text-dark fw-semibold"
+                                                                     onclick="event.stopPropagation()"
+                                                                     th:text="${req.user.username}"></a>
                             </p>
                             <p class="text-muted small mb-1">
-                                📍 <span th:text="${req.city}"></span>
+                                <i class="bi bi-geo-alt me-1"></i> <span th:text="${req.city}"></span>
                             </p>
                             <p class="text-muted small mb-1">
                                 <i class="bi bi-clock me-1"></i>
@@ -75,15 +73,13 @@
                             </p>
                             <p class="text-muted small mb-0"
                                th:if="${req.formattedScheduledDate != null and !#strings.isEmpty(req.formattedScheduledDate)}">
-                                🗓 <span th:text="${req.formattedScheduledDate}"></span>
+                                <i class="bi bi-clock me-2"></i> <span th:text="${req.formattedScheduledDate}"></span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- ЗАВЕРШЕНІ -->
         <div class="tab-pane fade" id="adminCompletedServices" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -112,12 +108,13 @@
                                       class="badge bg-secondary">Скасовано</span>
                             </div>
                             <p class="text-muted small mb-1" th:if="${req.user != null}">
-                                <i class="bi bi-person me-2"></i> <a th:href="@{/admin/users}" class="text-decoration-none text-dark fw-semibold"
-                                     onclick="event.stopPropagation()"
-                                     th:text="${req.user.username}"></a>
+                                <i class="bi bi-person me-2"></i> <a th:href="@{/admin/users}"
+                                                                     class="text-decoration-none text-dark fw-semibold"
+                                                                     onclick="event.stopPropagation()"
+                                                                     th:text="${req.user.username}"></a>
                             </p>
                             <p class="text-muted small mb-1">
-                                📍 <span th:text="${req.city}"></span>
+                                <i class="bi bi-geo-alt me-1"></i> <span th:text="${req.city}"></span>
                             </p>
                             <p class="text-muted small mb-1">
                                 <i class="bi bi-clock me-1"></i>
@@ -129,8 +126,6 @@
             </div>
         </div>
     </div>
-
-    <!-- МОДАЛКА АДМІНА (тільки перегляд) -->
     <div class="modal fade" id="adminServiceModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg">
@@ -145,7 +140,7 @@
                     <table class="table table-borderless mb-0">
                         <tbody>
                         <tr>
-                            <td class="text-muted fw-bold" >Користувач</td>
+                            <td class="text-muted fw-bold">Користувач</td>
                             <td>
                                 <a id="adminServiceUsernameLink" href="/admin/users"
                                    class="fw-bold text-decoration-none text-dark"></a>
@@ -185,7 +180,6 @@
             </div>
         </div>
     </div>
-
     <script th:src="@{/js/pages/admin/services.js}"></script>
 </div>
 

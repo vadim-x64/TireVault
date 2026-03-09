@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 
 @Controller
 public class AdminWorkServiceController {
-
     @Autowired
     private WorkServiceManager workServiceManager;
 
@@ -23,8 +22,6 @@ public class AdminWorkServiceController {
         model.addAttribute("page", "admin/workservices");
         return "index";
     }
-
-    // ── Категорії ──────────────────────────────────────────────────────────────
 
     @PostMapping("/admin/workservices/categories/add")
     public String addCategory(@RequestParam String name) {
@@ -49,8 +46,6 @@ public class AdminWorkServiceController {
         workServiceManager.deleteCategoryById(id);
         return "redirect:/admin/workservices";
     }
-
-    // ── Послуги ────────────────────────────────────────────────────────────────
 
     @PostMapping("/admin/workservices/add")
     public String addWorkService(@RequestParam Long categoryId,

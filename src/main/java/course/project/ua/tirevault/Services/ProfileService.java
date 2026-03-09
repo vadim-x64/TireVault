@@ -100,19 +100,12 @@ public class ProfileService {
         if (!passwordEncoder.matches(password, user.getPassword()))
             throw new Exception("Невірний пароль! Акаунт не було видалено.");
 
-        // 1. Відв'язуємо service_requests (зберігаємо для менеджера)
         List<ServiceRequest> requests = serviceRequestRepository.findByUser(user);
         requests.forEach(r -> r.setUser(null));
         serviceRequestRepository.saveAll(requests);
-
-        // 2. Спочатку OrderItem, потім Order — напряму через JPQL
         orderItemRepository.deleteByOrderUserId(userId);
         orderRepository.deleteByUserId(userId);
-
-        // 3. Кошик (CartItem видалиться каскадно)
         cartRepository.findByUserId(userId).ifPresent(cartRepository::delete);
-
-        // 4. Юзер (Customer видалиться каскадно)
         userRepository.delete(user);
     }
 }

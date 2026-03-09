@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,7 +58,6 @@ public class Order {
                 : "";
     }
 
-    /** JSON-рядок для передачі позицій у data-атрибут картки */
     public String getItemsJson() {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < items.size(); i++) {

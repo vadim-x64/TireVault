@@ -1,6 +1,5 @@
 package course.project.ua.tirevault.Controllers.Manager;
 
-
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.ServiceRequestService;
 import jakarta.servlet.http.HttpSession;
@@ -30,7 +29,6 @@ public class ManagerController {
         return "index";
     }
 
-    // Повертає JSON: ["09:00","10:00"] — зайняті години для вказаної дати
     @GetMapping("/api/slots")
     @ResponseBody
     public List<String> getBookedSlots(@RequestParam String date, HttpSession session) {

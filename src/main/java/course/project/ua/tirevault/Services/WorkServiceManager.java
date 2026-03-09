@@ -6,13 +6,11 @@ import course.project.ua.tirevault.Repositories.IWorkServiceCategoryRepository;
 import course.project.ua.tirevault.Repositories.IWorkServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class WorkServiceManager {
-
     @Autowired
     private IWorkServiceRepository workServiceRepository;
 
@@ -44,7 +42,6 @@ public class WorkServiceManager {
     }
 
     public void deleteCategoryById(Long id) {
-        // спочатку видаляємо всі послуги категорії, щоб не було constraint violation
         workServiceRepository.findByCategoryIdOrderByIdAsc(id)
                 .forEach(workServiceRepository::delete);
         categoryRepository.deleteById(id);

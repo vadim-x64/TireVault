@@ -1,24 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     document.querySelectorAll('.myorder-card').forEach(function (card) {
         card.addEventListener('click', function () {
-            const id        = this.dataset.id;
-            const status    = this.dataset.status;
-            const created   = this.dataset.created;
-            const total     = parseFloat(this.dataset.total).toFixed(2);
-            const station   = this.dataset.station;
+            const id = this.dataset.id;
+            const status = this.dataset.status;
+            const created = this.dataset.created;
+            const total = parseFloat(this.dataset.total).toFixed(2);
+            const station = this.dataset.station;
             const payMethod = this.dataset.paymethod;
-            const items     = JSON.parse(this.dataset.items || '[]');
-
+            const items = JSON.parse(this.dataset.items || '[]');
             document.getElementById('myOrderCreated').textContent = created;
             document.getElementById('myOrderStation').textContent = station || '-';
-            document.getElementById('myOrderTotal').textContent   = total + ' ₴';
-
-            const payLabel = payMethod === 'card' ? 'Карткою'
-                : payMethod === 'cash' ? 'Готівка на СТО' : '-';
+            document.getElementById('myOrderTotal').textContent = total + ' ₴';
+            const payLabel = payMethod === 'card' ? 'Карта'
+                : payMethod === 'cash' ? 'Готівка' : '-';
             document.getElementById('myOrderPayMethod').textContent = payLabel;
-
-            // Позиції
             const tbody = document.getElementById('myOrderItems');
             tbody.innerHTML = '';
             items.forEach(it => {
@@ -29,12 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <td class="text-end">${parseFloat(it.subtotal).toFixed(2)} ₴</td>`;
                 tbody.appendChild(tr);
             });
-
-            // Статус + кнопка скасування
             const badge = document.getElementById('myOrderStatusBadge');
             const cancelSection = document.getElementById('myOrderCancelSection');
             cancelSection.classList.add('d-none');
-
             if (status === 'PENDING') {
                 badge.className = 'badge fs-6 px-3 py-2 bg-danger';
                 badge.textContent = 'В обробці';
@@ -52,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 badge.className = 'badge fs-6 px-3 py-2 bg-secondary';
                 badge.textContent = 'Скасовано';
             }
-
             new bootstrap.Modal(document.getElementById('myOrderModal')).show();
         });
     });

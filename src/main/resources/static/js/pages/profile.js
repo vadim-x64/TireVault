@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const profileForm = document.getElementById('profileForm');
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     const phoneInput = document.getElementById('profPhone');
@@ -30,14 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkProfileChanges() {
         if (!saveProfileBtn) return;
-
         const currentValues = {
             firstName: document.getElementById('profFirstName').value,
             lastName: document.getElementById('profLastName').value,
             middleName: document.getElementById('profMiddleName').value,
             phone: phoneInput.value
         };
-
         let hasChanges = false;
         for (const key in initialProfileValues) {
             if (initialProfileValues[key] !== currentValues[key]) {
@@ -51,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (profileForm) {
         const inputs = profileForm.querySelectorAll('input:not([disabled])');
         inputs.forEach(input => {
-            input.addEventListener('input', function(e) {
+            input.addEventListener('input', function (e) {
                 if (e.target.id === 'profPhone') {
                     let cursorPosition = e.target.selectionStart;
                     let oldLength = e.target.value.length;
@@ -80,22 +78,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function checkSecurityChanges() {
         if (!saveSecurityBtn || !secUsernameInput || !secPasswordInput) return;
-
         const currentUsername = secUsernameInput.value;
         const currentPassword = secPasswordInput.value;
         let hasChanges = (currentUsername !== initialSecurityValues.username && currentUsername.trim() !== '') || (currentPassword.length > 0);
-
         saveSecurityBtn.disabled = !hasChanges;
     }
 
     if (securityForm) {
         checkSecurityChanges();
-
         const secInputs = securityForm.querySelectorAll('input:not([type="checkbox"])');
         secInputs.forEach(input => {
             input.addEventListener('input', checkSecurityChanges);
         });
-
         setTimeout(() => {
             if (secPasswordInput && secPasswordInput.value !== '') {
                 secPasswordInput.value = '';

@@ -19,7 +19,6 @@ import java.util.List;
 
 @Controller
 public class AdminUserController {
-
     @Autowired
     private IUserRepository userRepository;
 
@@ -64,10 +63,8 @@ public class AdminUserController {
     @Transactional
     public String deleteUser(@PathVariable Long id) {
         userRepository.findById(id).ifPresent(user -> {
-            // 1. Видаляємо кошик (cascade видалить CartItems)
             cartRepository.findByUserId(id).ifPresent(cartRepository::delete);
 
-            // 2. Видаляємо замовлення (cascade видалить OrderItems)
             orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(user,
                             List.of(course.project.ua.tirevault.Entities.Enums.OrderStatus.PENDING,
                                     course.project.ua.tirevault.Entities.Enums.OrderStatus.PROCESSING,
@@ -75,7 +72,6 @@ public class AdminUserController {
                                     course.project.ua.tirevault.Entities.Enums.OrderStatus.CANCELLED))
                     .forEach(orderRepository::delete);
 
-            // 3. Видаляємо записи на СТО
             serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(user,
                             List.of(course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus.PENDING,
                                     course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus.ACCEPTED,
@@ -84,7 +80,6 @@ public class AdminUserController {
                                     course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus.CANCELLED))
                     .forEach(serviceRequestRepository::delete);
 
-            // 4. Видаляємо користувача (cascade видалить Customer)
             userRepository.delete(user);
         });
         return "redirect:/admin/users";

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     const phoneInput = document.getElementById('homePhone');
-
     if (phoneInput) {
         phoneInput.addEventListener('input', function (e) {
             let rawPhone = e.target.value.replace(/\D/g, '').substring(0, 10);

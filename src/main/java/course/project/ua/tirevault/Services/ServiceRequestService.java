@@ -75,15 +75,13 @@ public class ServiceRequestService {
     }
 
     public void schedule(Long id, LocalDateTime scheduledAt) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
 
-        // --- НОВА ПЕРЕВІРКА ---
         java.time.DayOfWeek dow = scheduledAt.getDayOfWeek();
         LocalTime time = scheduledAt.toLocalTime();
 
         if (dow == java.time.DayOfWeek.SUNDAY) {
-            throw new RuntimeException("Неділя — вихідний день.");
+            throw new RuntimeException("Неділя - вихідний день.");
         }
         if (dow == java.time.DayOfWeek.SATURDAY) {
             if (time.isBefore(LocalTime.of(10, 0)) || time.isAfter(LocalTime.of(15, 0))) {
@@ -167,7 +165,6 @@ public class ServiceRequestService {
         serviceRequestRepository.saveAll(unseen);
     }
 
-    // Повертає зайняті години на вказану дату (формат "HH:mm")
     public List<String> getBookedHoursForDate(LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);

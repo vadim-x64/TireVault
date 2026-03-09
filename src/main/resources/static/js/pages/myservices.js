@@ -4,28 +4,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const d = phone.replace(/\D/g, '');
         if (d.length === 12 && d.startsWith('38')) {
             const p = d.substring(2);
-            return `+38 (${p.substring(0,3)})-${p.substring(3,6)}-${p.substring(6,8)}-${p.substring(8,10)}`;
+            return `+38 (${p.substring(0, 3)})-${p.substring(3, 6)}-${p.substring(6, 8)}-${p.substring(8, 10)}`;
         }
         return phone;
     }
 
     document.querySelectorAll('.order-card').forEach(function (card) {
         card.addEventListener('click', function () {
-            const id          = this.dataset.id;
-            const name        = this.dataset.name;
-            const phone       = this.dataset.phone;
-            const city        = this.dataset.city;
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            const phone = this.dataset.phone;
+            const city = this.dataset.city;
             const description = this.dataset.description;
-            const status      = this.dataset.status;
-            const created     = this.dataset.created;
-            const scheduled   = this.dataset.scheduled;
-            const payment     = this.dataset.payment;
-
-            document.getElementById('modalName').textContent    = name;
-            document.getElementById('modalPhone').textContent   = formatPhone(phone);
-            document.getElementById('modalCity').textContent    = city;
+            const status = this.dataset.status;
+            const created = this.dataset.created;
+            const scheduled = this.dataset.scheduled;
+            const payment = this.dataset.payment;
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalPhone').textContent = formatPhone(phone);
+            document.getElementById('modalCity').textContent = city;
             document.getElementById('modalCreated').textContent = created;
-
             const descRow = document.getElementById('modalDescRow');
             if (description && description.trim() !== '') {
                 document.getElementById('modalDescription').textContent = description;
@@ -33,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 descRow.classList.add('d-none');
             }
-
             const scheduledRow = document.getElementById('modalScheduledRow');
             if (scheduled && scheduled.trim() !== '') {
                 document.getElementById('modalScheduled').textContent = scheduled;
@@ -41,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 scheduledRow.classList.add('d-none');
             }
-
-            // Оплата
             const paymentRow = document.getElementById('modalPaymentRow');
             if (status === 'COMPLETED' && payment) {
                 const payLabel = payment === 'CARD' ? 'Карта' : 'Готівка';
@@ -51,11 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 paymentRow.classList.add('d-none');
             }
-
             const badge = document.getElementById('modalStatusBadge');
             const cancelSection = document.getElementById('modalCancelSection');
             cancelSection.classList.add('d-none');
-
             if (status === 'PENDING') {
                 badge.className = 'badge fs-6 px-3 py-2 bg-danger';
                 badge.textContent = 'В обробці';
@@ -78,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 badge.className = 'badge fs-6 px-3 py-2 bg-secondary';
                 badge.textContent = 'Скасовано';
             }
-
             const modal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
             modal.show();
         });

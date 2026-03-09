@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
-<div th:fragment="content">
 
+<div th:fragment="content">
     <h2 class="fw-bold mb-4">Послуги</h2>
     <div class="card shadow border-0 mb-4">
         <div class="card-header py-3 d-flex align-items-center justify-content-between bg-dark text-white">
             <h5 class="mb-0">Категорії послуг</h5>
         </div>
         <div class="card-body">
-
             <form th:action="@{/admin/workservices/categories/add}" method="post"
                   class="d-flex gap-2 mb-3">
                 <input type="text" name="name" class="form-control"
                        placeholder="Назва нової категорії" required>
                 <button type="submit" class="btn btn-dark">Додати</button>
             </form>
-
             <div th:if="${categories.isEmpty()}" class="text-muted text-center">Категорій ще немає</div>
-
             <table th:unless="${categories.isEmpty()}" class="table table-sm align-middle mb-0">
                 <thead class="table-dark">
                 <tr>
@@ -51,13 +48,11 @@
             </table>
         </div>
     </div>
-
     <div class="card shadow border-0">
         <div class="card-header py-3 bg-dark text-white">
             <h5 class="mb-0">Послуги</h5>
         </div>
         <div class="card-body">
-
             <form th:action="@{/admin/workservices/add}" method="post"
                   class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
                 <h6 class="fw-bold mb-1">Нова послуга</h6>
@@ -94,9 +89,7 @@
                     <button type="submit" class="btn btn-dark btn-sm w-100 mt-3">Додати</button>
                 </div>
             </form>
-
             <div th:if="${workServices.isEmpty()}" class="text-muted text-center">Послуг ще немає</div>
-
             <div th:unless="${workServices.isEmpty()}" class="table-responsive">
                 <table class="table table-sm align-middle mb-0">
                     <thead class="table-dark">
@@ -142,7 +135,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="editCategoryModal" tabindex="-1">
         <div class="modal-dialog">
             <form method="post" id="editCategoryForm">
@@ -167,7 +159,6 @@
             </form>
         </div>
     </div>
-
     <div class="modal fade" id="editServiceModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <form method="post" id="editServiceForm">
@@ -218,9 +209,8 @@
             </form>
         </div>
     </div>
-
     <script th:src="@{/js/pages/admin/workservices.js}"></script>
-
 </div>
+
 </body>
 </html>

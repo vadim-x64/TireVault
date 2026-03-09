@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class WorkServiceController {
-
     @Autowired
     private WorkServiceManager workServiceManager;
 

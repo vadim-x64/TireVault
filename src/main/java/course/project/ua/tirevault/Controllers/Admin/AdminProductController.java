@@ -4,7 +4,6 @@ import course.project.ua.tirevault.Entities.Models.*;
 import course.project.ua.tirevault.Repositories.ICartItemRepository;
 import course.project.ua.tirevault.Repositories.ICartRepository;
 import course.project.ua.tirevault.Repositories.IOrderItemRepository;
-import course.project.ua.tirevault.Repositories.IOrderRepository;
 import course.project.ua.tirevault.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,6 @@ import java.util.List;
 
 @Controller
 public class AdminProductController {
-
     @Autowired
     private ProductService productService;
 
@@ -28,9 +26,7 @@ public class AdminProductController {
     private ICartRepository cartRepository;
 
     @Autowired
-    private IOrderItemRepository orderItemRepository; // додати поле
-
-    // ── Головна сторінка ──────────────────────────────────────────────────────
+    private IOrderItemRepository orderItemRepository;
 
     @GetMapping("/admin/products")
     public String productsPage(Model model) {
@@ -39,8 +35,6 @@ public class AdminProductController {
         model.addAttribute("page", "admin/adminproducts");
         return "index";
     }
-
-    // ── Категорії ─────────────────────────────────────────────────────────────
 
     @PostMapping("/admin/products/categories/add")
     public String addCategory(@RequestParam String name) {
@@ -59,10 +53,6 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    /**
-     * Перед видаленням категорії чистимо CartItem-и для кожного товару,
-     * щоб уникнути FK constraint violation.
-     */
     @PostMapping("/admin/products/categories/{id}/delete")
     @Transactional
     public String deleteCategory(@PathVariable Long id) {
@@ -74,8 +64,6 @@ public class AdminProductController {
         productService.deleteCategoryById(id);
         return "redirect:/admin/products";
     }
-
-    // ── Товари ────────────────────────────────────────────────────────────────
 
     @PostMapping("/admin/products/add")
     public String addProduct(@RequestParam Long categoryId,
@@ -123,10 +111,6 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    /**
-     * Видалення товару: спочатку прибираємо всі CartItem-и,
-     * перераховуємо тотали кошиків — потім видаляємо сам товар.
-     */
     @PostMapping("/admin/products/{id}/delete")
     @Transactional
     public String deleteProduct(@PathVariable Long id) {
@@ -134,8 +118,6 @@ public class AdminProductController {
         productService.deleteProductById(id);
         return "redirect:/admin/products";
     }
-
-    // ── Хелпер ────────────────────────────────────────────────────────────────
 
     private void removeCartItemsForProduct(Long productId) {
         orderItemRepository.deleteByProductId(productId); // <-- додати це
@@ -145,7 +127,6 @@ public class AdminProductController {
             Cart cart = item.getCart();
             cart.getItems().remove(item);
             cartItemRepository.delete(item);
-            // Перераховуємо тотал кошика
             BigDecimal total = cart.getItems().stream()
                     .map(CartItem::getSubtotal)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);

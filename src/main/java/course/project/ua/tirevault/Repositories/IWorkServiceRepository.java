@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IWorkServiceRepository extends JpaRepository<WorkService, Long> {
     List<WorkService> findAllByOrderByIdAsc();
+
     List<WorkService> findByCategoryIdOrderByIdAsc(Long categoryId);
 }

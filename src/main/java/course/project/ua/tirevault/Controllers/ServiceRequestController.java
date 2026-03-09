@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 @Controller
 public class ServiceRequestController {
     @Autowired
@@ -64,8 +63,6 @@ public class ServiceRequestController {
         model.addAttribute("page", "myservices");
         return "index";
     }
-
-    // ---------- Manager endpoints ----------
 
     @PostMapping("/manager/services/{id}/accept")
     public String acceptRequest(@PathVariable Long id, HttpSession session) {
@@ -120,8 +117,6 @@ public class ServiceRequestController {
         serviceRequestService.cancel(id, loggedUser);
         return "redirect:/manager/services";
     }
-
-    // ---------- Client endpoint ----------
 
     @PostMapping("/myservices/{id}/cancel")
     public String cancelByClient(@PathVariable Long id, HttpSession session,

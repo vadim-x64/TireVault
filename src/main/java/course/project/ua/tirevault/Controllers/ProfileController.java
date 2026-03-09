@@ -27,7 +27,7 @@ public class ProfileController {
         }
 
         model.addAttribute("page", "profile");
-        return "index"; // Повертаємо базовий шаблон, який підтягне profile.html
+        return "index";
     }
 
     @PostMapping("/profile/update")

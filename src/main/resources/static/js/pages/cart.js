@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     function updateCartBadge(count) {
         const badge = document.getElementById('cart-badge');
         if (!badge) return;
@@ -7,17 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
         badge.style.display = count > 0 ? 'inline-block' : 'none';
     }
 
-    // --- Кнопки кількості ---
     document.querySelectorAll('.qty-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const itemId = this.dataset.itemId;
-            const delta  = parseInt(this.dataset.delta);
-            const qtyEl  = document.getElementById('qty-' + itemId);
+            const delta = parseInt(this.dataset.delta);
+            const qtyEl = document.getElementById('qty-' + itemId);
             const newQty = Math.max(0, parseInt(qtyEl.textContent) + delta);
-
             fetch('/cart/update', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `itemId=${itemId}&quantity=${newQty}`
             })
                 .then(r => r.json())
@@ -40,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function doRemove(itemId) {
         fetch('/cart/remove', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `itemId=${itemId}`
         })
             .then(r => r.json())
@@ -53,19 +50,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-// Замість трьох змінних — Map для кожного товару окремо
-    const pendingRemovals = new Map(); // itemId -> { timer, btn, originalHtml }
+    const pendingRemovals = new Map();
 
     function showUndoBar(itemId, row) {
         if (pendingRemovals.has(itemId)) return;
-
         const btn = row.querySelector('.remove-btn');
         const originalHtml = btn.innerHTML;
         const originalTitle = btn.title;
-
         const r = 8;
         const circumference = +(2 * Math.PI * r).toFixed(2);
-
         btn.title = 'Скасувати';
         btn.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 20 20">
@@ -78,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     transform="rotate(-90 10 10)"/>
             <path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>`;
-
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 const circle = btn.querySelector('.progress-ring');
@@ -88,21 +80,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
-
         const timer = setTimeout(() => clearRemoval(itemId, true), 5000);
-        pendingRemovals.set(itemId, { timer, btn, originalHtml, originalTitle });
+        pendingRemovals.set(itemId, {timer, btn, originalHtml, originalTitle});
     }
 
     function clearRemoval(itemId, execute) {
         const entry = pendingRemovals.get(itemId);
         if (!entry) return;
-
         clearTimeout(entry.timer);
         pendingRemovals.delete(itemId);
-
         entry.btn.innerHTML = entry.originalHtml;
         entry.btn.title = entry.originalTitle;
-
         if (execute) {
             doRemove(itemId);
         }
@@ -111,10 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.remove-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const itemId = this.dataset.itemId;
-            const row    = document.getElementById('row-' + itemId);
+            const row = document.getElementById('row-' + itemId);
             if (!row) return;
-
-            // Повторний клік = скасування
             if (pendingRemovals.has(itemId)) {
                 clearRemoval(itemId, false);
             } else {
@@ -134,17 +120,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return parseFloat(val).toFixed(2) + ' ₴';
     }
 
-    // --- CVV показати/сховати ---
     const cvvShow = document.getElementById('cvv-show');
     const cardCvv = document.getElementById('card-cvv');
+
     if (cvvShow && cardCvv) {
         cvvShow.addEventListener('change', function () {
             cardCvv.type = this.checked ? 'text' : 'password';
         });
     }
 
-    // --- Спосіб оплати ---
     const cardFormBlock = document.getElementById('card-form-block');
+
     document.querySelectorAll('input[name="payMethod"]').forEach(radio => {
         radio.addEventListener('change', function () {
             if (cardFormBlock) {
@@ -154,7 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // --- Форматування картки ---
     const cardNumber = document.getElementById('card-number');
     const cardExpiry = document.getElementById('card-expiry');
 
@@ -165,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
             validateForm();
         });
     }
+
     if (cardExpiry) {
         cardExpiry.addEventListener('input', function () {
             let val = this.value.replace(/\D/g, '').substring(0, 4);
@@ -173,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             validateForm();
         });
     }
+
     if (cardCvv) {
         cardCvv.addEventListener('input', function () {
             this.value = this.value.replace(/\D/g, '').substring(0, 3);
@@ -180,9 +167,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // --- Валідація форми ---
     const stationSelect = document.getElementById('station-select');
-    const checkoutBtn   = document.getElementById('checkout-btn');
+    const checkoutBtn = document.getElementById('checkout-btn');
 
     if (stationSelect) stationSelect.addEventListener('change', validateForm);
 
@@ -190,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!checkoutBtn) return;
         const stationOk = stationSelect?.value.trim() !== '';
         const payMethod = document.querySelector('input[name="payMethod"]:checked');
-        const payOk     = !!payMethod;
+        const payOk = !!payMethod;
         let cardOk = true;
         if (payMethod?.value === 'card') {
             cardOk = cardNumber?.value.replace(/\s/g, '').length === 16 &&
@@ -200,16 +186,15 @@ document.addEventListener("DOMContentLoaded", function () {
         checkoutBtn.disabled = !(stationOk && payOk && cardOk);
     }
 
-    // --- Оформити замовлення ---
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function () {
             checkoutBtn.disabled = true;
             checkoutBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Обробка...';
-            const station   = stationSelect?.value || '';
+            const station = stationSelect?.value || '';
             const payMethod = document.querySelector('input[name="payMethod"]:checked')?.value || '';
             fetch('/cart/checkout', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: `station=${encodeURIComponent(station)}&payMethod=${encodeURIComponent(payMethod)}`
             })
                 .then(r => r.json())
@@ -220,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         confirmModal.show();
                         document.getElementById('confirmModal').addEventListener('hidden.bs.modal', function () {
                             window.location.href = '/';
-                        }, { once: true });
+                        }, {once: true});
                     }
                 })
                 .catch(() => {

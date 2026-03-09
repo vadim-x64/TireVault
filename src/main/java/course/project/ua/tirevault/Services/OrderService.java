@@ -6,12 +6,12 @@ import course.project.ua.tirevault.Repositories.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class OrderService {
-
     @Autowired
     private IOrderRepository orderRepository;
 
@@ -24,7 +24,7 @@ public class OrderService {
         order.setStation(station);
         order.setPayMethod(payMethod);
         order.setStatus(OrderStatus.PENDING);
-        order.setSeen(false); // <- було true, тепер false — одразу з'явиться бейдж
+        order.setSeen(false);
 
         for (CartItem ci : cart.getItems()) {
             OrderItem oi = new OrderItem();
@@ -117,6 +117,4 @@ public class OrderService {
         unseen.forEach(o -> o.setSeen(true));
         orderRepository.saveAll(unseen);
     }
-
-
 }

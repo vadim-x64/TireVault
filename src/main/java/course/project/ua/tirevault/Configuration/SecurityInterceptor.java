@@ -25,18 +25,18 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
         if (requestURI.startsWith("/admin")) {
             if (userRole == UserRole.ADMIN) {
-                return true; // Allow admin access to admin pages
+                return true;
             } else {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return false; // Forbid non-admin access to admin pages
+                return false;
             }
         }
 
         if (userRole == UserRole.ADMIN || userRole == UserRole.MANAGER) {
-            return true; // Allow admin and manager access to non-admin pages
+            return true;
         }
 
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        return false; // Forbid all other users
+        return false;
     }
 }

@@ -10,6 +10,7 @@ import course.project.ua.tirevault.Repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -65,9 +66,8 @@ public class CartService {
             cart.getItems().add(item);
         }
 
-        // Резервуємо товар одразу при додаванні в кошик
         product.setQuantity(product.getQuantity() - quantity);
-        product.setAvailability(product.getQuantity() > 0); // <-- ось де оновлюється статус
+        product.setAvailability(product.getQuantity() > 0);
         productRepository.save(product);
 
         return recalculate(cart);
@@ -83,21 +83,18 @@ public class CartService {
             throw new RuntimeException("Доступ заборонено");
 
         Product product = item.getProduct();
-        int delta = quantity - item.getQuantity(); // різниця: скільки ще треба або повернути
+        int delta = quantity - item.getQuantity();
 
         if (quantity <= 0) {
-            // Повертаємо весь резерв назад на склад
             product.setQuantity(product.getQuantity() + item.getQuantity());
             product.setAvailability(true);
             productRepository.save(product);
-
             cartItemRepository.delete(item);
             cart.getItems().remove(item);
         } else {
             if (delta > 0 && product.getQuantity() < delta)
                 throw new RuntimeException("На складі лише " + product.getQuantity() + " шт.");
 
-            // Коригуємо резерв на різницю
             product.setQuantity(product.getQuantity() - delta);
             product.setAvailability(product.getQuantity() > 0);
             productRepository.save(product);
@@ -118,7 +115,6 @@ public class CartService {
         if (!item.getCart().getId().equals(cart.getId()))
             throw new RuntimeException("Доступ заборонено");
 
-        // Повертаємо резерв назад на склад
         Product product = item.getProduct();
         product.setQuantity(product.getQuantity() + item.getQuantity());
         product.setAvailability(true);
@@ -136,7 +132,6 @@ public class CartService {
             throw new RuntimeException("Кошик порожній");
 
         orderService.createFromCart(user, cart, station, payMethod);
-        // кошик НЕ чистимо — товари вже списані зі складу при addToCart
     }
 
     public int getCartItemCount(User user) {
@@ -146,7 +141,6 @@ public class CartService {
                 .orElse(0);
     }
 
-    // recalculate більше НЕ робить findById — рахує з поточного стану cart.getItems()
     private Cart recalculate(Cart cart) {
         BigDecimal total = cart.getItems().stream()
                 .map(CartItem::getSubtotal)

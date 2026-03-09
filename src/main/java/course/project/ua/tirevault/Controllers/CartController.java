@@ -14,33 +14,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
 public class CartController {
-
     @Autowired
     private CartService cartService;
-
-//    private static final List<String> STATIONS = List.of(
-//            "TireVault — вул. Хрещатик, 1, Київ",
-//            "TireVault — вул. Незалежності, 5, Харків",
-//            "TireVault — вул. Шевченка, 10, Львів",
-//            "TireVault — вул. Соборна, 3, Одеса"
-//    );
 
     @GetMapping("/cart")
     public String cartPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) {
             model.addAttribute("page", "cart");
-//            model.addAttribute("stations", STATIONS);
             return "index";
         }
         Cart cart = cartService.getOrCreateCart(user);
         model.addAttribute("cart", cart);
-//        model.addAttribute("stations", STATIONS);
         model.addAttribute("page", "cart");
         return "index";
     }

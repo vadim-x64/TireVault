@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @ToString(exclude = "order")
 @EqualsAndHashCode(exclude = "order")
 public class OrderItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +28,7 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price; // ціна на момент замовлення
+    private BigDecimal price;
 
     public BigDecimal getSubtotal() {
         return price.multiply(BigDecimal.valueOf(quantity));

@@ -95,7 +95,6 @@
                                   data-created=${order.formattedDate},
                                   data-scheduled=${order.formattedScheduledDate},
                                   data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
-
                         <form th:action="@{/manager/services/{id}/delete(id=${order.id})}"
                               method="post"
                               onsubmit="return confirm('Видалити замовлення?')"
