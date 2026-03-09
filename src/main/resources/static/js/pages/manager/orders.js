@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('mgrOrderStation').textContent   = station || '—';
             document.getElementById('mgrOrderTotal').textContent     = total + ' ₴';
 
-            const payLabel = payMethod === 'card' ? '💳 Карткою'
-                : payMethod === 'cash' ? '💵 Готівка на СТО' : '—';
+            const payLabel = payMethod === 'card' ? 'Карткою'
+                : payMethod === 'cash' ? 'Готівка на СТО' : '—';
             document.getElementById('mgrOrderPayMethod').textContent = payLabel;
 
             // Позиції

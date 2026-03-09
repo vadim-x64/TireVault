@@ -9,13 +9,13 @@
                 <li class="nav-item flex-fill text-center" role="presentation">
                     <button th:classappend="${activeTab == 'register' ? 'text-muted' : 'active'}"
                             class="nav-link w-100 fw-bold text-dark" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
-                            type="button" role="tab"><i class="bi bi-box-arrow-in-right me-2"></i>Вхід
+                            type="button" role="tab">Вхід
                     </button>
                 </li>
                 <li class="nav-item flex-fill text-center" role="presentation">
                     <button th:classappend="${activeTab == 'register' ? 'active' : 'text-muted'}"
                             class="nav-link w-100 fw-bold text-dark" id="register-tab" data-bs-toggle="tab"
-                            data-bs-target="#register" type="button" role="tab"><i class="bi bi-person-plus me-2"></i>Реєстрація
+                            data-bs-target="#register" type="button" role="tab">Реєстрація
                     </button>
                 </li>
             </ul>
@@ -32,7 +32,7 @@
                     <div th:if="${loginError}" class="alert alert-danger" role="alert" th:text="${loginError}"></div>
                     <form th:action="@{/login}" method="post">
                         <div class="mb-3">
-                            <label for="loginUsername" class="form-label fw-bold">Логін (Username)</label>
+                            <label for="loginUsername" class="form-label fw-bold">Логін</label>
                             <input type="text" class="form-control form-control-lg" id="loginUsername" name="username"
                                    placeholder="Введіть ваш логін" th:value="${enteredUsername}" maxlength="50"
                                    required>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="regUsername" class="form-label fw-bold">Логін (Username) <span
+                            <label for="regUsername" class="form-label fw-bold">Логін<span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="regUsername" name="username"
                                    placeholder="Придумайте логін" th:value="${regUsername}" maxlength="50" required>

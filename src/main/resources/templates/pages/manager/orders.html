@@ -4,47 +4,45 @@
 
 <div class="container-fluid py-4" th:fragment="content">
 
-  <div class="d-flex align-items-center mb-4">
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-         class="bi bi-bag me-2 text-warning" viewBox="0 0 16 16">
-      <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-    </svg>
-    <h3 class="fw-bold mb-0">Журнал замовлень</h3>
-  </div>
+    <div class="d-flex align-items-center mb-4">
 
-  <ul class="nav nav-tabs mb-4" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active fw-bold" data-bs-toggle="tab"
-              data-bs-target="#mActiveOrders" type="button">
-        Активні
-        <span th:if="${#lists.size(activeOrders) > 0}"
-              class="badge bg-danger rounded-pill ms-1"
-              th:text="${#lists.size(activeOrders)}"></span>
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link fw-bold" data-bs-toggle="tab"
-              data-bs-target="#mCompletedOrders" type="button">
-        Завершені
-        <span th:if="${#lists.size(completedOrders) > 0}"
-              class="badge bg-success rounded-pill ms-1"
-              th:text="${#lists.size(completedOrders)}"></span>
-      </button>
-    </li>
-  </ul>
+        <h3 class="fw-bold mb-0">Журнал замовлень</h3>
+    </div>
 
-  <div class="tab-content">
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold text-dark" data-bs-toggle="tab"
+                    data-bs-target="#mActiveOrders" type="button">
+                Активні
+                <span th:if="${#lists.size(activeOrders) > 0}"
+                      class="badge bg-danger rounded-pill ms-1"
+                      th:text="${#lists.size(activeOrders)}"></span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold text-dark" data-bs-toggle="tab"
+                    data-bs-target="#mCompletedOrders" type="button">
+                Завершені
+                <span th:if="${#lists.size(completedOrders) > 0}"
+                      class="badge bg-success rounded-pill ms-1"
+                      th:text="${#lists.size(completedOrders)}"></span>
+            </button>
+        </li>
+    </ul>
 
-    <!-- АКТИВНІ -->
-    <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
-      <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
-        <p class="fs-5">Нових замовлень немає</p>
-      </div>
-      <div class="row g-3" th:if="${!#lists.isEmpty(activeOrders)}">
-        <div class="col-md-6 col-lg-4" th:each="order : ${activeOrders}">
-          <div class="card border-0 shadow-sm h-100 mgr-order-card"
-               style="cursor:pointer;"
-               th:attr="data-id=${order.id},
+    <div class="tab-content">
+
+        <!-- АКТИВНІ -->
+        <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
+            <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
+                <i class="bi bi-inbox mb-3 d-block mx-auto opacity-50 fs-1"></i>
+                <p class="fs-5">Нових замовлень немає</p>
+            </div>
+            <div class="row g-3" th:if="${!#lists.isEmpty(activeOrders)}">
+                <div class="col-md-6 col-lg-4" th:each="order : ${activeOrders}">
+                    <div class="card border-0 shadow-sm h-100 mgr-order-card"
+                         role="button"
+                         th:attr="data-id=${order.id},
                                   data-username=${order.user.username},
                                   data-fullname=${order.customerInfo},
                                   data-phone=${order.customerPhone},
@@ -54,46 +52,42 @@
                                   data-station=${order.station != null ? order.station : ''},
                                   data-paymethod=${order.payMethod != null ? order.payMethod : ''},
                                   data-items=${order.itemsJson}">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
-                <span th:if="${order.status.name() == 'PENDING'}"
-                      class="badge bg-danger d-flex align-items-center gap-1">
-                                    <span class="rounded-circle bg-white d-inline-block"
-                                          style="width:7px;height:7px;"></span>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
+                                <span th:if="${order.status.name() == 'PENDING'}"
+                                      class="badge bg-danger d-flex align-items-center gap-1">
+                                    <span class="rounded-circle bg-white d-inline-block p-1"></span>
                                     Нове
                                 </span>
-                <span th:if="${order.status.name() == 'PROCESSING'}"
-                      class="badge bg-warning text-dark">Виконується</span>
-              </div>
-              <p class="text-muted small mb-1">
-                👤 <span th:text="${order.user.username}"></span>
-              </p>
-              <p class="text-muted small mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                     class="bi bi-clock me-1" viewBox="0 0 16 16">
-                  <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                </svg>
-                <span th:text="${order.formattedDate}"></span>
-              </p>
-              <p class="fw-bold mb-0 mt-2" th:text="${order.total} + ' ₴'"></p>
+                                <span th:if="${order.status.name() == 'PROCESSING'}"
+                                      class="badge bg-warning text-dark">Виконується</span>
+                            </div>
+                            <p class="text-muted small mb-1">
+                                <i class="bi bi-person me-2"></i> <span th:text="${order.user.username}"></span>
+                            </p>
+                            <p class="text-muted small mb-1">
+                                <i class="bi bi-clock me-1"></i>
+                                <span th:text="${order.formattedDate}"></span>
+                            </p>
+                            <p class="fw-bold mb-0 mt-2" th:text="${order.total} + ' ₴'"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- ЗАВЕРШЕНІ -->
-    <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
-      <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
-        <p class="fs-5">Завершених замовлень немає</p>
-      </div>
-      <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
-        <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
-          <div class="card border-0 shadow-sm h-100 mgr-order-card position-relative"
-               style="cursor:pointer;"
-               th:attr="data-id=${order.id},
+        <!-- ЗАВЕРШЕНІ -->
+        <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
+            <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
+                <i class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50 fs-1"></i>
+                <p class="fs-5">Завершених замовлень немає</p>
+            </div>
+            <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
+                <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
+                    <div class="card border-0 shadow-sm h-100 mgr-order-card position-relative"
+                         role="button"
+                         th:attr="data-id=${order.id},
                                   data-username=${order.user.username},
                                   data-fullname=${order.customerInfo},
                                   data-phone=${order.customerPhone},
@@ -103,143 +97,139 @@
                                   data-station=${order.station != null ? order.station : ''},
                                   data-paymethod=${order.payMethod != null ? order.payMethod : ''},
                                   data-items=${order.itemsJson}">
-            <form th:action="@{/manager/orders/{id}/delete(id=${order.id})}"
-                  method="post"
-                  onsubmit="return confirm('Видалити замовлення?')"
-                  onclick="event.stopPropagation()">
-              <button type="submit" class="btn btn-sm btn-close position-absolute"
-                      style="bottom:8px;right:8px;z-index:10;" title="Видалити"></button>
-            </form>
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
-                <span th:if="${order.status.name() == 'COMPLETED'}"
-                      class="badge bg-success">Виконано</span>
-                <span th:if="${order.status.name() == 'CANCELLED'}"
-                      class="badge bg-secondary">Скасовано</span>
-              </div>
-              <p class="text-muted small mb-1">👤 <span th:text="${order.user.username}"></span></p>
-              <p class="text-muted small mb-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                     class="bi bi-clock me-1" viewBox="0 0 16 16">
-                  <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                </svg>
-                <span th:text="${order.formattedDate}"></span>
-              </p>
-              <p class="fw-bold mb-0 mt-2" th:text="${order.total} + ' ₴'"></p>
+                        <form th:action="@{/manager/orders/{id}/delete(id=${order.id})}"
+                              method="post"
+                              onsubmit="return confirm('Видалити замовлення?')"
+                              onclick="event.stopPropagation()">
+                            <button type="submit" class="btn btn-sm btn-close position-absolute bottom-0 end-0 m-2"
+                                    title="Видалити"></button>
+                        </form>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="fw-bold">Замовлення #<span th:text="${order.orderNumber}"></span></span>
+                                <span th:if="${order.status.name() == 'COMPLETED'}"
+                                      class="badge bg-success">Виконано</span>
+                                <span th:if="${order.status.name() == 'CANCELLED'}"
+                                      class="badge bg-secondary">Скасовано</span>
+                            </div>
+                            <p class="text-muted small mb-1"><i class="bi bi-person me-2"></i> <span th:text="${order.user.username}"></span></p>
+                            <p class="text-muted small mb-1">
+                                <i class="bi bi-clock me-1"></i>
+                                <span th:text="${order.formattedDate}"></span>
+                            </p>
+                            <p class="fw-bold mb-0 mt-2" th:text="${order.total} + ' ₴'"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- МОДАЛКА МЕНЕДЖЕРА -->
-  <div class="modal fade" id="mgrOrderModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header" style="background-color:#212529;">
-          <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="mb-3 text-center">
-            <span id="mgrOrderStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
-          </div>
-          <table class="table table-borderless mb-3">
-            <tbody>
-            <tr>
-              <td class="text-muted fw-bold" style="width:160px;">Користувач</td>
-              <td id="mgrOrderUsername" class="fw-bold"></td>
-            </tr>
-            <tr>
-              <td class="text-muted fw-bold">ПІБ</td>
-              <td id="mgrOrderFullname"></td>
-            </tr>
-            <tr>
-              <td class="text-muted fw-bold">Телефон</td>
-              <td id="mgrOrderPhone"></td>
-            </tr>
-            <tr>
-              <td class="text-muted fw-bold">Дата замовлення</td>
-              <td id="mgrOrderCreated"></td>
-            </tr>
-            <tr>
-              <td class="text-muted fw-bold">Відділення СТО</td>
-              <td id="mgrOrderStation"></td>
-            </tr>
-            <tr>
-              <td class="text-muted fw-bold">Спосіб оплати</td>
-              <td id="mgrOrderPayMethod"></td>
-            </tr>
-            </tbody>
-          </table>
+    <!-- МОДАЛКА МЕНЕДЖЕРА -->
+    <div class="modal fade" id="mgrOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3 text-center">
+                        <span id="mgrOrderStatusBadge" class="badge fs-6 px-3 py-2">Статус</span>
+                    </div>
+                    <table class="table table-borderless mb-3">
+                        <tbody>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Користувач</td>
+                            <td id="mgrOrderUsername" class="fw-bold"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">ПІБ</td>
+                            <td id="mgrOrderFullname"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Телефон</td>
+                            <td id="mgrOrderPhone"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Дата замовлення</td>
+                            <td id="mgrOrderCreated"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Відділення СТО</td>
+                            <td id="mgrOrderStation"></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Спосіб оплати</td>
+                            <td id="mgrOrderPayMethod"></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-          <h6 class="fw-bold mb-2">Товари:</h6>
-          <table class="table table-sm table-bordered">
-            <thead class="table-dark">
-            <tr>
-              <th>Назва</th>
-              <th class="text-center" style="width:80px;">К-сть</th>
-              <th class="text-end" style="width:100px;">Ціна</th>
-              <th class="text-end" style="width:110px;">Сума</th>
-            </tr>
-            </thead>
-            <tbody id="mgrOrderItems"></tbody>
-            <tfoot>
-            <tr>
-              <td colspan="3" class="text-end fw-bold">Разом:</td>
-              <td class="text-end fw-bold" id="mgrOrderTotal"></td>
-            </tr>
-            </tfoot>
-          </table>
-        </div>
+                    <h6 class="fw-bold mb-2">Товари:</h6>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Назва</th>
+                            <th class="text-center" style="width:80px;">К-сть</th>
+                            <th class="text-end" style="width:100px;">Ціна</th>
+                            <th class="text-end" style="width:110px;">Сума</th>
+                        </tr>
+                        </thead>
+                        <tbody id="mgrOrderItems"></tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Разом:</td>
+                            <td class="text-end fw-bold" id="mgrOrderTotal"></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
 
-        <!-- Дії для PENDING -->
-        <div id="mgrPendingSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
-          <form id="mgrProcessingForm" th:action="'#'" method="post" class="w-100">
-            <input type="hidden" name="status" value="PROCESSING">
-            <button type="submit" class="btn btn-warning btn-sm fw-bold">
-              ▶ Прийняти в роботу
-            </button>
-          </form>
-          <div class="d-flex gap-2">
-            <form id="mgrCompleteFromPendingForm" method="post">
-              <input type="hidden" name="status" value="COMPLETED">
-              <button type="submit" class="btn btn-success btn-sm fw-bold">✔ Виконано</button>
-            </form>
-            <form id="mgrCancelFromPendingForm" method="post"
-                  onsubmit="return confirm('Скасувати замовлення?')">
-              <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати</button>
-            </form>
-          </div>
-        </div>
+                <!-- Дії для PENDING -->
+                <div id="mgrPendingSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
+                    <form id="mgrProcessingForm" th:action="'#'" method="post" class="w-100">
+                        <input type="hidden" name="status" value="PROCESSING">
+                        <button type="submit" class="btn btn-warning btn-sm fw-bold">
+                            Прийняти в роботу
+                        </button>
+                    </form>
+                    <div class="d-flex gap-2">
+                        <form id="mgrCompleteFromPendingForm" method="post">
+                            <input type="hidden" name="status" value="COMPLETED">
+                            <button type="submit" class="btn btn-success btn-sm fw-bold">Виконано</button>
+                        </form>
+                        <form id="mgrCancelFromPendingForm" method="post"
+                              onsubmit="return confirm('Скасувати замовлення?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
 
-        <!-- Дії для PROCESSING -->
-        <div id="mgrProcessingSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
-          <div class="d-flex gap-2">
-            <form id="mgrCompleteFromProcessingForm" method="post">
-              <input type="hidden" name="status" value="COMPLETED">
-              <button type="submit" class="btn btn-success btn-sm fw-bold">✔ Виконано</button>
-            </form>
-            <form id="mgrCancelFromProcessingForm" method="post"
-                  onsubmit="return confirm('Скасувати замовлення?')">
-              <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати</button>
-            </form>
-          </div>
-        </div>
+                <!-- Дії для PROCESSING -->
+                <div id="mgrProcessingSection"
+                     class="modal-footer flex-column align-items-start border-top d-none gap-2">
+                    <div class="d-flex gap-2">
+                        <form id="mgrCompleteFromProcessingForm" method="post">
+                            <input type="hidden" name="status" value="COMPLETED">
+                            <button type="submit" class="btn btn-success btn-sm fw-bold">Виконано</button>
+                        </form>
+                        <form id="mgrCancelFromProcessingForm" method="post"
+                              onsubmit="return confirm('Скасувати замовлення?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати</button>
+                        </form>
+                    </div>
+                </div>
 
-        <!-- COMPLETED / CANCELLED -->
-        <div id="mgrDoneSection" class="modal-footer d-none">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <!-- COMPLETED / CANCELLED -->
+                <div id="mgrDoneSection" class="modal-footer d-none">
+
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <script th:src="@{/js/pages/manager/orders.js}"></script>
+    <script th:src="@{/js/pages/manager/orders.js}"></script>
 </div>
-
 </body>
 </html>

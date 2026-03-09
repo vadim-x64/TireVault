@@ -4,18 +4,12 @@
 
 <div class="container-fluid py-4" th:fragment="content">
     <div class="d-flex align-items-center mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
-             class="bi bi-journal-text me-2 text-warning" viewBox="0 0 16 16">
-            <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-        </svg>
         <h3 class="fw-bold mb-0">Журнал записів</h3>
     </div>
 
     <ul class="nav nav-tabs mb-4" id="managerOrdersTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active fw-bold" id="m-active-tab" data-bs-toggle="tab"
+            <button class="nav-link active fw-bold text-dark" id="m-active-tab" data-bs-toggle="tab"
                     data-bs-target="#mActiveOrders" type="button" role="tab">
                 Активні
                 <span th:if="${#lists.size(activeOrders) > 0}"
@@ -24,7 +18,7 @@
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link fw-bold" id="m-completed-tab" data-bs-toggle="tab"
+            <button class="nav-link fw-bold text-dark" id="m-completed-tab" data-bs-toggle="tab"
                     data-bs-target="#mCompletedOrders" type="button" role="tab">
                 Завершені
                 <span th:if="${#lists.size(completedOrders) > 0}"
@@ -39,16 +33,13 @@
         <!-- ===== АКТИВНІ ===== -->
         <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
-                     class="bi bi-inbox mb-3 d-block mx-auto opacity-50" viewBox="0 0 16 16">
-                    <path d="M4.98 4a.5.5 0 0 0-.39.188L1.54 8H6a.5.5 0 0 1 .5.5 1.5 1.5 0 0 0 3 0A.5.5 0 0 1 10 8h4.46l-3.05-3.812A.5.5 0 0 0 11.02 4H4.98zm9.954 5H10.45a2.5 2.5 0 0 1-4.9 0H1.066l.32 2.562a.5.5 0 0 0 .497.438h12.234a.5.5 0 0 0 .496-.438L14.933 9z"/>
-                </svg>
-                <p class="fs-5">Нових замовлень немає</p>
+                <i class="bi bi-inbox mb-3 d-block mx-auto opacity-50 fs-1"></i>
+                <p class="fs-5">Нових записів немає</p>
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(activeOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${activeOrders}">
                     <div class="card border-0 shadow-sm h-100 manager-order-card"
-                         style="cursor: pointer;"
+                         role="button"
                          th:attr="data-id=${order.id},
                                   data-name=${order.customerName},
                                   data-phone=${order.phone},
@@ -63,38 +54,26 @@
                                 <h6 class="fw-bold mb-0" th:text="${order.customerName}">Ім'я</h6>
                                 <span th:if="${order.status.name() == 'PENDING'}"
                                       class="badge bg-danger d-flex align-items-center gap-1">
-                                    <span class="rounded-circle bg-white d-inline-block"
-                                          style="width:7px;height:7px;"></span>
+                                    <span class="rounded-circle bg-white d-inline-block p-1"></span>
                                     В очікуванні
                                 </span>
                                 <span th:if="${order.status.name() == 'ACCEPTED'}"
                                       class="badge bg-warning text-dark">Прийнято</span>
                                 <span th:if="${order.status.name() == 'SCHEDULED'}"
                                       class="badge bg-info text-dark">
-                                    📅 <span th:text="${order.formattedScheduledDate}"></span>
+                                    <span th:text="${order.formattedScheduledDate}"></span>
                                 </span>
                             </div>
                             <p class="text-muted small mb-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
-                                     class="bi bi-telephone me-1" viewBox="0 0 16 16">
-                                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
-                                </svg>
+                                <i class="bi bi-telephone me-1"></i>
                                 <span th:text="${order.phone}"></span>
                             </p>
                             <p class="text-muted small mb-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
-                                     class="bi bi-geo-alt me-1" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32.066 32.066 0 0 1 8 14.58a32.068 32.068 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                </svg>
+                                <i class="bi bi-geo-alt me-1"></i>
                                 <span th:text="${order.city}"></span>
                             </p>
                             <p class="text-muted small mb-0 mt-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                                     class="bi bi-clock me-1" viewBox="0 0 16 16">
-                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                                </svg>
+                                <i class="bi bi-clock me-1"></i>
                                 <span th:text="${order.formattedDate}"></span>
                             </p>
                         </div>
@@ -106,17 +85,13 @@
         <!-- ===== ЗАВЕРШЕНІ ===== -->
         <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
-                     class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50" viewBox="0 0 16 16">
-                    <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-                    <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-                </svg>
-                <p class="fs-5">Завершених замовлень немає</p>
+                <i class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50 fs-1"></i>
+                <p class="fs-5">Завершених записів немає</p>
             </div>
             <div class="row g-3" th:if="${!#lists.isEmpty(completedOrders)}">
                 <div class="col-md-6 col-lg-4" th:each="order : ${completedOrders}">
                     <div class="card border-0 shadow-sm h-100 manager-order-card position-relative"
-                         style="cursor: pointer;"
+                         role="button"
                          th:attr="data-id=${order.id},
                                   data-name=${order.customerName},
                                   data-phone=${order.phone},
@@ -132,8 +107,7 @@
                               onsubmit="return confirm('Видалити замовлення?')"
                               onclick="event.stopPropagation()">
                             <button type="submit"
-                                    class="btn btn-sm btn-close position-absolute"
-                                    style="bottom:8px;right:8px;z-index:10;"
+                                    class="btn btn-sm btn-close position-absolute bottom-0 end-0 m-2"
                                     title="Видалити">
                             </button>
                         </form>
@@ -146,26 +120,15 @@
                                       class="badge bg-secondary">Скасовано</span>
                             </div>
                             <p class="text-muted small mb-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
-                                     class="bi bi-telephone me-1" viewBox="0 0 16 16">
-                                    <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
-                                </svg>
+                                <i class="bi bi-telephone me-1"></i>
                                 <span th:text="${order.phone}"></span>
                             </p>
                             <p class="text-muted small mb-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
-                                     class="bi bi-geo-alt me-1" viewBox="0 0 16 16">
-                                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32.066 32.066 0 0 1 8 14.58a32.068 32.068 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
-                                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                </svg>
+                                <i class="bi bi-geo-alt me-1"></i>
                                 <span th:text="${order.city}"></span>
                             </p>
                             <p class="text-muted small mb-0 mt-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
-                                     class="bi bi-clock me-1" viewBox="0 0 16 16">
-                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                                </svg>
+                                <i class="bi bi-clock me-1"></i>
                                 <span th:text="${order.formattedDate}"></span>
                             </p>
                         </div>
@@ -180,7 +143,7 @@
     <div class="modal fade" id="managerOrderModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header" style="background-color: #212529;">
+                <div class="modal-header bg-dark">
                     <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -192,24 +155,24 @@
                     <table class="table table-borderless">
                         <tbody>
                         <tr>
-                            <td class="text-muted fw-bold" style="width:140px">Ім'я</td>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Ім'я</td>
                             <td id="mModalName" class="fw-bold"></td>
                         </tr>
                         <tr>
-                            <td class="text-muted fw-bold">Телефон</td>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Телефон</td>
                             <td id="mModalPhone"></td>
                         </tr>
                         <tr>
-                            <td class="text-muted fw-bold">Місто</td>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Місто</td>
                             <td id="mModalCity"></td>
                         </tr>
                         <tr>
-                            <td class="text-muted fw-bold">Дата запису</td>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Дата запису</td>
                             <td id="mModalCreated"></td>
                         </tr>
                         <tr id="mModalDescRow">
-                            <td class="text-muted fw-bold">Опис</td>
-                            <td id="mModalDescription" style="white-space: pre-wrap;"></td>
+                            <td class="text-muted fw-bold pe-3 text-nowrap">Опис</td>
+                            <td id="mModalDescription"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -218,9 +181,8 @@
                 <!-- PENDING: прийняти -->
                 <div id="mAcceptSection" class="modal-footer border-top d-none">
                     <form id="mAcceptForm" method="post">
-                        <div class="form-check form-switch d-flex align-items-center gap-2 mb-0">
+                        <div class="form-check d-flex align-items-center gap-2 mb-0">
                             <input class="form-check-input" type="checkbox" id="mAcceptCheck"
-                                   role="switch" style="width:2.5em;height:1.5em;cursor:pointer;"
                                    onchange="document.getElementById('mAcceptForm').submit()">
                             <label class="form-check-label fw-bold fs-6" for="mAcceptCheck">
                                 Прийняти замовлення
@@ -234,11 +196,11 @@
                     <form id="mScheduleForm" method="post" class="w-100">
                         <input type="hidden" id="mScheduledAt" name="scheduledAt">
                         <label class="fw-bold mb-1">Призначити дату прийому:</label>
-                        <input type="date" id="mScheduleDate" class="form-control mb-2" style="max-width:200px;">
+                        <input type="date" id="mScheduleDate" class="form-control mb-2 w-auto">
                         <div id="mSlotsContainer" class="mb-2">
                             <p class="text-muted small mb-0">Оберіть дату</p>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm fw-bold"
+                        <button type="submit" class="btn btn-danger btn-sm fw-bold"
                                 onclick="if(!document.getElementById('mScheduledAt').value){alert('Оберіть час');return false;}">
                             Заброньювати
                         </button>
@@ -258,25 +220,21 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod"
                                        id="payCard" value="CARD" required>
-                                <label class="form-check-label" for="payCard">💳 Карта</label>
+                                <label class="form-check-label" for="payCard">Карта</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="paymentMethod"
                                        id="payCash" value="CASH">
-                                <label class="form-check-label" for="payCash">💵 Готівка</label>
+                                <label class="form-check-label" for="payCash">Готівка</label>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-success btn-sm fw-bold px-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                 class="bi bi-check-lg me-1" viewBox="0 0 16 16">
-                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
-                            </svg>
                             Виконано
                         </button>
                     </form>
                     <hr class="w-100 my-1">
                     <form id="mUnscheduleForm" method="post" class="w-100">
-                        <button type="submit" class="btn btn-outline-warning btn-sm">
+                        <button type="submit" class="btn btn-outline-dark btn-sm">
                             Скасувати бронювання
                         </button>
                     </form>
@@ -291,12 +249,12 @@
                     <p class="mb-2 fw-bold">
                         Оплата: <span id="mDonePayment" class="text-success"></span>
                     </p>
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Закрити</button>
+
                 </div>
 
                 <!-- CANCELLED -->
                 <div id="mCancelledSection" class="modal-footer d-none">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+
                 </div>
 
             </div>

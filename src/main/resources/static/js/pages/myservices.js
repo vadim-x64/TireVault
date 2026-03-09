@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Оплата
             const paymentRow = document.getElementById('modalPaymentRow');
             if (status === 'COMPLETED' && payment) {
-                const payLabel = payment === 'CARD' ? '💳 Карта' : '💵 Готівка';
+                const payLabel = payment === 'CARD' ? 'Карта' : 'Готівка';
                 document.getElementById('modalPayment').textContent = payLabel;
                 paymentRow.classList.remove('d-none');
             } else {
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 cancelSection.classList.remove('d-none');
             } else if (status === 'SCHEDULED') {
                 badge.className = 'badge fs-6 px-3 py-2 bg-info text-dark';
-                badge.textContent = '📅 Заплановано';
+                badge.textContent = 'Заплановано';
                 document.getElementById('modalCancelForm').action = '/myservices/' + id + '/cancel';
                 cancelSection.classList.remove('d-none');
             } else if (status === 'COMPLETED') {
