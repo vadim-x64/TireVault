@@ -1,24 +1,37 @@
-<!--/*@thymesVar id="statusCode" type="java.lang.Integer"*/-->
-<!--/*@thymesVar id="errorMessage" type="java.lang.String"*/-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
 <div class="container-fluid" th:fragment="content">
-    <div class="row min-vh-100">
-        <main class="col-md-10 p-5 d-flex align-items-center justify-content-center">
-            <div class="text-center">
-                <div class="spinner-grow text-danger" role="status">
-                    <span class="visually-hidden">Loading...</span>
+    <div class="min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header bg-danger text-white text-center py-5 border-0">
+                        <div class="spinner-grow text-white mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h1 class="display-1 fw-bold mb-0" th:text="${statusCode}">000</h1>
+                    </div>
+                    <div class="card-body text-center px-5 py-4">
+                        <h2 class="fw-bold mb-2">
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>От халепа!
+                        </h2>
+                        <p class="text-muted lead mb-4" th:text="${errorMessage}">
+                            Невідома помилка
+                        </p>
+                        <hr class="my-3">
+                    </div>
+                    <div class="card-footer bg-light text-center text-muted small py-3 border-0">
+                        <i class="bi bi-shield-exclamation me-1 text-danger"></i>
+                        Якщо помилка повторюється - напишіть нам на
+                        <a href="mailto:support@gmail.com" class="text-danger text-decoration-none fw-semibold">
+                            support@gmail.com
+                        </a>
+                    </div>
                 </div>
-                <h1 class="display-1 fw-bold text-danger" th:text="${statusCode}"></h1>
-                <h2 class="mb-4"><i class="bi bi-exclamation-triangle-fill text-warning"></i>ОКАК!</h2>
-                <p class="lead text-muted mb-5" th:text="${errorMessage}"></p>
-                <a href="/" class="btn btn-primary btn-lg">
-                    <i class="bi bi-house-door"></i> Повернутися на головну
-                </a>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 
