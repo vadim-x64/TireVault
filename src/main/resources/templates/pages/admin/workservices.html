@@ -3,28 +3,21 @@
 <body>
 <div th:fragment="content">
 
-    <h2 class="fw-bold mb-4">Управління послугами</h2>
-    <a href="/admin" class="btn btn-outline-secondary btn-sm mb-4">
-        <i class="bi bi-arrow-left me-1"></i>
-        Назад до панелі
-    </a>
-
+    <h2 class="fw-bold mb-4">Послуги</h2>
     <div class="card shadow border-0 mb-4">
-        <div class="card-header py-3 d-flex align-items-center justify-content-between"
-             style="background-color:#212529; color:white;">
+        <div class="card-header py-3 d-flex align-items-center justify-content-between bg-dark text-white">
             <h5 class="mb-0">Категорії послуг</h5>
         </div>
         <div class="card-body">
 
-
             <form th:action="@{/admin/workservices/categories/add}" method="post"
                   class="d-flex gap-2 mb-3">
-                <input type="text" name="name" class="form-control" style="max-width:300px;"
+                <input type="text" name="name" class="form-control"
                        placeholder="Назва нової категорії" required>
                 <button type="submit" class="btn btn-dark">Додати</button>
             </form>
 
-            <div th:if="${categories.isEmpty()}" class="text-muted">Категорій ще немає</div>
+            <div th:if="${categories.isEmpty()}" class="text-muted text-center">Категорій ще немає</div>
 
             <table th:unless="${categories.isEmpty()}" class="table table-sm align-middle mb-0">
                 <thead class="table-dark">
@@ -32,7 +25,7 @@
                     <th>#</th>
                     <th>Назва</th>
                     <th>Послуг</th>
-                    <th style="width:220px;"></th>
+                    <th class="w-25"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,14 +34,12 @@
                     <td th:text="${cat.name}"></td>
                     <td th:text="${cat.workServices != null ? cat.workServices.size() : 0}"></td>
                     <td class="text-end">
-                        <!-- Кнопка «Редагувати» відкриває модалку -->
                         <button type="button" class="btn btn-sm btn-outline-secondary me-1"
                                 data-bs-toggle="modal" data-bs-target="#editCategoryModal"
                                 th:data-id="${cat.id}"
                                 th:data-name="${cat.name}">
                             Редагувати
                         </button>
-                        <!-- Видалити (разом з послугами категорії) -->
                         <form th:action="@{/admin/workservices/categories/{id}/delete(id=${cat.id})}"
                               method="post" class="d-inline"
                               onsubmit="return confirm('Видалити категорію разом з усіма її послугами?')">
@@ -61,14 +52,11 @@
         </div>
     </div>
 
-
     <div class="card shadow border-0">
-        <div class="card-header py-3"
-             style="background-color:#212529; color:white;">
+        <div class="card-header py-3 bg-dark text-white">
             <h5 class="mb-0">Послуги</h5>
         </div>
         <div class="card-body">
-
 
             <form th:action="@{/admin/workservices/add}" method="post"
                   class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
@@ -107,7 +95,7 @@
                 </div>
             </form>
 
-            <div th:if="${workServices.isEmpty()}" class="text-muted">Послуг ще немає</div>
+            <div th:if="${workServices.isEmpty()}" class="text-muted text-center">Послуг ще немає</div>
 
             <div th:unless="${workServices.isEmpty()}" class="table-responsive">
                 <table class="table table-sm align-middle mb-0">
@@ -119,7 +107,7 @@
                         <th>Опис</th>
                         <th>Ціна</th>
                         <th>Тривалість</th>
-                        <th style="width:160px;"></th>
+                        <th class="w-auto"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -140,12 +128,12 @@
                                     th:data-description="${ws.description}"
                                     th:data-price="${ws.price}"
                                     th:data-working-hours="${ws.workingHours}">
-                                Ред.
+                                Редагувати
                             </button>
                             <form th:action="@{/admin/workservices/{id}/delete(id=${ws.id})}"
                                   method="post" class="d-inline"
                                   onsubmit="return confirm('Видалити цю послугу?')">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Вид.</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
                             </form>
                         </td>
                     </tr>
@@ -159,7 +147,7 @@
         <div class="modal-dialog">
             <form method="post" id="editCategoryForm">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color:#212529; color:white;">
+                    <div class="modal-header bg-dark text-white">
                         <h5 class="modal-title">Редагувати категорію</h5>
                         <button type="button" class="btn-close btn-close-white"
                                 data-bs-dismiss="modal"></button>
@@ -171,7 +159,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Скасувати</button>
+                                data-bs-dismiss="modal">Скасувати
+                        </button>
                         <button type="submit" class="btn btn-dark">Зберегти</button>
                     </div>
                 </div>
@@ -179,12 +168,11 @@
         </div>
     </div>
 
-    <!-- Редагування послуги -->
     <div class="modal fade" id="editServiceModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <form method="post" id="editServiceForm">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color:#212529; color:white;">
+                    <div class="modal-header bg-dark text-white">
                         <h5 class="modal-title">Редагувати послугу</h5>
                         <button type="button" class="btn-close btn-close-white"
                                 data-bs-dismiss="modal"></button>
@@ -222,7 +210,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Скасувати</button>
+                                data-bs-dismiss="modal">Скасувати
+                        </button>
                         <button type="submit" class="btn btn-dark">Зберегти</button>
                     </div>
                 </div>
@@ -230,10 +219,7 @@
         </div>
     </div>
 
-    <!-- JS: наповнення модалок даними -->
-    <script th:src="@{/js/pages/admin/workservices.js}">
-
-    </script>
+    <script th:src="@{/js/pages/admin/workservices.js}"></script>
 
 </div>
 </body>
