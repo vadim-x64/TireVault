@@ -3,16 +3,13 @@
 <body>
 
 <div th:fragment="content" class="container-fluid py-4">
-
     <div class="d-flex align-items-center mb-4">
-                <h3 class="fw-bold mb-0">Мої замовлення</h3>
+        <h3 class="fw-bold mb-0">Мої замовлення</h3>
     </div>
-
     <div th:if="${cancelError}" class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Помилка:</strong> <span th:text="${cancelError}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-
     <ul class="nav nav-tabs mb-4" id="ordersTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active fw-bold text-dark" data-bs-toggle="tab"
@@ -33,10 +30,7 @@
             </button>
         </li>
     </ul>
-
     <div class="tab-content">
-
-        <!-- АКТИВНІ -->
         <div class="tab-pane fade show active" id="activeOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-inbox mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -72,8 +66,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- ЗАВЕРШЕНІ -->
         <div class="tab-pane fade" id="completedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -116,8 +108,6 @@
             </div>
         </div>
     </div>
-
-    <!-- МОДАЛКА КЛІЄНТА -->
     <div class="modal fade" id="myOrderModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg">
@@ -145,7 +135,6 @@
                         </tr>
                         </tbody>
                     </table>
-
                     <h6 class="fw-bold mb-2">Товари:</h6>
                     <table class="table table-sm table-bordered">
                         <thead class="table-dark">
@@ -172,12 +161,10 @@
                             <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати замовлення</button>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
     <script th:src="@{/js/pages/myorders.js}"></script>
 </div>
 

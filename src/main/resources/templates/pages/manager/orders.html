@@ -3,12 +3,9 @@
 <body>
 
 <div class="container-fluid py-4" th:fragment="content">
-
     <div class="d-flex align-items-center mb-4">
-
         <h3 class="fw-bold mb-0">Журнал замовлень</h3>
     </div>
-
     <ul class="nav nav-tabs mb-4" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active fw-bold text-dark" data-bs-toggle="tab"
@@ -29,10 +26,7 @@
             </button>
         </li>
     </ul>
-
     <div class="tab-content">
-
-        <!-- АКТИВНІ -->
         <div class="tab-pane fade show active" id="mActiveOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(activeOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-inbox mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -76,8 +70,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- ЗАВЕРШЕНІ -->
         <div class="tab-pane fade" id="mCompletedOrders" role="tabpanel">
             <div th:if="${#lists.isEmpty(completedOrders)}" class="text-center text-muted py-5">
                 <i class="bi bi-check2-circle mb-3 d-block mx-auto opacity-50 fs-1"></i>
@@ -112,7 +104,8 @@
                                 <span th:if="${order.status.name() == 'CANCELLED'}"
                                       class="badge bg-secondary">Скасовано</span>
                             </div>
-                            <p class="text-muted small mb-1"><i class="bi bi-person me-2"></i> <span th:text="${order.user.username}"></span></p>
+                            <p class="text-muted small mb-1"><i class="bi bi-person me-2"></i> <span
+                                    th:text="${order.user.username}"></span></p>
                             <p class="text-muted small mb-1">
                                 <i class="bi bi-clock me-1"></i>
                                 <span th:text="${order.formattedDate}"></span>
@@ -124,8 +117,6 @@
             </div>
         </div>
     </div>
-
-    <!-- МОДАЛКА МЕНЕДЖЕРА -->
     <div class="modal fade" id="mgrOrderModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg">
@@ -165,7 +156,6 @@
                         </tr>
                         </tbody>
                     </table>
-
                     <h6 class="fw-bold mb-2">Товари:</h6>
                     <table class="table table-sm table-bordered">
                         <thead class="table-dark">
@@ -185,8 +175,6 @@
                         </tfoot>
                     </table>
                 </div>
-
-                <!-- Дії для PENDING -->
                 <div id="mgrPendingSection" class="modal-footer flex-column align-items-start border-top d-none gap-2">
                     <form id="mgrProcessingForm" th:action="'#'" method="post" class="w-100">
                         <input type="hidden" name="status" value="PROCESSING">
@@ -205,8 +193,6 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Дії для PROCESSING -->
                 <div id="mgrProcessingSection"
                      class="modal-footer flex-column align-items-start border-top d-none gap-2">
                     <div class="d-flex gap-2">
@@ -220,16 +206,12 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- COMPLETED / CANCELLED -->
-                <div id="mgrDoneSection" class="modal-footer d-none">
-
-                </div>
+                <div id="mgrDoneSection" class="modal-footer d-none"></div>
             </div>
         </div>
     </div>
-
     <script th:src="@{/js/pages/manager/orders.js}"></script>
 </div>
+
 </body>
 </html>

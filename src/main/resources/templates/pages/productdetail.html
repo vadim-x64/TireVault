@@ -3,8 +3,6 @@
 <body>
 
 <div th:fragment="content">
-
-    <!-- Хлібні крихти -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/products" class="text-decoration-none text-danger">Автотовари</a></li>
@@ -16,9 +14,7 @@
             <li class="breadcrumb-item active" th:text="${product.name}"></li>
         </ol>
     </nav>
-
     <div class="row g-4">
-        <!-- Фото -->
         <div class="col-md-5">
             <div class="border rounded-3 overflow-hidden bg-light d-flex align-items-center justify-content-center ratio ratio-4x3">
                 <img th:src="${product.imageUrl != null ? product.imageUrl : '/img/no-image.png'}"
@@ -26,15 +22,11 @@
                      class="img-fluid object-fit-contain w-100 h-100">
             </div>
         </div>
-
-        <!-- Деталі -->
         <div class="col-md-7">
             <h2 class="fw-bold mb-1" th:text="${product.name}"></h2>
             <p class="text-muted mb-2 small">
                 Артикул: <span th:text="${product.article}"></span>
             </p>
-
-            <!-- Наявність -->
             <span th:if="${product.availability}"
                   class="badge bg-success-subtle text-success border border-success-subtle mb-3 small">
                 <i class="bi bi-check-circle-fill me-1"></i>В наявності
@@ -43,18 +35,12 @@
                   class="badge bg-danger-subtle text-danger border border-danger-subtle mb-3 small">
                 Немає в наявності
             </span>
-
-            <!-- Ціна -->
             <div class="mb-3">
                 <span class="fs-3 fw-bold" th:text="${product.price} + ' ₴'"></span>
             </div>
-
-            <!-- Опис -->
             <p th:if="${product.description != null}"
                th:text="${product.description}"
                class="text-secondary mb-4 lh-base"></p>
-
-            <!-- Лічильник + Кошик -->
             <div class="d-flex align-items-center gap-3 flex-wrap" th:if="${product.availability}">
                 <div class="d-flex align-items-center border rounded-2 overflow-hidden">
                     <button class="btn btn-light px-3 py-2 border-0" id="qty-minus" type="button">−</button>
@@ -74,7 +60,6 @@
             </div>
         </div>
     </div>
-
     <script th:src="@{/js/pages/productdetail.js}"></script>
 </div>
 
