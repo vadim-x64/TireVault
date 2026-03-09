@@ -5,10 +5,10 @@
 
     <h2 class="fw-bold mb-4">Управління послугами</h2>
     <a href="/admin" class="btn btn-outline-secondary btn-sm mb-4">
-        ← Назад до панелі
+        <i class="bi bi-arrow-left me-1"></i>
+        Назад до панелі
     </a>
 
-    <!-- ══════════════════  КАТЕГОРІЇ  ══════════════════ -->
     <div class="card shadow border-0 mb-4">
         <div class="card-header py-3 d-flex align-items-center justify-content-between"
              style="background-color:#212529; color:white;">
@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
 
-            <!-- Додати категорію -->
+
             <form th:action="@{/admin/workservices/categories/add}" method="post"
                   class="d-flex gap-2 mb-3">
                 <input type="text" name="name" class="form-control" style="max-width:300px;"
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <!-- ══════════════════  ПОСЛУГИ  ══════════════════ -->
+
     <div class="card shadow border-0">
         <div class="card-header py-3"
              style="background-color:#212529; color:white;">
@@ -69,7 +69,7 @@
         </div>
         <div class="card-body">
 
-            <!-- Форма додавання послуги -->
+
             <form th:action="@{/admin/workservices/add}" method="post"
                   class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
                 <h6 class="fw-bold mb-1">Нова послуга</h6>
@@ -155,9 +155,6 @@
         </div>
     </div>
 
-    <!-- ══════════════════  МОДАЛКИ  ══════════════════ -->
-
-    <!-- Редагування категорії -->
     <div class="modal fade" id="editCategoryModal" tabindex="-1">
         <div class="modal-dialog">
             <form method="post" id="editCategoryForm">
@@ -234,26 +231,8 @@
     </div>
 
     <!-- JS: наповнення модалок даними -->
-    <script>
-        document.getElementById('editCategoryModal').addEventListener('show.bs.modal', function (e) {
-            const btn = e.relatedTarget;
-            document.getElementById('editCategoryForm').action = '/admin/workservices/categories/' + btn.dataset.id + '/edit';
-            document.getElementById('editCategoryName').value = btn.dataset.name;
-        });
+    <script th:src="@{/js/pages/admin/workservices.js}">
 
-        document.getElementById('editServiceModal').addEventListener('show.bs.modal', function (e) {
-            const btn = e.relatedTarget;
-            document.getElementById('editServiceForm').action = '/admin/workservices/' + btn.dataset.id + '/edit';
-            document.getElementById('editServiceName').value        = btn.dataset.name;
-            document.getElementById('editServiceDescription').value = btn.dataset.description || '';
-            document.getElementById('editServicePrice').value       = btn.dataset.price;
-            document.getElementById('editServiceWorkingHours').value= btn.dataset.workingHours || '';
-
-            const sel = document.getElementById('editServiceCategory');
-            for (let opt of sel.options) {
-                opt.selected = opt.value === btn.dataset.categoryId;
-            }
-        });
     </script>
 
 </div>
