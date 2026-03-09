@@ -56,13 +56,14 @@
                                 <span th:if="${req.status.name() == 'ACCEPTED'}"
                                       class="badge bg-warning text-dark">Прийнято</span>
                                 <span th:if="${req.status.name() == 'SCHEDULED'}"
-                                      class="badge bg-info text-dark">📅 Заброньовано</span>
+                                      class="badge bg-info text-dark">Заброньовано</span>
                             </div>
                             <p class="text-muted small mb-1" th:if="${req.user != null}">
-                                <i class="bi bi-person me-2"></i> <a th:href="@{/admin/users}"
-                                                                     class="text-decoration-none text-dark fw-semibold"
-                                                                     onclick="event.stopPropagation()"
-                                                                     th:text="${req.user.username}"></a>
+                                <i class="bi bi-person me-1"></i>
+                                <a th:href="@{/admin/users}"
+                                   class="text-decoration-none text-dark fw-semibold"
+                                   onclick="event.stopPropagation()"
+                                   th:text="${req.user.username}"></a>
                             </p>
                             <p class="text-muted small mb-1">
                                 <i class="bi bi-geo-alt me-1"></i> <span th:text="${req.city}"></span>
@@ -73,7 +74,8 @@
                             </p>
                             <p class="text-muted small mb-0"
                                th:if="${req.formattedScheduledDate != null and !#strings.isEmpty(req.formattedScheduledDate)}">
-                                <i class="bi bi-clock me-2"></i> <span th:text="${req.formattedScheduledDate}"></span>
+                                <i class="bi bi-clock me-1"></i>
+                                <span th:text="${req.formattedScheduledDate}"></span>
                             </p>
                         </div>
                     </div>

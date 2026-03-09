@@ -3,7 +3,7 @@
 <body>
 
 <div th:fragment="content" class="container d-flex justify-content-center align-items-center">
-    <div class="card shadow-lg border-0 border-top border-3 border-danger w-100">
+    <div class="card shadow-lg border-0 border-top border-3 border-danger w-50">
         <div class="card-header bg-light pt-4 pb-0 border-0">
             <ul class="nav nav-tabs card-header-tabs w-100 d-flex" id="authTabs" role="tablist">
                 <li class="nav-item flex-fill text-center" role="presentation">
@@ -35,7 +35,7 @@
                         <div class="mb-3">
                             <label for="loginUsername" class="form-label fw-bold">Логін</label>
                             <input type="text" class="form-control form-control-lg" id="loginUsername" name="username"
-                                   placeholder="Введіть ваш логін" th:value="${enteredUsername}" maxlength="50"
+                                   placeholder="Введіть ім'я користувача" th:value="${enteredUsername}" maxlength="50"
                                    required>
                         </div>
                         <div class="mb-4">
@@ -90,20 +90,20 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted">+38</span>
                                 <input type="tel" class="form-control" id="regPhone" name="phone"
-                                       placeholder="(0XX) XXX-XX-XX" th:value="${regPhone}" required>
+                                       placeholder="(0XX)-XXX-XX-XX" th:value="${regPhone}" required>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="regUsername" class="form-label fw-bold">Логін<span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="regUsername" name="username"
-                                   placeholder="Придумайте логін" th:value="${regUsername}" maxlength="50" required>
+                                   placeholder="Придумайте ім'я користувача" th:value="${regUsername}" maxlength="50" required>
                         </div>
                         <div class="mb-4">
                             <label for="regPassword" class="form-label fw-bold">Пароль <span
                                     class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="regPassword" name="password"
-                                   placeholder="Мінімум 8 символів" required minlength="8" maxlength="255">
+                                   placeholder="Введіть принаймні 8 символів" required minlength="8" maxlength="255">
                             <div class="form-check mt-2">
                                 <input class="form-check-input" type="checkbox" id="showRegPassword"
                                        onclick="togglePassword('regPassword')">

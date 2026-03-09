@@ -69,8 +69,7 @@
                             <div th:if="${securityError}" class="alert alert-danger" role="alert"
                                  th:text="${securityError}"></div>
                             <div class="alert alert-secondary small mb-4">
-                                <strong>Увага!</strong> При зміні логіна або пароля вам доведеться увійти в систему
-                                заново.
+                                <strong>Увага!</strong> При зміні імені користувача або пароля треба авторизація.
                             </div>
                             <form id="securityForm" th:action="@{/profile/security}" method="post" autocomplete="off">
                                 <div class="mb-3">
@@ -81,7 +80,8 @@
                                            required>
                                 </div>
                                 <div class="mb-4">
-                                    <label for="secPassword" class="form-label fw-bold">Новий пароль</label>
+                                    <label for="secPassword" class="form-label fw-bold">Новий пароль <span
+                                            class="text-danger">*</span></label>
                                     <input type="password" class="form-control" id="secPassword" name="password"
                                            placeholder="Залиште пустим, якщо не хочете змінювати" minlength="8"
                                            maxlength="255" autocomplete="new-password">
@@ -106,7 +106,7 @@
                                 </div>
                                 <button type="button" class="btn btn-outline-danger fw-bold" data-bs-toggle="modal"
                                         data-bs-target="#deleteAccountModal">
-                                    Видалити акаунт
+                                    Видалити
                                 </button>
                             </div>
                         </div>
