@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('adminOrderStation').textContent      = station || '—';
             document.getElementById('adminOrderTotal').textContent        = total + ' ₴';
 
-            const payLabel = payMethod === 'card' ? '💳 Карткою'
-                : payMethod === 'cash' ? '💵 Готівка на СТО' : '—';
+            const payLabel = payMethod === 'card' ? 'Карткою'
+                : payMethod === 'cash' ? 'Готівка на СТО' : '—';
             document.getElementById('adminOrderPayMethod').textContent = payLabel;
 
             // Позиції

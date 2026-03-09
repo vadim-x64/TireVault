@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 badge.textContent = 'Прийнято';
             } else if (status === 'SCHEDULED') {
                 badge.className = 'badge fs-6 px-3 py-2 bg-info text-dark';
-                badge.textContent = '📅 Заброньовано: ' + scheduled;
+                badge.textContent = 'Заброньовано: ' + scheduled;
             } else if (status === 'COMPLETED') {
                 badge.className = 'badge fs-6 px-3 py-2 bg-success';
                 badge.textContent = 'Виконано';

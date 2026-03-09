@@ -23,7 +23,7 @@
                     data-bs-target="#activeOrders" type="button" role="tab">
                 Активні
                 <span th:if="${#lists.size(activeOrders) > 0}"
-                      class="badge bg-primary rounded-pill ms-1"
+                      class="badge bg-danger rounded-pill ms-1"
                       th:text="${#lists.size(activeOrders)}"></span>
             </button>
         </li>
@@ -149,7 +149,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-dark">
-                    <h5 class="modal-title text-white fw-bold">Деталі замовлення</h5>
+                    <h5 class="modal-title text-white fw-bold">Деталі запису</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -185,7 +185,7 @@
                         </tr>
                         <tr id="modalDescRow">
                             <td class="text-muted fw-bold pe-3 text-nowrap">Опис</td>
-                            <td id="modalDescription" style="white-space: pre-wrap;"></td>
+                            <td id="modalDescription"></td>
                         </tr>
                         </tbody>
                     </table>

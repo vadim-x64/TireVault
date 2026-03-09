@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // --- НОВА ПЕРЕВІРКА ДНЯ ---
                     const hours = getWorkHours(date);
                     if (!hours) {
-                        container.innerHTML = '<p class="text-danger small mb-0">Неділя — вихідний день. Оберіть іншу дату.</p>';
+                        container.innerHTML = '<p class="text-danger small mb-0">Неділя - вихідний день. Оберіть іншу дату.</p>';
                         return;
                     }
                     // --------------------------
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                                 if (isBooked) {
                                     btn.className = 'btn btn-sm btn-danger me-1 mb-1 disabled';
-                                    btn.textContent = hour + ' — заброньовано';
+                                    btn.textContent = hour + ' - заброньовано';
                                 } else {
                                     btn.className = 'btn btn-sm btn-outline-dark me-1 mb-1 slot-btn';
                                     btn.textContent = hour;
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 badge.className = 'badge fs-6 px-3 py-2 bg-success';
                 badge.textContent = 'Виконано';
                 const payLabel = payment === 'CARD' ? 'Карта'
-                    : payment === 'CASH' ? 'Готівка' : '—';
+                    : payment === 'CASH' ? 'Готівка' : '-';
                 document.getElementById('mDonePayment').textContent = payLabel;
                 doneSection.classList.remove('d-none');
 

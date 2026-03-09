@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const items     = JSON.parse(this.dataset.items || '[]');
 
             document.getElementById('myOrderCreated').textContent = created;
-            document.getElementById('myOrderStation').textContent = station || '—';
+            document.getElementById('myOrderStation').textContent = station || '-';
             document.getElementById('myOrderTotal').textContent   = total + ' ₴';
 
             const payLabel = payMethod === 'card' ? 'Карткою'
-                : payMethod === 'cash' ? 'Готівка на СТО' : '—';
+                : payMethod === 'cash' ? 'Готівка на СТО' : '-';
             document.getElementById('myOrderPayMethod').textContent = payLabel;
 
             // Позиції

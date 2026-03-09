@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const items     = JSON.parse(this.dataset.items || '[]');
 
             document.getElementById('mgrOrderUsername').textContent = username;
-            document.getElementById('mgrOrderFullname').textContent  = fullname || '—';
-            document.getElementById('mgrOrderPhone').textContent     = formatPhone(phone) || '—';
+            document.getElementById('mgrOrderFullname').textContent  = fullname || '-';
+            document.getElementById('mgrOrderPhone').textContent     = formatPhone(phone) || '-';
             document.getElementById('mgrOrderCreated').textContent  = created;
-            document.getElementById('mgrOrderStation').textContent   = station || '—';
+            document.getElementById('mgrOrderStation').textContent   = station || '-';
             document.getElementById('mgrOrderTotal').textContent     = total + ' ₴';
 
             const payLabel = payMethod === 'card' ? 'Карткою'
-                : payMethod === 'cash' ? 'Готівка на СТО' : '—';
+                : payMethod === 'cash' ? 'Готівка на СТО' : '-';
             document.getElementById('mgrOrderPayMethod').textContent = payLabel;
 
             // Позиції
