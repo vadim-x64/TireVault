@@ -10,13 +10,13 @@
                     <ul class="nav nav-tabs card-header-tabs w-100 d-flex" id="profileTabs" role="tablist">
                         <li class="nav-item flex-fill text-center" role="presentation">
                             <button th:classappend="${activeTab == 'main' ? 'active' : 'text-muted'}"
-                                    class="nav-link w-100 fw-bold" id="main-tab" data-bs-toggle="tab"
+                                    class="nav-link w-100 fw-bold text-dark" id="main-tab" data-bs-toggle="tab"
                                     data-bs-target="#main" type="button" role="tab">Основна
                             </button>
                         </li>
                         <li class="nav-item flex-fill text-center" role="presentation">
                             <button th:classappend="${activeTab == 'security' ? 'active' : 'text-muted'}"
-                                    class="nav-link w-100 fw-bold" id="security-tab" data-bs-toggle="tab"
+                                    class="nav-link w-100 fw-bold text-dark" id="security-tab" data-bs-toggle="tab"
                                     data-bs-target="#security" type="button" role="tab">Безпека
                             </button>
                         </li>
