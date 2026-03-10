@@ -59,7 +59,7 @@
                 <div class="col-md-2">
                     <label class="form-label small mb-1">Категорія</label>
                     <select name="categoryId" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>— обрати —</option>
+                        <option value="" disabled selected>Вибрати</option>
                         <option th:each="cat : ${categories}"
                                 th:value="${cat.id}"
                                 th:text="${cat.name}"></option>
@@ -107,11 +107,15 @@
                     <tr th:each="ws : ${workServices}">
                         <td th:text="${ws.id}"></td>
                         <td th:text="${ws.category.name}"></td>
-                        <td th:text="${ws.name}"></td>
+                        <td>
+                            <a th:href="@{/services/{id}(id=${ws.id})}"
+                               class="fw-semibold small text-decoration-none text-dark"
+                               th:text="${#strings.abbreviate(ws.name, 20)}"></a>
+                        </td>
                         <td class="text-muted small"
-                            th:text="${ws.description != null ? ws.description : '—'}"></td>
+                            th:text="${ws.description != null ? #strings.abbreviate(ws.description, 15) : '-'}"></td>
                         <td th:text="${ws.price} + ' ₴'"></td>
-                        <td th:text="${ws.workingHours != null ? ws.workingHours : '—'}"></td>
+                        <td th:text="${ws.workingHours != null ? ws.workingHours : '-'}"></td>
                         <td class="text-end">
                             <button type="button" class="btn btn-sm btn-outline-secondary me-1"
                                     data-bs-toggle="modal" data-bs-target="#editServiceModal"

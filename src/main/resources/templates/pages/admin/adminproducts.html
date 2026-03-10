@@ -59,7 +59,7 @@
                 <div class="col-md-2">
                     <label class="form-label small mb-1">Категорія</label>
                     <select name="categoryId" class="form-select form-select-sm" required>
-                        <option value="" disabled selected>— обрати —</option>
+                        <option value="" disabled selected>Вибрати</option>
                         <option th:each="cat : ${categories}"
                                 th:value="${cat.id}" th:text="${cat.name}"></option>
                     </select>
@@ -125,10 +125,12 @@
                         </td>
                         <td th:text="${p.category.name}"></td>
                         <td>
-                            <div th:text="${p.name}" class="fw-semibold small"></div>
+                            <a th:href="@{/products/{id}(id=${p.id})}"
+                               class="fw-semibold small text-decoration-none text-dark"
+                               th:text="${#strings.abbreviate(p.name, 20)}"></a>
                             <div th:if="${p.description != null}"
                                  class="text-muted small"
-                                 th:text="${#strings.abbreviate(p.description, 50)}"></div>
+                                 th:text="${#strings.abbreviate(p.description, 15)}"></div>
                         </td>
                         <td class="text-muted small" th:text="${p.article}"></td>
                         <td th:text="${p.price} + ' ₴'"></td>
