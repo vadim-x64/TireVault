@@ -5,21 +5,17 @@
 <th:block th:fragment="content">
     <div class="mb-4">
         <h3 class="fw-bold">
-            <i class="bi bi-search me-2 text-danger"></i>Результати пошуку
+            Результати пошуку
         </h3>
-
         <p class="text-muted mt-2" th:if="${query != null and !query.isEmpty()}">
             Результати для: <strong th:text="${query}"></strong>
             - знайдено <strong th:text="${totalCount}"></strong> збігів
         </p>
     </div>
-
     <div th:if="${totalCount == 0}" class="text-center py-5">
         <i class="bi bi-emoji-frown fs-1 text-secondary"></i>
         <p class="mt-3 text-muted fs-5">Нічого не знайдено за запитом "<strong th:text="${query}"></strong>"</p>
-        <a href="/" class="btn btn-outline-danger mt-2">На головну</a>
     </div>
-
     <div th:if="${!products.isEmpty()}" class="mb-5">
         <h5 class="fw-bold border-bottom pb-2 mb-3">
             <i class="bi bi-grid me-2 text-danger"></i>Автотовари
@@ -50,7 +46,6 @@
             </div>
         </div>
     </div>
-
     <div th:if="${!services.isEmpty()}" class="mb-5">
         <h5 class="fw-bold border-bottom pb-2 mb-3">
             <i class="bi bi-wrench-adjustable me-2 text-danger"></i>Послуги

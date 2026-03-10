@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 @Service("searchService")
 public class SearchService {
-
     public String highlight(String text, String query) {
         if (text == null || text.isBlank() || query == null || query.isBlank()) {
             return text != null ? truncate(text, 120) : "";

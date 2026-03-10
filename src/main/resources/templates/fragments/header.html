@@ -2,64 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="uk">
 <body>
 
-<header class="d-flex flex-wrap align-items-center justify-content-center py-3 border-bottom px-3 px-md-4 bg-white"
-        th:fragment="navbar">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-        <img th:src="@{/assets/logo/logo1.png}" alt="..." width="100">
-    </a>
-    <form action="/search" method="get" class="d-flex align-items-center ms-3" role="search">
-        <div class="input-group">
-            <input
-                    type="search"
-                    name="q"
-                    class="form-control"
-                    placeholder="Пошук по сайту..."
-                    th:value="${param.q}"
-                    autocomplete="off"
-                    id="globalSearchInput"
-            >
-            <button class="btn btn-danger btn-sm" type="submit">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
-    </form>
-    <ul class="nav nav-pills">
-        <li class="nav-item">
-            <a href="/about" class="nav-link text-dark">
-                <i class="bi bi-info-circle me-1"></i>Про нас
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/contacts" class="nav-link text-dark">
-                <i class="bi bi-telephone me-1"></i>Контакти
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/delivery" class="nav-link text-dark">
-                <i class="bi bi-truck me-1"></i>Доставка та оплата
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/gallery" class="nav-link text-dark">
-                <i class="bi bi-images me-1"></i>Галерея
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/blog" class="nav-link text-dark">
-                <i class="bi bi-newspaper me-1"></i>Блог
-            </a>
-        </li>
-    </ul>
-    <div class="d-flex align-items-center ms-4 me-3">
-        <a href="/cart" class="text-dark text-decoration-none" title="Кошик">
-            <div class="position-relative d-inline-block">
-                <i class="bi bi-cart2 fs-4"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                      id="cart-badge"
-                      th:style="${cartItemCount != null && cartItemCount > 0} ? '' : 'd-none'"
-                      th:text="${cartItemCount ?: 0}">0</span>
+<header class="d-flex  flex-column border-bottom bg-white px-3 px-md-4 pt-3 pb-2" th:fragment="navbar">
+    <div class="d-flex justify-content-center mb-2">
+        <form action="/search" method="get" class="d-flex align-items-center w-50" role="search">
+            <div class="input-group">
+                <input
+                        type="search"
+                        name="q"
+                        class="form-control rounded-pill rounded-end"
+                        placeholder="Пошук по сайту..."
+                        th:value="${param.q}"
+                        autocomplete="off"
+                        id="globalSearchInput">
+                <button class="btn btn-danger rounded-pill rounded-start ms-1" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
             </div>
+        </form>
+    </div>
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <img th:src="@{/assets/logo/logo1.png}" alt="..." width="100">
         </a>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="/about" class="nav-link text-dark">
+                    <i class="bi bi-info-circle me-1"></i>Про нас
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/contacts" class="nav-link text-dark">
+                    <i class="bi bi-telephone me-1"></i>Контакти
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/delivery" class="nav-link text-dark">
+                    <i class="bi bi-truck me-1"></i>Доставка та оплата
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/gallery" class="nav-link text-dark">
+                    <i class="bi bi-images me-1"></i>Галерея
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/blog" class="nav-link text-dark">
+                    <i class="bi bi-newspaper me-1"></i>Блог
+                </a>
+            </li>
+        </ul>
+        <div class="d-flex align-items-center ms-4 me-3">
+            <a href="/cart" class="text-dark text-decoration-none" title="Кошик">
+                <div class="position-relative d-inline-block">
+                    <i class="bi bi-cart2 fs-4"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          id="cart-badge"
+                          th:style="${cartItemCount != null && cartItemCount > 0} ? '' : 'd-none'"
+                          th:text="${cartItemCount ?: 0}">0</span>
+                </div>
+            </a>
+        </div>
     </div>
 </header>
 

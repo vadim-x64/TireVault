@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 
 @Controller
@@ -18,20 +17,14 @@ public class SearchController {
     private final IProductRepository productRepository;
     private final IWorkServiceRepository serviceRepository;
 
-
-    public SearchController(SearchService searchService,
-                            IProductRepository productRepository,
-                            IWorkServiceRepository serviceRepository) {
+    public SearchController(SearchService searchService, IProductRepository productRepository, IWorkServiceRepository serviceRepository) {
         this.searchService = searchService;
         this.productRepository = productRepository;
         this.serviceRepository = serviceRepository;
-
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(name = "q", defaultValue = "") String query,
-                         Model model) {
-
+    public String search(@RequestParam(name = "q", defaultValue = "") String query, Model model) {
         String q = query.trim();
 
         List<Product> products = q.isEmpty()
