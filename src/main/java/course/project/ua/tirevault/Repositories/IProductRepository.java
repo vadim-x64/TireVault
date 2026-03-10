@@ -33,4 +33,14 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             @Param("vmodel") String vmodel,
             @Param("year") Integer year,
             @Param("modification") String modification);
+
+    @Query("""
+        SELECT p FROM Product p
+        WHERE LOWER(p.name)        LIKE LOWER(CONCAT('%', :q, '%'))
+           OR LOWER(p.description) LIKE LOWER(CONCAT('%', :q, '%'))
+           OR EXISTS (SELECT v FROM p.vehicles v WHERE LOWER(v.brand) LIKE LOWER(CONCAT('%', :q, '%')))
+           OR CAST(p.price AS string) LIKE CONCAT('%', :q, '%')
+        ORDER BY p.name
+        """)
+    List<Product> searchByKeyword(@Param("q") String q);
 }

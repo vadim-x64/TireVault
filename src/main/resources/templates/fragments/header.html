@@ -7,6 +7,22 @@
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
         <img th:src="@{/assets/logo/logo1.png}" alt="..." width="100">
     </a>
+    <form action="/search" method="get" class="d-flex align-items-center ms-3" role="search">
+        <div class="input-group">
+            <input
+                    type="search"
+                    name="q"
+                    class="form-control"
+                    placeholder="Пошук по сайту..."
+                    th:value="${param.q}"
+                    autocomplete="off"
+                    id="globalSearchInput"
+            >
+            <button class="btn btn-danger btn-sm" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
     <ul class="nav nav-pills">
         <li class="nav-item">
             <a href="/about" class="nav-link text-dark">

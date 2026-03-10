@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<th:block th:fragment="content">
+    <div class="mb-4">
+        <h3 class="fw-bold">
+            <i class="bi bi-search me-2 text-danger"></i>Результати пошуку
+        </h3>
+
+        <p class="text-muted mt-2" th:if="${query != null and !query.isEmpty()}">
+            Результати для: <strong th:text="${query}"></strong>
+            - знайдено <strong th:text="${totalCount}"></strong> збігів
+        </p>
+    </div>
+
+    <div th:if="${totalCount == 0}" class="text-center py-5">
+        <i class="bi bi-emoji-frown fs-1 text-secondary"></i>
+        <p class="mt-3 text-muted fs-5">Нічого не знайдено за запитом "<strong th:text="${query}"></strong>"</p>
+        <a href="/" class="btn btn-outline-danger mt-2">На головну</a>
+    </div>
+
+    <div th:if="${!products.isEmpty()}" class="mb-5">
+        <h5 class="fw-bold border-bottom pb-2 mb-3">
+            <i class="bi bi-grid me-2 text-danger"></i>Автотовари
+            <span class="badge bg-danger ms-2" th:text="${products.size()}"></span>
+        </h5>
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-4" th:each="product : ${products}">
+                <a th:href="@{/products/{id}(id=${product.id})}" class="text-decoration-none">
+                    <div class="card h-100 shadow-sm border-0 hover-card">
+                        <div class="row g-0 h-100">
+                            <div class="col-4 d-flex align-items-center justify-content-center p-2 bg-light rounded-start">
+                                <img th:src="${product.imageUrl != null ? product.imageUrl : '/assets/no-image.png'}"
+                                     alt="..." class="img-fluid rounded object-fit: contain;">
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title fw-bold text-dark mb-1"
+                                        th:utext="${@searchService.highlight(product.name, query)}"></h6>
+                                    <p class="card-text text-muted small mb-1"
+                                       th:utext="${@searchService.highlight(product.description, query)}"></p>
+                                    <span class="text-danger fw-bold"
+                                          th:text="${product.price + ' ₴'}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${!services.isEmpty()}" class="mb-5">
+        <h5 class="fw-bold border-bottom pb-2 mb-3">
+            <i class="bi bi-wrench-adjustable me-2 text-danger"></i>Послуги
+            <span class="badge bg-danger ms-2" th:text="${services.size()}"></span>
+        </h5>
+        <div class="row g-3">
+            <div class="col-12 col-md-6" th:each="service : ${services}">
+                <a th:href="@{/services/{id}(id=${service.id})}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 hover-card">
+                        <div class="card-body">
+                            <h6 class="fw-bold text-dark"
+                                th:utext="${@searchService.highlight(service.name, query)}"></h6>
+                            <p class="text-muted small mb-1"
+                               th:utext="${@searchService.highlight(service.description, query)}"></p>
+                            <span class="badge bg-danger" th:text="${service.price + ' ₴'}"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>
