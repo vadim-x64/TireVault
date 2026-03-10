@@ -1,6 +1,10 @@
 package course.project.ua.tirevault.Controllers;
 
+import course.project.ua.tirevault.Entities.Models.Review;
+import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.ProductService;
+import course.project.ua.tirevault.Services.ReviewService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,11 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/products")
     public String products(
@@ -27,7 +35,6 @@ public class ProductController {
             @RequestParam(required = false) String modification,
             Model model) {
 
-        // Порожній рядок → null, щоб JPQL коректно обробляв IS NULL
         if (brand        != null && brand.isBlank())        brand        = null;
         if (vmodel       != null && vmodel.isBlank())       vmodel       = null;
         if (modification != null && modification.isBlank()) modification = null;
@@ -52,7 +59,6 @@ public class ProductController {
         return "index";
     }
 
-    // Маршрут збережено для зворотної сумісності (наприклад, якщо є зовнішні посилання)
     @GetMapping("/products/category/{id}")
     public String productsByCategory(@PathVariable Long id, Model model) {
         model.addAttribute("categories", productService.getAllCategories());
@@ -65,10 +71,21 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public String productDetail(@PathVariable Long id, Model model) {
+    public String productDetail(@PathVariable Long id, Model model, HttpSession session) {
         var product = productService.getProductById(id);
         if (product.isEmpty()) return "redirect:/products";
+
+        User user = (User) session.getAttribute("loggedUser");
+        List<Review> reviews =
+                reviewService.getTopLevelReviews(
+                        course.project.ua.tirevault.Entities.Enums.ReviewTargetType.PRODUCT, id);
+        java.util.Set<Long> likedIds = reviewService.getAllLikedReviewIds(user, reviews);
+
         model.addAttribute("product", product.get());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("likedReviewIds", likedIds);
+        model.addAttribute("reviewTargetType", "PRODUCT");
+        model.addAttribute("reviewTargetId", id);
         model.addAttribute("page", "productdetail");
         return "index";
     }

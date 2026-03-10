@@ -60,6 +60,10 @@
             </div>
         </div>
     </div>
+    <div class="mt-5">
+        <div th:replace="~{fragments/reviews :: section(
+        ${reviewTargetType}, ${reviewTargetId}, ${reviews}, ${likedReviewIds})}"></div>
+    </div>
     <script th:src="@{/js/pages/productdetail.js}"></script>
 </div>
 

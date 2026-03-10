@@ -55,6 +55,10 @@
             </div>
         </div>
     </div>
+    <div class="mt-5">
+        <div th:replace="~{fragments/reviews :: section(
+        ${reviewTargetType}, ${reviewTargetId}, ${reviews}, ${likedReviewIds})}"></div>
+    </div>
 </div>
 
 </body>

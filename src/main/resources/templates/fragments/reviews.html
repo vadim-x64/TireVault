@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="section(targetType, targetId, reviews, likedReviewIds)">
+    <hr class="mt-5">
+    <h5 class="fw-bold mb-4" id="reviews">
+        <i class="bi bi-chat-square-text me-2"></i>Відгуки
+        <span class="text-muted fw-normal fs-6" th:text="'(' + ${reviews.size()} + ')'"></span>
+    </h5>
+    <div th:if="${session.loggedUser != null}" class="mb-4">
+        <form th:action="@{/reviews/add}" method="post">
+            <input type="hidden" name="targetType" th:value="${targetType}">
+            <input type="hidden" name="targetId"   th:value="${targetId}">
+            <textarea name="content" class="form-control mb-2" rows="3"
+                      placeholder="Напишіть відгук..." required></textarea>
+            <button type="submit" class="btn btn-dark btn-sm">
+                <i class="bi bi-send me-1"></i>Надіслати
+            </button>
+        </form>
+    </div>
+    <div th:unless="${session.loggedUser != null}" class="mb-4 text-muted small">
+        <a href="/auth" class="text-danger">Увійдіть</a>, щоб залишити відгук.
+    </div>
+    <div th:if="${reviews.isEmpty()}" class="text-muted small">Відгуків ще немає.</div>
+    <div th:each="review : ${reviews}"
+         th:id="'review-' + ${review.id}"
+         class="review-card mb-3 p-3 border rounded-3 bg-white shadow-sm">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <div>
+                <span class="fw-semibold small" th:text="${review.user.username}"></span>
+                <span class="text-muted ms-2 small"
+                      th:text="${#temporals.format(review.createdAt,'dd.MM.yyyy HH:mm')}"></span>
+            </div>
+        </div>
+        <p class="mb-2 lh-base" th:text="${review.content}"></p>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <button type="button"
+                    class="btn btn-sm btn-like d-flex align-items-center gap-1 border-0 p-0"
+                    th:data-review-id="${review.id}"
+                    th:classappend="${likedReviewIds != null and likedReviewIds.contains(review.id)}
+                                    ? 'text-danger' : 'text-secondary'">
+                <i class="bi"
+                   th:classappend="${likedReviewIds != null and likedReviewIds.contains(review.id)}
+                                   ? 'bi-heart-fill' : 'bi-heart'"></i>
+                <span class="like-count" th:text="${review.likes.size()}"></span>
+            </button>
+            <button th:if="${session.loggedUser != null}"
+                    type="button"
+                    class="btn btn-sm text-secondary border-0 p-0 btn-reply"
+                    th:data-review-id="${review.id}"
+                    th:data-username="${review.user.username}"
+                    th:data-user-id="${review.user.id}"
+                    th:data-target-type="${targetType}"
+                    th:data-target-id="${targetId}">
+                <i class="bi bi-reply me-1"></i>Відповісти
+            </button>
+            <form th:if="${session.loggedUser != null
+                           and (review.user.id == session.loggedUser.id
+                                or session.loggedUser.role.name() == 'ADMIN'
+                                or session.loggedUser.role.name() == 'MANAGER')}"
+                  th:action="@{/reviews/{id}/delete(id=${review.id})}"
+                  method="post" class="d-inline"
+                  onsubmit="return confirm('Видалити коментар разом з усіма відповідями?')">
+                <input type="hidden" name="targetType" th:value="${targetType}">
+                <input type="hidden" name="targetId"   th:value="${targetId}">
+                <button type="submit" class="btn btn-sm text-danger border-0 p-0">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </form>
+        </div>
+        <div th:id="'reply-form-' + ${review.id}" class="reply-form mt-3 d-none">
+            <form th:action="@{/reviews/add}" method="post">
+                <input type="hidden" name="targetType"      th:value="${targetType}">
+                <input type="hidden" name="targetId"        th:value="${targetId}">
+                <input type="hidden" name="parentId"        th:value="${review.id}">
+                <input type="hidden" name="replyToReviewId" th:value="${review.id}">
+                <input type="hidden" name="replyToUserId"   th:value="${review.user.id}">
+                <textarea name="content" class="form-control form-control-sm mb-2"
+                          rows="2" required></textarea>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-dark btn-sm">
+                        <i class="bi bi-send me-1"></i>Надіслати
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm btn-cancel-reply"
+                            th:data-review-id="${review.id}">Скасувати</button>
+                </div>
+            </form>
+        </div>
+        <div th:if="${!review.replies.isEmpty()}" class="mt-3">
+            <button type="button"
+                    class="btn btn-sm btn-outline-secondary btn-toggle-replies mb-2"
+                    th:data-review-id="${review.id}">
+                <i class="bi bi-chevron-down me-1"></i>
+                <span th:text="'Відповіді (' + ${review.replies.size()} + ')'"></span>
+            </button>
+            <div th:id="'replies-' + ${review.id}" class="replies-container ps-3 border-start d-none">
+                <div th:each="reply : ${review.replies}"
+                     th:id="'review-' + ${reply.id}"
+                     class="review-card reply-card mb-2 p-2 rounded-2 bg-light">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <span class="fw-semibold small" th:text="${reply.user.username}"></span>
+                        <span class="text-muted small"
+                              th:text="${#temporals.format(reply.createdAt,'dd.MM.yyyy HH:mm')}"></span>
+                    </div>
+                    <p class="mb-1 small lh-base">
+                        <span th:if="${reply.replyToUser != null}"
+                              class="text-danger fw-semibold me-1 reply-mention"
+                              th:data-ref-id="${reply.replyToReview != null ? reply.replyToReview.id : reply.parent.id}"
+                              th:text="'@' + ${reply.replyToUser.username}"
+                              style="cursor:pointer;"></span>
+                        <span th:text="${reply.replyToUser != null
+                                         ? reply.content.replaceFirst('^@\\S+\\s*','')
+                                         : reply.content}"></span>
+                    </p>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <button type="button"
+                                class="btn btn-sm btn-like d-flex align-items-center gap-1 border-0 p-0"
+                                th:data-review-id="${reply.id}"
+                                th:classappend="${likedReviewIds != null and likedReviewIds.contains(reply.id)}
+                                                ? 'text-danger' : 'text-secondary'">
+                            <i class="bi"
+                               th:classappend="${likedReviewIds != null and likedReviewIds.contains(reply.id)}
+                                               ? 'bi-heart-fill' : 'bi-heart'"></i>
+                            <span class="like-count" th:text="${reply.likes.size()}"></span>
+                        </button>
+                        <button th:if="${session.loggedUser != null}"
+                                type="button"
+                                class="btn btn-sm text-secondary border-0 p-0 btn-reply"
+                                th:data-review-id="${reply.parent.id}"
+                                th:data-reply-to-review-id="${reply.id}"
+                                th:data-username="${reply.user.username}"
+                                th:data-user-id="${reply.user.id}"
+                                th:data-target-type="${targetType}"
+                                th:data-target-id="${targetId}">
+                            <i class="bi bi-reply me-1"></i>Відповісти
+                        </button>
+                        <form th:if="${session.loggedUser != null
+                                       and (reply.user.id == session.loggedUser.id
+                                            or session.loggedUser.role.name() == 'ADMIN'
+                                            or session.loggedUser.role.name() == 'MANAGER')}"
+                              th:action="@{/reviews/{id}/delete(id=${reply.id})}"
+                              method="post" class="d-inline"
+                              onsubmit="return confirm('Видалити відповідь?')">
+                            <input type="hidden" name="targetType" th:value="${targetType}">
+                            <input type="hidden" name="targetId"   th:value="${targetId}">
+                            <button type="submit" class="btn btn-sm text-danger border-0 p-0">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/pages/reviews.js}"></script>
+</div>
+
+</body>
+</html>

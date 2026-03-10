@@ -1,16 +1,25 @@
 package course.project.ua.tirevault.Controllers;
 
+import course.project.ua.tirevault.Entities.Models.Review;
+import course.project.ua.tirevault.Entities.Models.User;
+import course.project.ua.tirevault.Services.ReviewService;
 import course.project.ua.tirevault.Services.WorkServiceManager;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @Controller
 public class WorkServiceController {
     @Autowired
     private WorkServiceManager workServiceManager;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/services")
     public String services(Model model) {
@@ -31,10 +40,21 @@ public class WorkServiceController {
     }
 
     @GetMapping("/services/{id}")
-    public String serviceDetail(@PathVariable Long id, Model model) {
+    public String serviceDetail(@PathVariable Long id, Model model, HttpSession session) {
         var ws = workServiceManager.getWorkServiceById(id);
         if (ws.isEmpty()) return "redirect:/services";
+
+        User user = (User) session.getAttribute("loggedUser");
+        List<Review> reviews =
+                reviewService.getTopLevelReviews(
+                        course.project.ua.tirevault.Entities.Enums.ReviewTargetType.SERVICE, id);
+        java.util.Set<Long> likedIds = reviewService.getAllLikedReviewIds(user, reviews);
+
         model.addAttribute("workService", ws.get());
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("likedReviewIds", likedIds);
+        model.addAttribute("reviewTargetType", "SERVICE");
+        model.addAttribute("reviewTargetId", id);
         model.addAttribute("page", "autoservicedetail");
         return "index";
     }
