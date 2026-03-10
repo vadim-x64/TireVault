@@ -2,10 +2,14 @@ package course.project.ua.tirevault.Services;
 
 import course.project.ua.tirevault.Entities.Models.Product;
 import course.project.ua.tirevault.Entities.Models.ProductCategory;
+import course.project.ua.tirevault.Entities.Models.Vehicle;
 import course.project.ua.tirevault.Repositories.IProductCategoryRepository;
 import course.project.ua.tirevault.Repositories.IProductRepository;
+import course.project.ua.tirevault.Repositories.IVehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +20,9 @@ public class ProductService {
 
     @Autowired
     private IProductCategoryRepository categoryRepository;
+
+    @Autowired
+    private IVehicleRepository vehicleRepository;
 
     public List<ProductCategory> getAllCategories() {
         return categoryRepository.findAllByOrderByIdAsc();
@@ -51,5 +58,16 @@ public class ProductService {
 
     public void deleteCategoryById(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    public List<Vehicle> getAllVehicles() {
+        return vehicleRepository.findAllByOrderByBrandAscModelAscYearAsc();
+    }
+
+    public List<Product> getFilteredProducts(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
+                                             Boolean availability, String brand, String vmodel,
+                                             Integer year, String modification) {
+        return productRepository.findFiltered(
+                categoryId, minPrice, maxPrice, availability, brand, vmodel, year, modification);
     }
 }

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<body>
+
+<div th:fragment="content">
+    <h2 class="fw-bold mb-4">Автомобілі</h2>
+    <div class="card shadow border-0">
+        <div class="card-header py-3 bg-dark text-white">
+            <h5 class="mb-0">Перелік автомобілів</h5>
+        </div>
+        <div class="card-body">
+
+            <!-- Форма додавання -->
+            <form th:action="@{/admin/vehicles/add}" method="post"
+                  class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
+                <h6 class="fw-bold mb-1">Новий автомобіль</h6>
+                <div class="col-md-3">
+                    <label class="form-label small mb-1">Марка</label>
+                    <input type="text" name="brand" class="form-control form-control-sm"
+                           placeholder="Toyota" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small mb-1">Модель</label>
+                    <input type="text" name="model" class="form-control form-control-sm"
+                           placeholder="Camry" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small mb-1">Рік</label>
+                    <input type="number" name="year" class="form-control form-control-sm"
+                           placeholder="2020" min="1900" max="2100" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small mb-1">Двигун / характеристика</label>
+                    <input type="text" name="modification" class="form-control form-control-sm"
+                           placeholder="2.5 AT 181 к.с." required>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-dark btn-sm w-100 mt-3">Додати</button>
+                </div>
+            </form>
+
+            <!-- Таблиця -->
+            <div th:if="${vehicles.isEmpty()}" class="text-muted text-center">Автомобілів ще немає</div>
+            <div th:unless="${vehicles.isEmpty()}" class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Марка</th>
+                        <th>Модель</th>
+                        <th>Рік</th>
+                        <th>Двигун / характеристика</th>
+                        <th>Товарів</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="v : ${vehicles}">
+                        <td th:text="${v.id}"></td>
+                        <td th:text="${v.brand}"></td>
+                        <td th:text="${v.model}"></td>
+                        <td th:text="${v.year}"></td>
+                        <td th:text="${v.modification}"></td>
+                        <td>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-dark"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#manageProductsModal"
+                                    th:data-vehicle-id="${v.id}"
+                                    th:data-vehicle-label="${v.brand + ' ' + v.model + ' ' + v.year}">
+                                <i class="bi bi-link-45deg me-1"></i>
+                                <span th:text="${v.products != null ? v.products.size() : 0}"></span>
+                            </button>
+                        </td>
+                        <td class="text-end">
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-1"
+                                    data-bs-toggle="modal" data-bs-target="#editVehicleModal"
+                                    th:data-id="${v.id}"
+                                    th:data-brand="${v.brand}"
+                                    th:data-model="${v.model}"
+                                    th:data-year="${v.year}"
+                                    th:data-modification="${v.modification}">
+                                Редагувати
+                            </button>
+                            <form th:action="@{/admin/vehicles/{id}/delete(id=${v.id})}"
+                                  method="post" class="d-inline"
+                                  onsubmit="return confirm('Видалити автомобіль?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Видалити</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно: прив'язані товари -->
+    <div class="modal fade" id="manageProductsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Товари для: <span id="vehicleLabel"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Прив'язані товари -->
+                    <h6 class="fw-bold mb-2">Прив'язані товари</h6>
+                    <div id="linkedProductsList">
+                        <div th:each="v : ${vehicles}">
+                            <div th:attr="data-vehicle-linked=${v.id}"
+                                 th:if="${v.products != null and !v.products.isEmpty()}">
+                                <div th:each="p : ${v.products}" class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge bg-secondary small" th:text="'#' + ${p.id}"></span>
+                                    <span class="small flex-grow-1" th:text="${p.name}"></span>
+                                    <span class="text-muted small me-2" th:text="${p.article}"></span>
+                                    <form th:action="@{/admin/vehicles/{vid}/products/remove(vid=${v.id})}"
+                                          method="post" class="d-inline">
+                                        <input type="hidden" name="productId" th:value="${p.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-0">
+                                            <i class="bi bi-x"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div th:attr="data-vehicle-empty=${v.id}"
+                                 th:if="${v.products == null or v.products.isEmpty()}"
+                                 class="text-muted small">
+                                Жодного товару не прив'язано
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Додати товар -->
+                    <h6 class="fw-bold mb-2">Додати товар</h6>
+                    <form id="addProductForm" method="post" class="d-flex gap-2">
+                        <select name="productId" id="addProductSelect" class="form-select form-select-sm">
+                            <option value="" disabled selected>Вибрати товар</option>
+                            <option th:each="p : ${allProducts}"
+                                    th:value="${p.id}"
+                                    th:text="${p.name + ' (' + p.article + ')'}"></option>
+                        </select>
+                        <button type="submit" class="btn btn-dark btn-sm text-nowrap">
+                            <i class="bi bi-plus-lg me-1"></i>Прив'язати
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно: редагування -->
+    <div class="modal fade" id="editVehicleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="post" id="editVehicleForm">
+                <div class="modal-content">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title">Редагувати автомобіль</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Марка</label>
+                            <input type="text" name="brand" id="editVehicleBrand"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Модель</label>
+                            <input type="text" name="model" id="editVehicleModel"
+                                   class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Рік</label>
+                            <input type="number" name="year" id="editVehicleYear"
+                                   class="form-control" min="1900" max="2100" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Двигун / характеристика</label>
+                            <input type="text" name="modification" id="editVehicleModification"
+                                   class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
+                        <button type="submit" class="btn btn-dark">Зберегти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/js/pages/admin/adminvehicles.js}"></script>
+</div>
+
+</body>
+</html>

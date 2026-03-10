@@ -16,6 +16,97 @@
            class="btn btn-sm fw-bold">
         </a>
     </div>
+
+    <form th:action="@{/products}" method="get" id="filterForm" class="card border-0 shadow-sm mb-4">
+        <div class="card-body py-3">
+            <!-- Зберігаємо вибрану категорію -->
+            <input type="hidden" name="categoryId" th:value="${selectedCategoryId}">
+
+            <div class="row g-2 align-items-end">
+
+                <!-- Марка -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <label class="form-label small mb-1">Марка</label>
+                    <select id="filterBrand" name="brand" class="form-select form-select-sm">
+                        <option value="">Всі марки</option>
+                    </select>
+                </div>
+
+                <!-- Модель -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <label class="form-label small mb-1">Модель</label>
+                    <select id="filterModel" name="vmodel" class="form-select form-select-sm" disabled>
+                        <option value="">Всі моделі</option>
+                    </select>
+                </div>
+
+                <!-- Рік -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <label class="form-label small mb-1">Рік</label>
+                    <select id="filterYear" name="year" class="form-select form-select-sm" disabled>
+                        <option value="">Всі роки</option>
+                    </select>
+                </div>
+
+                <!-- Двигун/характеристика -->
+                <div class="col-6 col-md-3 col-lg-2">
+                    <label class="form-label small mb-1">Двигун</label>
+                    <select id="filterMod" name="modification" class="form-select form-select-sm" disabled>
+                        <option value="">Всі</option>
+                    </select>
+                </div>
+
+                <!-- Ціна від -->
+                <div class="col-6 col-md-2 col-lg-1">
+                    <label class="form-label small mb-1">Від (₴)</label>
+                    <input type="number" name="minPrice" class="form-control form-control-sm"
+                           min="0" step="1" placeholder="0"
+                           th:value="${filterMinPrice}">
+                </div>
+
+                <!-- Ціна до -->
+                <div class="col-6 col-md-2 col-lg-1">
+                    <label class="form-label small mb-1">До (₴)</label>
+                    <input type="number" name="maxPrice" class="form-control form-control-sm"
+                           min="0" step="1" placeholder="∞"
+                           th:value="${filterMaxPrice}">
+                </div>
+
+                <!-- Наявність -->
+                <div class="col-md-auto">
+                    <label class="form-label small mb-1 d-block">Наявність</label>
+                    <div class="d-flex gap-3">
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="availability"
+                                   id="avAll" value=""
+                                   th:checked="${filterAvailability == null or filterAvailability == ''}">
+                            <label class="form-check-label small" for="avAll">Всі</label>
+                        </div>
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="availability"
+                                   id="avTrue" value="true"
+                                   th:checked="${filterAvailability == 'true'}">
+                            <label class="form-check-label small" for="avTrue">В наявності</label>
+                        </div>
+                        <div class="form-check mb-0">
+                            <input class="form-check-input" type="radio" name="availability"
+                                   id="avFalse" value="false"
+                                   th:checked="${filterAvailability == 'false'}">
+                            <label class="form-check-label small" for="avFalse">Немає</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="col-auto ms-auto d-flex gap-2 align-items-end">
+                    <button type="submit" class="btn btn-dark btn-sm">Застосувати</button>
+                    <a th:href="${selectedCategoryId != null} ? '/products?categoryId=' + ${selectedCategoryId} : '/products'"
+                       class="btn btn-outline-secondary btn-sm">Скинути</a>
+                </div>
+
+            </div>
+        </div>
+    </form>
     <div th:if="${products.isEmpty()}" class="text-center text-muted py-5">
         <i class="bi bi-box-seam fs-1 d-block mb-3"></i>
         <p>Товарів у цій категорії поки немає</p>
@@ -57,6 +148,83 @@
             </div>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const allVehicles = [];
+        /*[# th:each="v : ${vehicles}"]*/
+        allVehicles.push({
+            brand:        /*[[${v.brand}]]*/ '',
+            model:        /*[[${v.model}]]*/ '',
+            year:         /*[[${v.year}]]*/ 0,
+            modification: /*[[${v.modification}]]*/ ''
+        });
+        /*[/]*/
+
+        const selBrand = /*[[${filterBrand}]]*/ null;
+        const selModel = /*[[${filterVmodel}]]*/ null;
+        const selYear  = /*[[${filterYear}]]*/ null;
+        const selMod   = /*[[${filterModification}]]*/ null;
+
+        const elBrand = document.getElementById('filterBrand');
+        const elModel = document.getElementById('filterModel');
+        const elYear  = document.getElementById('filterYear');
+        const elMod   = document.getElementById('filterMod');
+
+        function fillSelect(el, values, preselect) {
+            const current = el.options[0]; // зберігаємо "Всі..."
+            el.innerHTML = '';
+            el.add(current);
+            values.forEach(v => {
+                const opt = new Option(v, v);
+                if (String(v) === String(preselect)) opt.selected = true;
+                el.add(opt);
+            });
+            el.disabled = values.length === 0;
+        }
+
+        function unique(arr) { return [...new Set(arr)].sort(); }
+
+        function loadBrands() {
+            const brands = unique(allVehicles.map(v => v.brand));
+            fillSelect(elBrand, brands, selBrand);
+            if (selBrand) loadModels();
+        }
+
+        function loadModels() {
+            const brand = elBrand.value;
+            const models = unique(allVehicles.filter(v => v.brand === brand).map(v => v.model));
+            fillSelect(elModel, models, selModel);
+            elYear.innerHTML = '<option value="">Всі роки</option>'; elYear.disabled = true;
+            elMod.innerHTML  = '<option value="">Всі</option>';      elMod.disabled  = true;
+            if (selModel && elModel.value) loadYears();
+        }
+
+        function loadYears() {
+            const brand = elBrand.value, model = elModel.value;
+            const years = unique(allVehicles.filter(v => v.brand === brand && v.model === model).map(v => v.year))
+                .sort((a, b) => b - a);
+            fillSelect(elYear, years, selYear);
+            elMod.innerHTML = '<option value="">Всі</option>'; elMod.disabled = true;
+            if (selYear && elYear.value) loadMods();
+        }
+
+        function loadMods() {
+            const brand = elBrand.value, model = elModel.value, year = Number(elYear.value);
+            const mods = unique(allVehicles
+                .filter(v => v.brand === brand && v.model === model && v.year === year)
+                .map(v => v.modification));
+            fillSelect(elMod, mods, selMod);
+        }
+
+        elBrand.addEventListener('change', loadModels);
+        elModel.addEventListener('change', loadYears);
+        elYear.addEventListener('change',  loadMods);
+
+        // Відновлення стану після застосування фільтра
+        loadBrands();
+        /*]]>*/
+    </script>
 </div>
 
 </body>
