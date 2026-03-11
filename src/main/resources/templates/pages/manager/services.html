@@ -97,7 +97,7 @@
                                   data-payment=${order.paymentMethod != null ? order.paymentMethod.name() : ''}">
                         <form th:action="@{/manager/services/{id}/delete(id=${order.id})}"
                               method="post"
-                              onsubmit="return confirm('Видалити замовлення?')"
+                              onsubmit="return confirm('Видалити запис?')"
                               onclick="event.stopPropagation()">
                             <button type="submit"
                                     class="btn btn-sm btn-close position-absolute bottom-0 end-0 m-2"
@@ -134,7 +134,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-dark">
-                    <h5 class="modal-title text-white fw-bold">Замовлення клієнта</h5>
+                    <h5 class="modal-title text-white fw-bold">Запис клієнта</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -172,7 +172,7 @@
                             <input class="form-check-input" type="checkbox" id="mAcceptCheck"
                                    onchange="document.getElementById('mAcceptForm').submit()">
                             <label class="form-check-label fw-bold fs-6" for="mAcceptCheck">
-                                Прийняти замовлення
+                                Прийняти в роботу
                             </label>
                         </div>
                     </form>
@@ -192,7 +192,7 @@
                     </form>
                     <hr class="w-100 my-1">
                     <form id="mCancelFromAcceptedForm" method="post" class="w-100"
-                          onsubmit="return confirm('Скасувати замовлення?')">
+                          onsubmit="return confirm('Скасувати запис?')">
                         <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати запис</button>
                     </form>
                 </div>
@@ -222,7 +222,7 @@
                         </button>
                     </form>
                     <form id="mCancelFromScheduledForm" method="post" class="w-100"
-                          onsubmit="return confirm('Скасувати замовлення?')">
+                          onsubmit="return confirm('Скасувати запис?')">
                         <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати запис</button>
                     </form>
                 </div>

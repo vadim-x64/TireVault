@@ -51,6 +51,15 @@
                           th:text="${unseenProductOrdersCount}">0</span>
                 </a>
             </li>
+            <li th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'MANAGER'}">
+                <a href="/manager/orders"
+                   class="nav-link text-white fw-bold d-flex align-items-center justify-content-between">
+                    <span><i class="bi bi-bag me-2"></i>Журнал замовлень</span>
+                    <span th:if="${pendingProductOrdersCount != null and pendingProductOrdersCount > 0}"
+                          class="badge rounded-pill bg-danger"
+                          th:text="${pendingProductOrdersCount}">0</span>
+                </a>
+            </li>
             <li>
                 <a th:href="${session.loggedUser != null ? '/myreviews' : '/auth'}"
                    class="nav-link text-white d-flex align-items-center justify-content-between">
@@ -62,22 +71,13 @@
                           th:text="${reviewNotificationCount}">0</span>
                 </a>
             </li>
-            <li th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'MANAGER'}">
-                <a href="/manager/orders"
-                   class="nav-link text-white fw-bold d-flex align-items-center justify-content-between">
-                    <span><i class="bi bi-bag me-2"></i>Журнал замовлень</span>
-                    <span th:if="${pendingProductOrdersCount != null and pendingProductOrdersCount > 0}"
-                          class="badge rounded-pill bg-danger"
-                          th:text="${pendingProductOrdersCount}">0</span>
-                </a>
-            </li>
             <li th:if="${session.loggedUser != null
              and (session.loggedUser.role.name() == 'MANAGER'
                   or session.loggedUser.role.name() == 'ADMIN')}">
                 <a th:href="${session.loggedUser.role.name() == 'ADMIN'
                   ? '/admin/reviews' : '/manager/reviews'}"
                    class="nav-link text-white fw-bold">
-                    <i class="bi bi-chat-dots me-2"></i>Відгуки
+                    <i class="bi bi-chat-dots me-2"></i>Журнал відгуків
                 </a>
             </li>
             <li th:if="${session.loggedUser != null and session.loggedUser.role.name() == 'ADMIN'}">
