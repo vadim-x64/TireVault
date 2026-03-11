@@ -7,7 +7,7 @@
         <h3 class="fw-bold mb-0">Мої замовлення</h3>
     </div>
     <div th:if="${cancelError}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Помилка:</strong> <span th:text="${cancelError}"></span>
+        <span th:text="${cancelError}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     <ul class="nav nav-tabs mb-4" id="ordersTab" role="tablist">
