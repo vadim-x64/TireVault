@@ -118,6 +118,10 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long id) {
+        // Unlink all external dependencies pointing to this review or any of its replies.
+        // Doing this before fetching avoids FK self-referencing constraints during JPA cascading deletes.
+        reviewRepository.clearReplyToReviewReferences(id);
+
         reviewRepository.findById(id).ifPresent(review -> {
             review.getReplies().forEach(notificationRepository::deleteByReview);
             notificationRepository.deleteByReview(review);
