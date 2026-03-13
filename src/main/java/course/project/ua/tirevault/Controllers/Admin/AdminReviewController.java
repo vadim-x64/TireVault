@@ -54,7 +54,7 @@ public class AdminReviewController {
         return "index";
     }
 
-    @DeleteMapping({"/admin/reviews/{id}/delete", "/manager/reviews/{id}/delete"})
+    @PostMapping({"/admin/reviews/{id}/delete", "/manager/reviews/{id}/delete"})
     public String deleteReview(@PathVariable Long id, HttpSession session) {
         if (!hasAccess(session)) return "redirect:/";
         reviewService.deleteReview(id);

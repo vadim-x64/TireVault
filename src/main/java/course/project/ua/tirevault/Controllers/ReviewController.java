@@ -45,7 +45,7 @@ public class ReviewController {
         return buildRedirect(targetType, targetId) + "#reviews";
     }
 
-    @DeleteMapping("/reviews/{id}/delete")
+    @PostMapping("/reviews/{id}/delete")
     public String deleteReview(@PathVariable Long id,
                                @RequestParam String targetType,
                                @RequestParam Long targetId,

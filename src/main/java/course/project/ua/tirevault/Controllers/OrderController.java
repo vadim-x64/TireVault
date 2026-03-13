@@ -39,7 +39,7 @@ public class OrderController {
         return "redirect:/myorders";
     }
 
-    @DeleteMapping("/myorders/{id}/delete")
+    @PostMapping("/myorders/{id}/delete")
     public String deleteByClient(@PathVariable Long id, HttpSession session,
                                  RedirectAttributes redirectAttributes) {
         User loggedUser = (User) session.getAttribute("loggedUser");

@@ -40,7 +40,7 @@ public class ManagerOrderController {
         return "redirect:/manager/orders";
     }
 
-    @DeleteMapping("/manager/orders/{id}/delete")
+    @PostMapping("/manager/orders/{id}/delete")
     public String delete(@PathVariable Long id, HttpSession session) {
         if (!isManager(session)) return "redirect:/";
         orderService.delete(id);

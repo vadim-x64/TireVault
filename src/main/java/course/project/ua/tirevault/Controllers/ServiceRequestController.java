@@ -70,7 +70,7 @@ public class ServiceRequestController {
         return "redirect:/myservices";
     }
 
-    @DeleteMapping("/myservices/{id}/delete")
+    @PostMapping("/myservices/{id}/delete")
     public String deleteByClient(@PathVariable Long id, HttpSession session,
                                  RedirectAttributes redirectAttributes) {
         User loggedUser = (User) session.getAttribute("loggedUser");

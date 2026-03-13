@@ -28,7 +28,7 @@ public class ProfileController {
         return "index";
     }
 
-    @PutMapping("/profile/update")
+    @PostMapping("/profile/update")
     public String updateProfile(@RequestParam String firstName,
                                 @RequestParam String lastName,
                                 @RequestParam(required = false) String middleName,
@@ -89,7 +89,7 @@ public class ProfileController {
         }
     }
 
-    @DeleteMapping("/profile/delete")
+    @PostMapping("/profile/delete")
     public String deleteAccount(@RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
 

@@ -56,7 +56,7 @@ public class AdminUserController {
         return "redirect:/admin/users";
     }
 
-    @DeleteMapping("/admin/users/{id}/delete")
+    @PostMapping("/admin/users/{id}/delete")
     @Transactional
     public String deleteUser(@PathVariable Long id) {
         userRepository.findById(id).ifPresent(user -> {

@@ -39,7 +39,7 @@ public class AdminVehicleController {
         return "redirect:/admin/vehicles";
     }
 
-    @PutMapping("/admin/vehicles/{id}/edit")
+    @PostMapping("/admin/vehicles/{id}/edit")
     public String editVehicle(@PathVariable Long id,
                               @RequestParam String brand,
                               @RequestParam String model,
@@ -55,7 +55,7 @@ public class AdminVehicleController {
         return "redirect:/admin/vehicles";
     }
 
-    @DeleteMapping("/admin/vehicles/{id}/delete")
+    @PostMapping("/admin/vehicles/{id}/delete")
     public String deleteVehicle(@PathVariable Long id) {
         vehicleRepository.deleteById(id);
         return "redirect:/admin/vehicles";
@@ -77,7 +77,7 @@ public class AdminVehicleController {
     }
 
     // Відв'язати товар від авто
-    @DeleteMapping("/admin/vehicles/{vehicleId}/products/remove")
+    @PostMapping("/admin/vehicles/{vehicleId}/products/remove")
     public String removeProduct(@PathVariable Long vehicleId,
                                 @RequestParam Long productId) {
         vehicleRepository.findById(vehicleId).ifPresent(vehicle ->

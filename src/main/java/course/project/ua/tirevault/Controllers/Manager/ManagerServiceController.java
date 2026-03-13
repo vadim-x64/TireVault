@@ -23,7 +23,7 @@ public class ManagerServiceController {
         return "redirect:/manager/services";
     }
 
-    @DeleteMapping("/manager/services/{id}/delete")
+    @PostMapping("/manager/services/{id}/delete")
     public String deleteRequest(@PathVariable Long id, HttpSession session) {
         if (!isManager(session)) return "redirect:/";
         serviceRequestService.delete(id);

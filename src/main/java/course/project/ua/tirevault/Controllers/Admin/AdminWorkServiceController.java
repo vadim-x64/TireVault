@@ -31,7 +31,7 @@ public class AdminWorkServiceController {
         return "redirect:/admin/workservices";
     }
 
-    @PutMapping("/admin/workservices/categories/{id}/edit")
+    @PostMapping("/admin/workservices/categories/{id}/edit")
     public String editCategory(@PathVariable Long id,
                                @RequestParam String name) {
         workServiceManager.getCategoryById(id).ifPresent(cat -> {
@@ -41,7 +41,7 @@ public class AdminWorkServiceController {
         return "redirect:/admin/workservices";
     }
 
-    @DeleteMapping("/admin/workservices/categories/{id}/delete")
+    @PostMapping("/admin/workservices/categories/{id}/delete")
     public String deleteCategory(@PathVariable Long id) {
         workServiceManager.deleteCategoryById(id);
         return "redirect:/admin/workservices";
@@ -65,7 +65,7 @@ public class AdminWorkServiceController {
         return "redirect:/admin/workservices";
     }
 
-    @PutMapping("/admin/workservices/{id}/edit")
+    @PostMapping("/admin/workservices/{id}/edit")
     public String editWorkService(@PathVariable Long id,
                                   @RequestParam Long categoryId,
                                   @RequestParam String name,
@@ -83,7 +83,7 @@ public class AdminWorkServiceController {
         return "redirect:/admin/workservices";
     }
 
-    @DeleteMapping("/admin/workservices/{id}/delete")
+    @PostMapping("/admin/workservices/{id}/delete")
     public String deleteWorkService(@PathVariable Long id) {
         workServiceManager.deleteWorkServiceById(id);
         return "redirect:/admin/workservices";

@@ -70,7 +70,7 @@ public class CartController {
         }
     }
 
-    @PutMapping("/cart/update")
+    @PostMapping("/cart/update")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateItem(
             @RequestParam Long itemId,
@@ -96,7 +96,7 @@ public class CartController {
         ));
     }
 
-    @DeleteMapping("/cart/remove")
+    @PostMapping("/cart/remove")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> removeItem(
             @RequestParam Long itemId,

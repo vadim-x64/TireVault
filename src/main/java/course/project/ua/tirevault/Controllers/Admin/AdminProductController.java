@@ -44,7 +44,7 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    @PutMapping("/admin/products/categories/{id}/edit")
+    @PostMapping("/admin/products/categories/{id}/edit")
     public String editCategory(@PathVariable Long id, @RequestParam String name) {
         productService.getCategoryById(id).ifPresent(cat -> {
             cat.setName(name);
@@ -53,7 +53,7 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    @DeleteMapping("/admin/products/categories/{id}/delete")
+    @PostMapping("/admin/products/categories/{id}/delete")
     @Transactional
     public String deleteCategory(@PathVariable Long id) {
         List<Product> products = productService.getProductsByCategory(id);
@@ -88,7 +88,7 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    @PutMapping("/admin/products/{id}/edit")
+    @PostMapping("/admin/products/{id}/edit")
     public String editProduct(@PathVariable Long id,
                               @RequestParam Long categoryId,
                               @RequestParam String name,
@@ -111,7 +111,7 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    @DeleteMapping("/admin/products/{id}/delete")
+    @PostMapping("/admin/products/{id}/delete")
     @Transactional
     public String deleteProduct(@PathVariable Long id) {
         removeCartItemsForProduct(id);
