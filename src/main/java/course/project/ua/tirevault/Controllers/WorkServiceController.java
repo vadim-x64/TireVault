@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.List;
 
 @Controller
@@ -44,13 +42,9 @@ public class WorkServiceController {
     public String serviceDetail(@PathVariable Long id, Model model, HttpSession session) {
         var ws = workServiceManager.getWorkServiceById(id);
         if (ws.isEmpty()) return "redirect:/services";
-
         User user = (User) session.getAttribute("loggedUser");
-        List<Review> reviews =
-                reviewService.getTopLevelReviews(
-                        course.project.ua.tirevault.Entities.Enums.ReviewTargetType.SERVICE, id);
+        List<Review> reviews = reviewService.getTopLevelReviews(course.project.ua.tirevault.Entities.Enums.ReviewTargetType.SERVICE, id);
         java.util.Set<Long> likedIds = reviewService.getAllLikedReviewIds(user, reviews);
-
         model.addAttribute("workService", ws.get());
         model.addAttribute("reviews", reviews);
         model.addAttribute("likedReviewIds", likedIds);

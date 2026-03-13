@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.util.List;
 
 @Controller
@@ -28,23 +26,14 @@ public class SearchController {
     @GetMapping("/search")
     public String search(@RequestParam(name = "q", defaultValue = "") String query, Model model) {
         String q = query.trim();
-
-        List<Product> products = q.isEmpty()
-                ? List.of()
-                : productRepository.searchByKeyword(q);
-
-        List<WorkService> services = q.isEmpty()
-                ? List.of()
-                : serviceRepository.searchByKeyword(q);
-
+        List<Product> products = q.isEmpty() ? List.of() : productRepository.searchByKeyword(q);
+        List<WorkService> services = q.isEmpty() ? List.of() : serviceRepository.searchByKeyword(q);
         int totalCount = products.size() + services.size();
-
         model.addAttribute("query", q);
         model.addAttribute("products", products);
         model.addAttribute("services", services);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("page", "search");
-
         return "index";
     }
 }

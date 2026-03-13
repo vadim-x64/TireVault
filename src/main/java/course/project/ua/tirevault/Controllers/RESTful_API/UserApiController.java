@@ -11,18 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Користувачі", description = "Управління користувачами (адмін)")
 public class UserApiController {
+    @Autowired
+    private IUserRepository userRepository;
 
-    @Autowired private IUserRepository userRepository;
-    @Autowired private ICartRepository cartRepository;
-    @Autowired private IOrderRepository orderRepository;
-    @Autowired private IServiceRequestRepository serviceRequestRepository;
+    @Autowired
+    private ICartRepository cartRepository;
+
+    @Autowired
+    private IOrderRepository orderRepository;
+
+    @Autowired
+    private IServiceRequestRepository serviceRequestRepository;
 
     @GetMapping
     @Operation(summary = "Отримати всіх користувачів (крім адмінів)")

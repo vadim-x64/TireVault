@@ -11,7 +11,7 @@
     <div th:if="${session.loggedUser != null}" class="mb-4">
         <form th:action="@{/reviews/add}" method="post">
             <input type="hidden" name="targetType" th:value="${targetType}">
-            <input type="hidden" name="targetId"   th:value="${targetId}">
+            <input type="hidden" name="targetId" th:value="${targetId}">
             <textarea name="content" class="form-control mb-2" rows="3"
                       placeholder="Напишіть відгук..." required></textarea>
             <button type="submit" class="btn btn-dark btn-sm">
@@ -63,7 +63,7 @@
                   method="post" class="d-inline"
                   onsubmit="return confirm('Видалити коментар разом з усіма відповідями?')">
                 <input type="hidden" name="targetType" th:value="${targetType}">
-                <input type="hidden" name="targetId"   th:value="${targetId}">
+                <input type="hidden" name="targetId" th:value="${targetId}">
                 <button type="submit" class="btn btn-sm text-danger border-0 p-0">
                     <i class="bi bi-trash3"></i>
                 </button>
@@ -71,11 +71,11 @@
         </div>
         <div th:id="'reply-form-' + ${review.id}" class="reply-form mt-3 d-none">
             <form th:action="@{/reviews/add}" method="post">
-                <input type="hidden" name="targetType"      th:value="${targetType}">
-                <input type="hidden" name="targetId"        th:value="${targetId}">
-                <input type="hidden" name="parentId"        th:value="${review.id}">
+                <input type="hidden" name="targetType" th:value="${targetType}">
+                <input type="hidden" name="targetId" th:value="${targetId}">
+                <input type="hidden" name="parentId" th:value="${review.id}">
                 <input type="hidden" name="replyToReviewId" th:value="${review.id}">
-                <input type="hidden" name="replyToUserId"   th:value="${review.user.id}">
+                <input type="hidden" name="replyToUserId" th:value="${review.user.id}">
                 <textarea name="content" class="form-control form-control-sm mb-2"
                           rows="2" required></textarea>
                 <div class="d-flex gap-2">
@@ -83,7 +83,8 @@
                         <i class="bi bi-send me-1"></i>Надіслати
                     </button>
                     <button type="button" class="btn btn-outline-secondary btn-sm btn-cancel-reply"
-                            th:data-review-id="${review.id}">Скасувати</button>
+                            th:data-review-id="${review.id}">Скасувати
+                    </button>
                 </div>
             </form>
         </div>
@@ -141,7 +142,7 @@
                               method="post" class="d-inline"
                               onsubmit="return confirm('Видалити відповідь?')">
                             <input type="hidden" name="targetType" th:value="${targetType}">
-                            <input type="hidden" name="targetId"   th:value="${targetId}">
+                            <input type="hidden" name="targetId" th:value="${targetId}">
                             <button type="submit" class="btn btn-sm text-danger border-0 p-0">
                                 <i class="bi bi-trash3"></i>
                             </button>

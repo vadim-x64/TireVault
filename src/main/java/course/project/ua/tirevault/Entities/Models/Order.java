@@ -53,13 +53,12 @@ public class Order {
     private boolean seen = true;
 
     public String getFormattedDate() {
-        return createdAt != null
-                ? createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-                : "";
+        return createdAt != null ? createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) : "";
     }
 
     public String getItemsJson() {
         StringBuilder sb = new StringBuilder("[");
+
         for (int i = 0; i < items.size(); i++) {
             OrderItem it = items.get(i);
             String name = it.getProduct().getName().replace("\\", "\\\\").replace("\"", "\\\"");
@@ -69,6 +68,7 @@ public class Order {
                     .append("\",\"subtotal\":\"").append(it.getSubtotal()).append("\"}");
             if (i < items.size() - 1) sb.append(",");
         }
+
         sb.append("]");
         return sb.toString();
     }

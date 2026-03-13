@@ -24,9 +24,7 @@ public class ManagerOrderController {
     }
 
     @PostMapping("/manager/orders/{id}/status")
-    public String setStatus(@PathVariable Long id,
-                            @RequestParam String status,
-                            HttpSession session) {
+    public String setStatus(@PathVariable Long id, @RequestParam String status, HttpSession session) {
         if (!isManager(session)) return "redirect:/";
         orderService.setStatus(id, OrderStatus.valueOf(status));
         return "redirect:/manager/orders";

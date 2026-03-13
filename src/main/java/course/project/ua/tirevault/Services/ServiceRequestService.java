@@ -7,7 +7,6 @@ import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Repositories.IServiceRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -36,39 +35,30 @@ public class ServiceRequestService {
     }
 
     public void deleteByUser(Long id, User user) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
-        if (request.getUser() == null || !request.getUser().getId().equals(user.getId()))
-            throw new RuntimeException("Немає доступу.");
-        if (!List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED)
-                .contains(request.getStatus()))
-            throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        if (request.getUser() == null || !request.getUser().getId().equals(user.getId())) throw new RuntimeException("Немає доступу.");
+        if (!List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED).contains(request.getStatus())) throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
         serviceRequestRepository.deleteById(id);
     }
 
     public List<ServiceRequest> getActiveByUser(User user) {
-        return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
-                user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
+        return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(user, List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
     }
 
     public List<ServiceRequest> getCompletedByUser(User user) {
-        return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(
-                user, List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
+        return serviceRequestRepository.findByUserAndStatusInOrderByCreatedAtDesc(user, List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
     }
 
     public List<ServiceRequest> getAllActive() {
-        return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(
-                List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
+        return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED));
     }
 
     public List<ServiceRequest> getAllCompleted() {
-        return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(
-                List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
+        return serviceRequestRepository.findByStatusInOrderByCreatedAtDesc(List.of(ServiceRequestStatus.COMPLETED, ServiceRequestStatus.CANCELLED));
     }
 
     public void accept(Long id) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         request.setStatus(ServiceRequestStatus.ACCEPTED);
         request.setSeen(false);
         serviceRequestRepository.save(request);
@@ -76,13 +66,13 @@ public class ServiceRequestService {
 
     public void schedule(Long id, LocalDateTime scheduledAt) {
         ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
-
         java.time.DayOfWeek dow = scheduledAt.getDayOfWeek();
         LocalTime time = scheduledAt.toLocalTime();
 
         if (dow == java.time.DayOfWeek.SUNDAY) {
             throw new RuntimeException("Неділя - вихідний день.");
         }
+
         if (dow == java.time.DayOfWeek.SATURDAY) {
             if (time.isBefore(LocalTime.of(10, 0)) || time.isAfter(LocalTime.of(15, 0))) {
                 throw new RuntimeException("У суботу прийом з 10:00 до 15:00.");
@@ -94,11 +84,7 @@ public class ServiceRequestService {
         }
 
         List<ServiceRequestStatus> excluded = List.of(ServiceRequestStatus.CANCELLED, ServiceRequestStatus.COMPLETED);
-        boolean slotTaken = serviceRequestRepository
-                .findByScheduledAtBetweenAndStatusNotIn(
-                        scheduledAt.minusMinutes(1), scheduledAt.plusMinutes(1), excluded)
-                .stream()
-                .anyMatch(r -> !r.getId().equals(id));
+        boolean slotTaken = serviceRequestRepository.findByScheduledAtBetweenAndStatusNotIn(scheduledAt.minusMinutes(1), scheduledAt.plusMinutes(1), excluded).stream().anyMatch(r -> !r.getId().equals(id));
 
         if (slotTaken) {
             throw new RuntimeException("Цей час вже заброньований. Оберіть інший.");
@@ -111,8 +97,7 @@ public class ServiceRequestService {
     }
 
     public void unschedule(Long id) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         request.setScheduledAt(null);
         request.setStatus(ServiceRequestStatus.ACCEPTED);
         request.setSeen(false);
@@ -120,8 +105,7 @@ public class ServiceRequestService {
     }
 
     public void complete(Long id, PaymentMethod paymentMethod) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         request.setStatus(ServiceRequestStatus.COMPLETED);
         request.setPaymentMethod(paymentMethod);
         request.setSeen(false);
@@ -129,9 +113,7 @@ public class ServiceRequestService {
     }
 
     public void cancel(Long id, User user) {
-        ServiceRequest request = serviceRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
-
+        ServiceRequest request = serviceRequestRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         boolean isOwner = request.getUser() != null && request.getUser().getId().equals(user.getId());
         boolean isManager = user.getRole().name().equals("MANAGER");
 
@@ -139,8 +121,7 @@ public class ServiceRequestService {
             throw new RuntimeException("Немає доступу.");
         }
 
-        List<ServiceRequestStatus> cancellable = List.of(
-                ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED);
+        List<ServiceRequestStatus> cancellable = List.of(ServiceRequestStatus.PENDING, ServiceRequestStatus.ACCEPTED, ServiceRequestStatus.SCHEDULED);
         if (!cancellable.contains(request.getStatus())) {
             throw new RuntimeException("Це замовлення не можна скасувати.");
         }
@@ -169,11 +150,6 @@ public class ServiceRequestService {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
         List<ServiceRequestStatus> excluded = List.of(ServiceRequestStatus.CANCELLED, ServiceRequestStatus.COMPLETED);
-
-        return serviceRequestRepository
-                .findByScheduledAtBetweenAndStatusNotIn(start, end, excluded)
-                .stream()
-                .map(r -> r.getScheduledAt().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")))
-                .collect(Collectors.toList());
+        return serviceRequestRepository.findByScheduledAtBetweenAndStatusNotIn(start, end, excluded).stream().map(r -> r.getScheduledAt().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))).collect(Collectors.toList());
     }
 }

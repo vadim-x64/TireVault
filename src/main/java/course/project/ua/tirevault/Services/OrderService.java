@@ -6,7 +6,6 @@ import course.project.ua.tirevault.Repositories.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -44,46 +43,34 @@ public class OrderService {
     }
 
     public List<Order> getActiveByUser(User user) {
-        return orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(
-                user, List.of(OrderStatus.PENDING, OrderStatus.PROCESSING));
+        return orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(user, List.of(OrderStatus.PENDING, OrderStatus.PROCESSING));
     }
 
     public List<Order> getCompletedByUser(User user) {
-        return orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(
-                user, List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED));
+        return orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(user, List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED));
     }
 
     public List<Order> getAllActive() {
-        return orderRepository.findByStatusInOrderByCreatedAtDesc(
-                List.of(OrderStatus.PENDING, OrderStatus.PROCESSING));
+        return orderRepository.findByStatusInOrderByCreatedAtDesc(List.of(OrderStatus.PENDING, OrderStatus.PROCESSING));
     }
 
     public List<Order> getAllCompleted() {
-        return orderRepository.findByStatusInOrderByCreatedAtDesc(
-                List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED));
+        return orderRepository.findByStatusInOrderByCreatedAtDesc(List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED));
     }
 
     public void setStatus(Long id, OrderStatus status) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         order.setStatus(status);
         order.setSeen(false);
         orderRepository.save(order);
     }
 
     public void cancel(Long id, User user) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
-
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
         boolean isOwner = order.getUser().getId().equals(user.getId());
         boolean isManager = user.getRole().name().equals("MANAGER");
-
-        if (!isOwner && !isManager)
-            throw new RuntimeException("Немає доступу.");
-
-        if (!List.of(OrderStatus.PENDING, OrderStatus.PROCESSING).contains(order.getStatus()))
-            throw new RuntimeException("Це замовлення не можна скасувати.");
-
+        if (!isOwner && !isManager) throw new RuntimeException("Немає доступу.");
+        if (!List.of(OrderStatus.PENDING, OrderStatus.PROCESSING).contains(order.getStatus())) throw new RuntimeException("Це замовлення не можна скасувати.");
         order.setStatus(OrderStatus.CANCELLED);
         order.setSeen(false);
         orderRepository.save(order);
@@ -94,12 +81,9 @@ public class OrderService {
     }
 
     public void deleteByUser(Long id, User user) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
-        if (!order.getUser().getId().equals(user.getId()))
-            throw new RuntimeException("Немає доступу.");
-        if (!List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED).contains(order.getStatus()))
-            throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Замовлення не знайдено."));
+        if (!order.getUser().getId().equals(user.getId())) throw new RuntimeException("Немає доступу.");
+        if (!List.of(OrderStatus.COMPLETED, OrderStatus.CANCELLED).contains(order.getStatus())) throw new RuntimeException("Можна видаляти тільки завершені замовлення.");
         orderRepository.deleteById(id);
     }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AdminVehicleController {
-
     @Autowired
     private IVehicleRepository vehicleRepository;
 
@@ -26,10 +25,7 @@ public class AdminVehicleController {
     }
 
     @PostMapping("/admin/vehicles/add")
-    public String addVehicle(@RequestParam String brand,
-                             @RequestParam String model,
-                             @RequestParam Integer year,
-                             @RequestParam String modification) {
+    public String addVehicle(@RequestParam String brand, @RequestParam String model, @RequestParam Integer year, @RequestParam String modification) {
         Vehicle v = new Vehicle();
         v.setBrand(brand);
         v.setModel(model);
@@ -40,11 +36,7 @@ public class AdminVehicleController {
     }
 
     @PostMapping("/admin/vehicles/{id}/edit")
-    public String editVehicle(@PathVariable Long id,
-                              @RequestParam String brand,
-                              @RequestParam String model,
-                              @RequestParam Integer year,
-                              @RequestParam String modification) {
+    public String editVehicle(@PathVariable Long id, @RequestParam String brand, @RequestParam String model, @RequestParam Integer year, @RequestParam String modification) {
         vehicleRepository.findById(id).ifPresent(v -> {
             v.setBrand(brand);
             v.setModel(model);
@@ -52,6 +44,7 @@ public class AdminVehicleController {
             v.setModification(modification);
             vehicleRepository.save(v);
         });
+
         return "redirect:/admin/vehicles";
     }
 
@@ -61,10 +54,8 @@ public class AdminVehicleController {
         return "redirect:/admin/vehicles";
     }
 
-    // Прив'язати товар до авто
     @PostMapping("/admin/vehicles/{vehicleId}/products/add")
-    public String addProduct(@PathVariable Long vehicleId,
-                             @RequestParam Long productId) {
+    public String addProduct(@PathVariable Long vehicleId, @RequestParam Long productId) {
         vehicleRepository.findById(vehicleId).ifPresent(vehicle ->
                 productRepository.findById(productId).ifPresent(product -> {
                     if (!product.getVehicles().contains(vehicle)) {
@@ -73,19 +64,19 @@ public class AdminVehicleController {
                     }
                 })
         );
+
         return "redirect:/admin/vehicles";
     }
 
-    // Відв'язати товар від авто
     @PostMapping("/admin/vehicles/{vehicleId}/products/remove")
-    public String removeProduct(@PathVariable Long vehicleId,
-                                @RequestParam Long productId) {
+    public String removeProduct(@PathVariable Long vehicleId, @RequestParam Long productId) {
         vehicleRepository.findById(vehicleId).ifPresent(vehicle ->
                 productRepository.findById(productId).ifPresent(product -> {
                     product.getVehicles().remove(vehicle);
                     productRepository.save(product);
                 })
         );
+
         return "redirect:/admin/vehicles";
     }
 }

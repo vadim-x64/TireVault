@@ -6,15 +6,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/products")
 @Tag(name = "Автотовари", description = "Каталог товарів та категорій")
 public class ProductApiController {
-
-    @Autowired private ProductService productService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping
     @Operation(summary = "Отримати всі товари")
@@ -25,9 +24,7 @@ public class ProductApiController {
     @GetMapping("/{id}")
     @Operation(summary = "Отримати товар за ID")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return productService.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return productService.getProductById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/categories")
@@ -38,13 +35,7 @@ public class ProductApiController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Редагувати товар")
-    public ResponseEntity<?> editProduct(@PathVariable Long id,
-                                         @RequestParam Long categoryId,
-                                         @RequestParam String name,
-                                         @RequestParam(required = false) String description,
-                                         @RequestParam BigDecimal price,
-                                         @RequestParam(defaultValue = "0") Integer quantity,
-                                         @RequestParam(required = false) String imageUrl) {
+    public ResponseEntity<?> editProduct(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(defaultValue = "0") Integer quantity, @RequestParam(required = false) String imageUrl) {
         return productService.getProductById(id).map(p -> {
             productService.getCategoryById(categoryId).ifPresent(p::setCategory);
             p.setName(name);

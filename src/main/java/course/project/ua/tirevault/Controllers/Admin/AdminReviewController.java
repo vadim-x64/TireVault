@@ -11,16 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 public class AdminReviewController {
-    @Autowired private ReviewService reviewService;
-    @Autowired private ProductService productService;
-    @Autowired private WorkServiceManager workServiceManager;
+    @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private WorkServiceManager workServiceManager;
 
     @GetMapping({"/admin/reviews", "/manager/reviews"})
     public String reviewsPage(Model model, HttpSession session) {
@@ -32,6 +36,7 @@ public class AdminReviewController {
 
         for (Review r : reviews) {
             String key = r.getTargetType() + "_" + r.getTargetId();
+
             if (!targetNames.containsKey(key)) {
                 if (r.getTargetType() == ReviewTargetType.PRODUCT) {
                     productService.getProductById(r.getTargetId()).ifPresent(p -> {

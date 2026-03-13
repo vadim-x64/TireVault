@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -41,10 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String firstName, @RequestParam String lastName,
-                           @RequestParam(required = false) String middleName, @RequestParam String phone,
-                           @RequestParam String username, @RequestParam String password, HttpSession session,
-                           RedirectAttributes redirectAttributes) {
+    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam(required = false) String middleName, @RequestParam String phone, @RequestParam String username, @RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             String cleanDigits = phone.replaceAll("\\D+", "");
 

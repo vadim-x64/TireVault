@@ -6,15 +6,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/work-services")
 @Tag(name = "Послуги СТО", description = "Каталог послуг та категорій")
 public class WorkServiceApiController {
-
-    @Autowired private WorkServiceManager workServiceManager;
+    @Autowired
+    private WorkServiceManager workServiceManager;
 
     @GetMapping
     @Operation(summary = "Отримати всі послуги")
@@ -31,19 +30,12 @@ public class WorkServiceApiController {
     @GetMapping("/{id}")
     @Operation(summary = "Отримати послугу за ID")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return workServiceManager.getWorkServiceById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return workServiceManager.getWorkServiceById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Редагувати послугу")
-    public ResponseEntity<?> edit(@PathVariable Long id,
-                                  @RequestParam Long categoryId,
-                                  @RequestParam String name,
-                                  @RequestParam(required = false) String description,
-                                  @RequestParam BigDecimal price,
-                                  @RequestParam(required = false) String workingHours) {
+    public ResponseEntity<?> edit(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(required = false) String workingHours) {
         return workServiceManager.getWorkServiceById(id).map(ws -> {
             workServiceManager.getCategoryById(categoryId).ifPresent(ws::setCategory);
             ws.setName(name);

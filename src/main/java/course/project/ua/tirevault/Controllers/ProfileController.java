@@ -29,13 +29,7 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/update")
-    public String updateProfile(@RequestParam String firstName,
-                                @RequestParam String lastName,
-                                @RequestParam(required = false) String middleName,
-                                @RequestParam String phone,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-
+    public String updateProfile(@RequestParam String firstName, @RequestParam String lastName, @RequestParam(required = false) String middleName, @RequestParam String phone, HttpSession session, RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
 
         if (currentUser == null) {
@@ -67,9 +61,7 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/security")
-    public String updateSecurity(@RequestParam String username, @RequestParam(required = false) String password,
-                                 HttpSession session, RedirectAttributes redirectAttributes) {
-
+    public String updateSecurity(@RequestParam String username, @RequestParam(required = false) String password, HttpSession session, RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
 
         if (currentUser == null) {

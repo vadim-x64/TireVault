@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,8 +15,8 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/api/service-requests")
 @Tag(name = "Заявки на СТО", description = "Управління заявками на обслуговування")
 public class ServiceRequestApiController {
-
-    @Autowired private ServiceRequestService serviceRequestService;
+    @Autowired
+    private ServiceRequestService serviceRequestService;
 
     @GetMapping("/active")
     @Operation(summary = "Активні заявки")
@@ -39,8 +40,7 @@ public class ServiceRequestApiController {
     @PutMapping("/{id}/schedule")
     @Operation(summary = "Запланувати заявку (формат: yyyy-MM-dd'T'HH:mm)")
     public ResponseEntity<?> schedule(@PathVariable Long id, @RequestParam String scheduledAt) {
-        LocalDateTime dt = LocalDateTime.parse(scheduledAt,
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        LocalDateTime dt = LocalDateTime.parse(scheduledAt, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
         serviceRequestService.schedule(id, dt);
         return ResponseEntity.ok().build();
     }

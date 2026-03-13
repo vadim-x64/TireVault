@@ -6,7 +6,6 @@ import course.project.ua.tirevault.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,10 +14,13 @@ import java.util.stream.Collectors;
 public class ReviewService {
     @Autowired
     private IReviewRepository reviewRepository;
+
     @Autowired
     private IReviewLikeRepository reviewLikeRepository;
+
     @Autowired
     private IReviewNotificationRepository notificationRepository;
+
     @Autowired
     private IUserRepository userRepository;
 
@@ -28,8 +30,7 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<Review> getTopLevelReviews(ReviewTargetType type, Long targetId) {
-        return reviewRepository
-                .findByTargetTypeAndTargetIdAndParentIsNullOrderByCreatedAtDesc(type, targetId);
+        return reviewRepository.findByTargetTypeAndTargetIdAndParentIsNullOrderByCreatedAtDesc(type, targetId);
     }
 
     @Transactional(readOnly = true)
@@ -42,34 +43,35 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review addReview(User user, ReviewTargetType targetType, Long targetId,
-                            String content, Long parentId, Long replyToReviewId, Long replyToUserId) {
+    public Review addReview(User user, ReviewTargetType targetType, Long targetId, String content, Long parentId, Long replyToReviewId, Long replyToUserId) {
         Review review = new Review();
         review.setUser(user);
         String raw = content.trim();
         String cleanContent;
+
         if (replyToUserId != null) {
             Optional<User> replyUser = userRepository.findById(replyToUserId);
+
             if (replyUser.isPresent()) {
                 String mention = "@" + replyUser.get().getUsername();
-                cleanContent = raw.startsWith(mention)
-                        ? raw.substring(mention.length()).trim()
-                        : raw;
+                cleanContent = raw.startsWith(mention) ? raw.substring(mention.length()).trim() : raw;
             } else {
                 cleanContent = raw;
             }
         } else {
             cleanContent = raw;
         }
+
         review.setContent(cleanContent);
         review.setTargetType(targetType);
         review.setTargetId(targetId);
         review.setCreatedAt(LocalDateTime.now());
-
         Review directParent = null;
+
         if (parentId != null) {
             directParent = reviewRepository.findById(parentId).orElse(null);
         }
+
         if (replyToReviewId != null && directParent == null) {
             directParent = reviewRepository.findById(replyToReviewId).orElse(null);
         }
@@ -97,9 +99,8 @@ public class ReviewService {
                 createNotification(root.getUser(), saved);
                 notified.add(root.getUser().getId());
             }
-            if (directParent.getParent() != null
-                    && !directParent.getUser().getId().equals(user.getId())
-                    && !notified.contains(directParent.getUser().getId())) {
+
+            if (directParent.getParent() != null && !directParent.getUser().getId().equals(user.getId()) && !notified.contains(directParent.getUser().getId())) {
                 createNotification(directParent.getUser(), saved);
             }
         }
@@ -118,8 +119,6 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long id) {
-        // Unlink all external dependencies pointing to this review or any of its replies.
-        // Doing this before fetching avoids FK self-referencing constraints during JPA cascading deletes.
         reviewRepository.clearReplyToReviewReferences(id);
 
         reviewRepository.findById(id).ifPresent(review -> {
@@ -131,10 +130,10 @@ public class ReviewService {
 
     @Transactional
     public Map<String, Object> toggleLike(Long reviewId, User user) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("Review not found: " + reviewId));
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new RuntimeException("Review not found: " + reviewId));
         Optional<ReviewLike> existing = reviewLikeRepository.findByUserAndReview(user, review);
         boolean liked;
+
         if (existing.isPresent()) {
             reviewLikeRepository.delete(existing.get());
             liked = false;
@@ -155,6 +154,7 @@ public class ReviewService {
                 notificationRepository.save(n);
             }
         }
+
         int count = reviewLikeRepository.countByReview(review);
         return Map.of("liked", liked, "count", count);
     }

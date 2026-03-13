@@ -7,12 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
-
     @Bean
     public OpenAPI tirVaultOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("TireVault — API системи СТО")
+                        .title("TireVault - OpenAPI системи СТО")
                         .description("Документація до курсової роботи")
                         .version("1.0.0"));
     }

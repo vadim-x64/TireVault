@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/orders")
 @Tag(name = "Замовлення", description = "Управління замовленнями магазину")
 public class OrderApiController {
-
-    @Autowired private OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/active")
     @Operation(summary = "Отримати активні замовлення")

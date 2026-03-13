@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -50,6 +49,7 @@ public class AdminProductController {
             cat.setName(name);
             productService.saveCategory(cat);
         });
+
         return "redirect:/admin/products";
     }
 
@@ -57,22 +57,18 @@ public class AdminProductController {
     @Transactional
     public String deleteCategory(@PathVariable Long id) {
         List<Product> products = productService.getProductsByCategory(id);
+
         for (Product product : products) {
             removeCartItemsForProduct(product.getId());
             productService.deleteProductById(product.getId());
         }
+
         productService.deleteCategoryById(id);
         return "redirect:/admin/products";
     }
 
     @PostMapping("/admin/products/add")
-    public String addProduct(@RequestParam Long categoryId,
-                             @RequestParam String name,
-                             @RequestParam(required = false) String article,
-                             @RequestParam(required = false) String description,
-                             @RequestParam BigDecimal price,
-                             @RequestParam(defaultValue = "0") Integer quantity,
-                             @RequestParam(required = false) String imageUrl) {
+    public String addProduct(@RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String article, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(defaultValue = "0") Integer quantity, @RequestParam(required = false) String imageUrl) {
         productService.getCategoryById(categoryId).ifPresent(cat -> {
             Product p = new Product();
             p.setCategory(cat);
@@ -85,18 +81,12 @@ public class AdminProductController {
             p.setImageUrl(imageUrl);
             productService.saveProduct(p);
         });
+
         return "redirect:/admin/products";
     }
 
     @PostMapping("/admin/products/{id}/edit")
-    public String editProduct(@PathVariable Long id,
-                              @RequestParam Long categoryId,
-                              @RequestParam String name,
-                              @RequestParam(required = false) String article,
-                              @RequestParam(required = false) String description,
-                              @RequestParam BigDecimal price,
-                              @RequestParam(defaultValue = "0") Integer quantity,
-                              @RequestParam(required = false) String imageUrl) {
+    public String editProduct(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String article, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(defaultValue = "0") Integer quantity, @RequestParam(required = false) String imageUrl) {
         productService.getProductById(id).ifPresent(p -> {
             productService.getCategoryById(categoryId).ifPresent(p::setCategory);
             p.setName(name);
@@ -108,6 +98,7 @@ public class AdminProductController {
             p.setImageUrl(imageUrl);
             productService.saveProduct(p);
         });
+
         return "redirect:/admin/products";
     }
 
@@ -120,16 +111,14 @@ public class AdminProductController {
     }
 
     private void removeCartItemsForProduct(Long productId) {
-        orderItemRepository.deleteByProductId(productId); // <-- додати це
-
+        orderItemRepository.deleteByProductId(productId);
         List<CartItem> items = cartItemRepository.findByProductId(productId);
+
         for (CartItem item : items) {
             Cart cart = item.getCart();
             cart.getItems().remove(item);
             cartItemRepository.delete(item);
-            BigDecimal total = cart.getItems().stream()
-                    .map(CartItem::getSubtotal)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal total = cart.getItems().stream().map(CartItem::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
             cart.setTotal(total);
             cartRepository.save(cart);
         }

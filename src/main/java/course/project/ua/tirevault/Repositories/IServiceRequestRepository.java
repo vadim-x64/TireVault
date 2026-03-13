@@ -11,17 +11,10 @@ import java.util.List;
 @Repository
 public interface IServiceRequestRepository extends JpaRepository<ServiceRequest, Long> {
     List<ServiceRequest> findByUser(User user);
-
     List<ServiceRequest> findByUserAndStatusInOrderByCreatedAtDesc(User user, List<ServiceRequestStatus> statuses);
-
     List<ServiceRequest> findByStatusInOrderByCreatedAtDesc(List<ServiceRequestStatus> statuses);
-
     long countByStatus(ServiceRequestStatus status);
-
     long countByUserAndSeenFalse(User user);
-
     List<ServiceRequest> findByUserAndSeenFalse(User user);
-
-    List<ServiceRequest> findByScheduledAtBetweenAndStatusNotIn(
-            LocalDateTime start, LocalDateTime end, List<ServiceRequestStatus> excludedStatuses);
+    List<ServiceRequest> findByScheduledAtBetweenAndStatusNotIn(LocalDateTime start, LocalDateTime end, List<ServiceRequestStatus> excludedStatuses);
 }

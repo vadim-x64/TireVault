@@ -12,6 +12,8 @@ import java.util.List;
 @Entity
 @Table(name = "reviews")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review implements Serializable {
@@ -53,14 +55,12 @@ public class Review implements Serializable {
     @JoinColumn(name = "reply_to_user_id")
     private User replyToUser;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
     @ToString.Exclude
     private List<Review> replies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ReviewLike> likes = new ArrayList<>();
 }

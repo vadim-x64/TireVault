@@ -1,5 +1,5 @@
 .review-highlight {
-    outline: 2px solid #dc3545;
-    background-color: #fff5f5 !important;
-    transition: background-color 0.3s ease;
+    outline: 1px solid #DC3545;
+    background-color: #FFF5f5 !important;
+    transition: background-color 0.5s ease;
 }

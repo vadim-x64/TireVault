@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 
 @Controller
@@ -32,12 +31,12 @@ public class AdminWorkServiceController {
     }
 
     @PostMapping("/admin/workservices/categories/{id}/edit")
-    public String editCategory(@PathVariable Long id,
-                               @RequestParam String name) {
+    public String editCategory(@PathVariable Long id, @RequestParam String name) {
         workServiceManager.getCategoryById(id).ifPresent(cat -> {
             cat.setName(name);
             workServiceManager.saveCategory(cat);
         });
+
         return "redirect:/admin/workservices";
     }
 
@@ -48,11 +47,7 @@ public class AdminWorkServiceController {
     }
 
     @PostMapping("/admin/workservices/add")
-    public String addWorkService(@RequestParam Long categoryId,
-                                 @RequestParam String name,
-                                 @RequestParam(required = false) String description,
-                                 @RequestParam BigDecimal price,
-                                 @RequestParam(required = false) String workingHours) {
+    public String addWorkService(@RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(required = false) String workingHours) {
         workServiceManager.getCategoryById(categoryId).ifPresent(cat -> {
             WorkService ws = new WorkService();
             ws.setCategory(cat);
@@ -62,16 +57,12 @@ public class AdminWorkServiceController {
             ws.setWorkingHours(workingHours);
             workServiceManager.saveWorkService(ws);
         });
+
         return "redirect:/admin/workservices";
     }
 
     @PostMapping("/admin/workservices/{id}/edit")
-    public String editWorkService(@PathVariable Long id,
-                                  @RequestParam Long categoryId,
-                                  @RequestParam String name,
-                                  @RequestParam(required = false) String description,
-                                  @RequestParam BigDecimal price,
-                                  @RequestParam(required = false) String workingHours) {
+    public String editWorkService(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(required = false) String workingHours) {
         workServiceManager.getWorkServiceById(id).ifPresent(ws -> {
             workServiceManager.getCategoryById(categoryId).ifPresent(ws::setCategory);
             ws.setName(name);
@@ -80,6 +71,7 @@ public class AdminWorkServiceController {
             ws.setWorkingHours(workingHours);
             workServiceManager.saveWorkService(ws);
         });
+
         return "redirect:/admin/workservices";
     }
 

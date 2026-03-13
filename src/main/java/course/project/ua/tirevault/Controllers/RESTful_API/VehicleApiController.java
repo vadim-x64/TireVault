@@ -11,23 +11,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/vehicles")
 @Tag(name = "Автомобілі", description = "Довідник автомобілів")
 public class VehicleApiController {
-
-    @Autowired private IVehicleRepository vehicleRepository;
+    @Autowired
+    private IVehicleRepository vehicleRepository;
 
     @GetMapping
     @Operation(summary = "Отримати всі автомобілі")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(
-                vehicleRepository.findAllByOrderByBrandAscModelAscYearAsc()
+        return ResponseEntity.ok(vehicleRepository.findAllByOrderByBrandAscModelAscYearAsc()
         );
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Отримати автомобіль за ID")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        return vehicleRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return vehicleRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

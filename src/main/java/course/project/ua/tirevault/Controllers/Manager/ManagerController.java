@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class ManagerController {
     public String managerPage(Model model, HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null || !loggedUser.getRole().name().equals("MANAGER")) return "redirect:/";
-
         model.addAttribute("activeOrders", serviceRequestService.getAllActive());
         model.addAttribute("completedOrders", serviceRequestService.getAllCompleted());
         model.addAttribute("page", "manager/services");

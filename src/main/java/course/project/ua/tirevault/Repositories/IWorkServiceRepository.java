@@ -4,12 +4,12 @@ import course.project.ua.tirevault.Entities.Models.WorkService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
+@Repository
 public interface IWorkServiceRepository extends JpaRepository<WorkService, Long> {
     List<WorkService> findAllByOrderByIdAsc();
-
     List<WorkService> findByCategoryIdOrderByIdAsc(Long categoryId);
 
     @Query("""

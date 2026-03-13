@@ -3,15 +3,15 @@ package course.project.ua.tirevault.Entities.Models;
 import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.ServiceRequestStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "service_requests")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceRequest {
@@ -53,14 +53,10 @@ public class ServiceRequest {
     private PaymentMethod paymentMethod;
 
     public String getFormattedDate() {
-        return createdAt != null
-                ? createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-                : "";
+        return createdAt != null ? createdAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) : "";
     }
 
     public String getFormattedScheduledDate() {
-        return scheduledAt != null
-                ? scheduledAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-                : "";
+        return scheduledAt != null ? scheduledAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) : "";
     }
 }

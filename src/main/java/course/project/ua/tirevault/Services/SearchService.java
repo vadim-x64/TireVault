@@ -11,11 +11,7 @@ public class SearchService {
         }
 
         String truncated = truncate(text, 300);
-
-        return truncated.replaceAll(
-                "(?i)(" + Pattern.quote(query.trim()) + ")",
-                "<mark class=\"bg-warning px-0\">$1</mark>"
-        );
+        return truncated.replaceAll("(?i)(" + Pattern.quote(query.trim()) + ")", "<mark class=\"bg-warning px-0\">$1</mark>");
     }
 
     private String truncate(String text, int maxLen) {

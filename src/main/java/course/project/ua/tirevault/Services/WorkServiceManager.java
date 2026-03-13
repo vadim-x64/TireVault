@@ -42,8 +42,7 @@ public class WorkServiceManager {
     }
 
     public void deleteCategoryById(Long id) {
-        workServiceRepository.findByCategoryIdOrderByIdAsc(id)
-                .forEach(workServiceRepository::delete);
+        workServiceRepository.findByCategoryIdOrderByIdAsc(id).forEach(workServiceRepository::delete);
         categoryRepository.deleteById(id);
     }
 

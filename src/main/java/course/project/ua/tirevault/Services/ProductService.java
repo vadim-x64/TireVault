@@ -8,7 +8,6 @@ import course.project.ua.tirevault.Repositories.IProductRepository;
 import course.project.ua.tirevault.Repositories.IVehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -64,10 +63,7 @@ public class ProductService {
         return vehicleRepository.findAllByOrderByBrandAscModelAscYearAsc();
     }
 
-    public List<Product> getFilteredProducts(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
-                                             Boolean availability, String brand, String vmodel,
-                                             Integer year, String modification) {
-        return productRepository.findFiltered(
-                categoryId, minPrice, maxPrice, availability, brand, vmodel, year, modification);
+    public List<Product> getFilteredProducts(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, Boolean availability, String brand, String vmodel, Integer year, String modification) {
+        return productRepository.findFiltered(categoryId, minPrice, maxPrice, availability, brand, vmodel, year, modification);
     }
 }

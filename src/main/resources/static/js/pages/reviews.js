@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-like').forEach(btn => {
         btn.addEventListener('click', function () {
             const id = this.dataset.reviewId;
-            fetch(`/reviews/${id}/like`, { method: 'POST' })
+            fetch(`/reviews/${id}/like`, {method: 'POST'})
                 .then(r => r.json())
                 .then(data => {
                     if (data.error) return;
@@ -22,28 +22,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('.btn-reply').forEach(btn => {
         btn.addEventListener('click', function () {
-            const parentId      = this.dataset.reviewId;
-            const username      = this.dataset.username;
-            const userId        = this.dataset.userId;
+            const parentId = this.dataset.reviewId;
+            const username = this.dataset.username;
+            const userId = this.dataset.userId;
             const replyToReviewId = this.dataset.replyToReviewId || parentId;
-            const targetType    = this.dataset.targetType;
-            const targetId      = this.dataset.targetId;
-
+            const targetType = this.dataset.targetType;
+            const targetId = this.dataset.targetId;
             document.querySelectorAll('.reply-form').forEach(f => f.classList.add('d-none'));
-
             const formBlock = document.getElementById('reply-form-' + parentId);
             if (!formBlock) return;
             formBlock.classList.remove('d-none');
-
             const form = formBlock.querySelector('form');
             form.querySelector('[name="replyToReviewId"]').value = replyToReviewId;
-            form.querySelector('[name="replyToUserId"]').value   = userId;
-
+            form.querySelector('[name="replyToUserId"]').value = userId;
             const textarea = form.querySelector('textarea');
             textarea.value = '@' + username + ' ';
             textarea.focus();
             textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-
             highlightReview(replyToReviewId);
         });
     });
@@ -76,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('replies-' + id);
             if (!container) return;
             const hidden = container.classList.toggle('d-none');
-            const icon   = this.querySelector('i');
-            const label  = this.querySelector('span');
+            const icon = this.querySelector('i');
+            const label = this.querySelector('span');
             icon.className = hidden ? 'bi bi-chevron-down me-1' : 'bi bi-chevron-up me-1';
             const count = container.querySelectorAll('.reply-card').length;
             label.textContent = (hidden ? 'Відповіді' : 'Сховати') + ' (' + count + ')';
@@ -109,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const toggleBtn = document.querySelector(
                 '.btn-toggle-replies[data-review-id="' + pid + '"]');
             if (toggleBtn) {
-                const icon  = toggleBtn.querySelector('i');
+                const icon = toggleBtn.querySelector('i');
                 const label = toggleBtn.querySelector('span');
                 icon.className = 'bi bi-chevron-up me-1';
                 const count = repliesBlock.querySelectorAll('.reply-card').length;
@@ -117,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         el.classList.add('review-highlight');
-        if (scroll) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (scroll) el.scrollIntoView({behavior: 'smooth', block: 'center'});
         setTimeout(() => el.classList.remove('review-highlight'), 2500);
     }
 });

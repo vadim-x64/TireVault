@@ -34,7 +34,7 @@
                                                    ? 'bi-box-seam' : 'bi-wrench-adjustable'"
                                    class="bi me-1 text-danger"></i>
                                 <span th:text="${targetNames.get(review.targetType + '_' + review.targetId)}
-                                               ?: '—'"></span>
+                                               ?: '-'"></span>
                             </a>
                             <span class="text-muted ms-3 small"
                                   th:text="${#temporals.format(review.createdAt,'dd.MM.yyyy HH:mm')}"></span>
@@ -46,7 +46,7 @@
                               onsubmit="return confirm('Видалити відгук?')">
                             <input type="hidden" name="targetType" th:value="${review.targetType}">
                             <input type="hidden" name="targetId" th:value="${review.targetId}">
-                            <input type="hidden" name="from" value="myreviews">   <!-- ← додати -->
+                            <input type="hidden" name="from" value="myreviews">
                             <button type="submit" class="btn btn-sm btn-outline-danger">
                                 <i class="bi bi-trash3"></i>
                             </button>

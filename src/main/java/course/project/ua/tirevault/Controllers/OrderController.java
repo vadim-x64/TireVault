@@ -18,7 +18,6 @@ public class OrderController {
     public String myOrders(Model model, HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) return "redirect:/auth";
-
         orderService.markAllSeenByUser(loggedUser);
         model.addAttribute("activeOrders", orderService.getActiveByUser(loggedUser));
         model.addAttribute("completedOrders", orderService.getCompletedByUser(loggedUser));
@@ -27,28 +26,30 @@ public class OrderController {
     }
 
     @PostMapping("/myorders/{id}/cancel")
-    public String cancelByClient(@PathVariable Long id, HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+    public String cancelByClient(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) return "redirect:/auth";
+
         try {
             orderService.cancel(id, loggedUser);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("cancelError", e.getMessage());
         }
+
         return "redirect:/myorders";
     }
 
     @PostMapping("/myorders/{id}/delete")
-    public String deleteByClient(@PathVariable Long id, HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+    public String deleteByClient(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) return "redirect:/auth";
+
         try {
             orderService.deleteByUser(id, loggedUser);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("cancelError", e.getMessage());
         }
+
         return "redirect:/myorders";
     }
 }

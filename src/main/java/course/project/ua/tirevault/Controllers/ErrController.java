@@ -18,6 +18,7 @@ public class ErrController implements ErrorController {
 
         if (status != null) {
             statusCode = Integer.parseInt(status.toString());
+
             if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 errorMessage = "Сторінку не знайдено. Можливо, ви ввели неправильну адресу.";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {

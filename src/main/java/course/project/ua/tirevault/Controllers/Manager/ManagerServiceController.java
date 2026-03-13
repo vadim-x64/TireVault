@@ -31,18 +31,16 @@ public class ManagerServiceController {
     }
 
     @PostMapping("/manager/services/{id}/schedule")
-    public String scheduleRequest(@PathVariable Long id,
-                                  @RequestParam String scheduledAt,
-                                  HttpSession session,
-                                  RedirectAttributes redirectAttributes) {
+    public String scheduleRequest(@PathVariable Long id, @RequestParam String scheduledAt, HttpSession session, RedirectAttributes redirectAttributes) {
         if (!isManager(session)) return "redirect:/";
+
         try {
-            LocalDateTime dateTime = LocalDateTime.parse(scheduledAt,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+            LocalDateTime dateTime = LocalDateTime.parse(scheduledAt, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
             serviceRequestService.schedule(id, dateTime);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("scheduleError", e.getMessage());
         }
+
         return "redirect:/manager/services";
     }
 
@@ -54,9 +52,7 @@ public class ManagerServiceController {
     }
 
     @PostMapping("/manager/services/{id}/complete")
-    public String completeRequest(@PathVariable Long id,
-                                  @RequestParam String paymentMethod,
-                                  HttpSession session) {
+    public String completeRequest(@PathVariable Long id, @RequestParam String paymentMethod, HttpSession session) {
         if (!isManager(session)) return "redirect:/";
         serviceRequestService.complete(id, PaymentMethod.valueOf(paymentMethod));
         return "redirect:/manager/services";

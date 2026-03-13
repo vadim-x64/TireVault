@@ -13,50 +13,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 @Controller
 public class ReviewController {
     @Autowired
     private ReviewService reviewService;
+
     @Autowired
     private ProductService productService;
+
     @Autowired
     private WorkServiceManager workServiceManager;
 
     @PostMapping("/reviews/add")
-    public String addReview(@RequestParam String targetType,
-                            @RequestParam Long targetId,
-                            @RequestParam String content,
-                            @RequestParam(required = false) Long parentId,
-                            @RequestParam(required = false) Long replyToReviewId,
-                            @RequestParam(required = false) Long replyToUserId,
-                            HttpSession session) {
+    public String addReview(@RequestParam String targetType, @RequestParam Long targetId, @RequestParam String content, @RequestParam(required = false) Long parentId, @RequestParam(required = false) Long replyToReviewId, @RequestParam(required = false) Long replyToUserId, HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) return "redirect:/auth";
-
         if (content.trim().isEmpty()) return buildRedirect(targetType, targetId);
-
         ReviewTargetType type = ReviewTargetType.valueOf(targetType);
-        reviewService.addReview(user, type, targetId, content.trim(),
-                parentId, replyToReviewId, replyToUserId);
+        reviewService.addReview(user, type, targetId, content.trim(), parentId, replyToReviewId, replyToUserId);
         return buildRedirect(targetType, targetId) + "#reviews";
     }
 
     @PostMapping("/reviews/{id}/delete")
-    public String deleteReview(@PathVariable Long id,
-                               @RequestParam String targetType,
-                               @RequestParam Long targetId,
-                               @RequestParam(required = false) String from,
-                               HttpSession session) {
+    public String deleteReview(@PathVariable Long id, @RequestParam String targetType, @RequestParam Long targetId, @RequestParam(required = false) String from, HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) return "redirect:/auth";
 
         reviewService.getReviewById(id).ifPresent(review -> {
-            boolean canDelete = review.getUser().getId().equals(user.getId())
-                    || user.getRole() == UserRole.ADMIN
-                    || user.getRole() == UserRole.MANAGER;
+            boolean canDelete = review.getUser().getId().equals(user.getId()) || user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.MANAGER;
             if (canDelete) reviewService.deleteReview(id);
         });
 
@@ -76,15 +62,15 @@ public class ReviewController {
     public String myReviews(Model model, HttpSession session) {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) return "redirect:/auth";
-
         List<Review> reviews = reviewService.getReviewsByUser(user);
         List<ReviewNotification> notifications = reviewService.getNotifications(user);
         reviewService.markAllNotificationsSeen(user);
-
         Map<String, String> targetNames = new HashMap<>();
         Map<String, String> targetLinks = new HashMap<>();
+
         for (Review r : reviews) {
             String key = r.getTargetType() + "_" + r.getTargetId();
+
             if (!targetNames.containsKey(key)) {
                 if (r.getTargetType() == ReviewTargetType.PRODUCT) {
                     productService.getProductById(r.getTargetId()).ifPresent(p -> {
@@ -109,8 +95,6 @@ public class ReviewController {
     }
 
     private String buildRedirect(String targetType, Long targetId) {
-        return "PRODUCT".equals(targetType)
-                ? "redirect:/products/" + targetId
-                : "redirect:/services/" + targetId;
+        return "PRODUCT".equals(targetType) ? "redirect:/products/" + targetId : "redirect:/services/" + targetId;
     }
 }

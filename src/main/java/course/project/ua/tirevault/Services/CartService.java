@@ -10,7 +10,6 @@ import course.project.ua.tirevault.Repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -39,8 +38,7 @@ public class CartService {
 
     @Transactional
     public Cart addToCart(User user, Long productId, int quantity) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Товар не знайдено"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Товар не знайдено"));
 
         if (product.getQuantity() < quantity)
             throw new RuntimeException(
@@ -50,8 +48,7 @@ public class CartService {
             );
 
         Cart cart = getOrCreateCart(user);
-        Optional<CartItem> existing =
-                cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);
+        Optional<CartItem> existing = cartItemRepository.findByCartIdAndProductId(cart.getId(), productId);
 
         if (existing.isPresent()) {
             CartItem item = existing.get();
@@ -69,19 +66,14 @@ public class CartService {
         product.setQuantity(product.getQuantity() - quantity);
         product.setAvailability(product.getQuantity() > 0);
         productRepository.save(product);
-
         return recalculate(cart);
     }
 
     @Transactional
     public Cart updateQuantity(User user, Long itemId, int quantity) {
         Cart cart = getOrCreateCart(user);
-        CartItem item = cartItemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Позицію не знайдено"));
-
-        if (!item.getCart().getId().equals(cart.getId()))
-            throw new RuntimeException("Доступ заборонено");
-
+        CartItem item = cartItemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Позицію не знайдено"));
+        if (!item.getCart().getId().equals(cart.getId())) throw new RuntimeException("Доступ заборонено");
         Product product = item.getProduct();
         int delta = quantity - item.getQuantity();
 
@@ -92,13 +84,10 @@ public class CartService {
             cartItemRepository.delete(item);
             cart.getItems().remove(item);
         } else {
-            if (delta > 0 && product.getQuantity() < delta)
-                throw new RuntimeException("На складі лише " + product.getQuantity() + " шт.");
-
+            if (delta > 0 && product.getQuantity() < delta) throw new RuntimeException("На складі лише " + product.getQuantity() + " шт.");
             product.setQuantity(product.getQuantity() - delta);
             product.setAvailability(product.getQuantity() > 0);
             productRepository.save(product);
-
             item.setQuantity(quantity);
             cartItemRepository.save(item);
         }
@@ -109,17 +98,12 @@ public class CartService {
     @Transactional
     public Cart removeItem(User user, Long itemId) {
         Cart cart = getOrCreateCart(user);
-        CartItem item = cartItemRepository.findById(itemId)
-                .orElseThrow(() -> new RuntimeException("Позицію не знайдено"));
-
-        if (!item.getCart().getId().equals(cart.getId()))
-            throw new RuntimeException("Доступ заборонено");
-
+        CartItem item = cartItemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Позицію не знайдено"));
+        if (!item.getCart().getId().equals(cart.getId())) throw new RuntimeException("Доступ заборонено");
         Product product = item.getProduct();
         product.setQuantity(product.getQuantity() + item.getQuantity());
         product.setAvailability(true);
         productRepository.save(product);
-
         cartItemRepository.delete(item);
         cart.getItems().remove(item);
         return recalculate(cart);
@@ -128,23 +112,16 @@ public class CartService {
     @Transactional
     public void checkout(User user, String station, String payMethod) {
         Cart cart = getOrCreateCart(user);
-        if (cart.getItems().isEmpty())
-            throw new RuntimeException("Кошик порожній");
-
+        if (cart.getItems().isEmpty()) throw new RuntimeException("Кошик порожній");
         orderService.createFromCart(user, cart, station, payMethod);
     }
 
     public int getCartItemCount(User user) {
-        return cartRepository.findByUserId(user.getId())
-                .map(cart -> cart.getItems().stream()
-                        .mapToInt(CartItem::getQuantity).sum())
-                .orElse(0);
+        return cartRepository.findByUserId(user.getId()).map(cart -> cart.getItems().stream().mapToInt(CartItem::getQuantity).sum()).orElse(0);
     }
 
     private Cart recalculate(Cart cart) {
-        BigDecimal total = cart.getItems().stream()
-                .map(CartItem::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal total = cart.getItems().stream().map(CartItem::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
         cart.setTotal(total);
         return cartRepository.save(cart);
     }

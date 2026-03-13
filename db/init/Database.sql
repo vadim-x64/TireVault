@@ -58,7 +58,8 @@ create table users
     role        varchar(255) not null
         constraint users_role_check
             check ((role)::text = ANY
-                   ((ARRAY ['USER'::character varying, 'MANAGER'::character varying, 'ADMIN'::character varying])::text[]))
+                   ((ARRAY ['USER':: character varying, 'MANAGER':: character varying, 'ADMIN':: character varying])::text[])
+                )
 );
 
 alter table users
@@ -111,7 +112,8 @@ create table orders
     status       varchar(255)   not null
         constraint orders_status_check
             check ((status)::text = ANY
-                   ((ARRAY ['PENDING'::character varying, 'PROCESSING'::character varying, 'COMPLETED'::character varying, 'CANCELLED'::character varying])::text[]))
+                   ((ARRAY ['PENDING':: character varying, 'PROCESSING':: character varying, 'COMPLETED':: character varying, 'CANCELLED':: character varying])::text[])
+                )
 );
 
 alter table orders
@@ -151,7 +153,8 @@ create table service_requests
     payment_method varchar(255)
         constraint service_requests_payment_method_check
             check ((payment_method)::text = ANY
-                   ((ARRAY ['CARD'::character varying, 'CASH'::character varying])::text[])),
+                   ((ARRAY ['CARD':: character varying, 'CASH':: character varying])::text[])
+                ),
     status         varchar(255) not null
         constraint service_requests_status_check
             check ((status)::text = ANY
@@ -264,7 +267,8 @@ create table reviews
     target_type        varchar(20)  not null
         constraint reviews_target_type_check
             check ((target_type)::text = ANY
-                   ((ARRAY ['PRODUCT'::character varying, 'SERVICE'::character varying])::text[])),
+                   ((ARRAY ['PRODUCT':: character varying, 'SERVICE':: character varying])::text[])
+                ),
     parent_id          bigint
         constraint fk7qpkv66dxpmph7fcilu9ucqtc
             references reviews,
@@ -316,4 +320,3 @@ create table review_notifications
 
 alter table review_notifications
     owner to postgres;
-

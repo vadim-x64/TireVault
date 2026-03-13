@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +46,7 @@ public class ProfileService {
 
         if (!customer.getPhone().equals(phone)) {
             Optional<Customer> existingCustomerWithPhone = customerRepository.findByPhone(phone);
+
             if (existingCustomerWithPhone.isPresent() && !existingCustomerWithPhone.get().getId().equals(customer.getId())) {
                 throw new Exception("Цей номер телефону вже використовується іншим користувачем.");
             }
@@ -56,7 +56,6 @@ public class ProfileService {
         customer.setLastName(lastName);
         customer.setMiddleName(middleName);
         customer.setPhone(phone);
-
         return userRepository.save(user);
     }
 
@@ -95,11 +94,8 @@ public class ProfileService {
     public void deleteAccount(Long userId, String password) throws Exception {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) throw new Exception("Користувача не знайдено.");
-
         User user = userOpt.get();
-        if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new Exception("Невірний пароль! Акаунт не було видалено.");
-
+        if (!passwordEncoder.matches(password, user.getPassword())) throw new Exception("Невірний пароль! Акаунт не було видалено.");
         List<ServiceRequest> requests = serviceRequestRepository.findByUser(user);
         requests.forEach(r -> r.setUser(null));
         serviceRequestRepository.saveAll(requests);

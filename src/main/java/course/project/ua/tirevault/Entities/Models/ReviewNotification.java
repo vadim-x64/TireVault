@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "review_notifications")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewNotification {

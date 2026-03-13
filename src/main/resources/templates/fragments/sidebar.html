@@ -88,7 +88,8 @@
         </ul>
         <hr>
         <div th:if="${session.loggedUser == null}">
-            <a href="/auth" class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center fw-bold">
+            <a href="/auth"
+               class="btn btn-outline-light w-100 d-flex align-items-center justify-content-center fw-bold">
                 <i class="bi bi-box-arrow-in-right me-2"></i>Увійти
             </a>
         </div>
@@ -111,7 +112,8 @@
             </ul>
         </div>
     </div>
-    <div th:if="${session.loggedUser != null}" class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div th:if="${session.loggedUser != null}" class="modal fade" id="logoutModal" tabindex="-1"
+         aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 shadow text-dark">
                 <div class="modal-header border-bottom-0">

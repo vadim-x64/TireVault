@@ -9,8 +9,6 @@
             <h5 class="mb-0">Перелік автомобілів</h5>
         </div>
         <div class="card-body">
-
-            <!-- Форма додавання -->
             <form th:action="@{/admin/vehicles/add}" method="post"
                   class="row g-2 align-items-end mb-4 p-3 bg-light rounded border">
                 <h6 class="fw-bold mb-1">Новий автомобіль</h6>
@@ -38,8 +36,6 @@
                     <button type="submit" class="btn btn-dark btn-sm w-100 mt-3">Додати</button>
                 </div>
             </form>
-
-            <!-- Таблиця -->
             <div th:if="${vehicles.isEmpty()}" class="text-muted text-center">Автомобілів ще немає</div>
             <div th:unless="${vehicles.isEmpty()}" class="table-responsive">
                 <table class="table table-sm align-middle mb-0">
@@ -94,8 +90,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Модальне вікно: прив'язані товари -->
     <div class="modal fade" id="manageProductsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -104,8 +98,6 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-
-                    <!-- Прив'язані товари -->
                     <h6 class="fw-bold mb-2">Прив'язані товари</h6>
                     <div id="linkedProductsList">
                         <div th:each="v : ${vehicles}">
@@ -131,10 +123,7 @@
                             </div>
                         </div>
                     </div>
-
                     <hr>
-
-                    <!-- Додати товар -->
                     <h6 class="fw-bold mb-2">Додати товар</h6>
                     <form id="addProductForm" method="post" class="d-flex gap-2">
                         <select name="productId" id="addProductSelect" class="form-select form-select-sm">
@@ -147,13 +136,10 @@
                             <i class="bi bi-plus-lg me-1"></i>Прив'язати
                         </button>
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Модальне вікно: редагування -->
     <div class="modal fade" id="editVehicleModal" tabindex="-1">
         <div class="modal-dialog">
             <form method="post" id="editVehicleForm">
@@ -192,7 +178,6 @@
             </form>
         </div>
     </div>
-
     <script th:src="@{/js/pages/admin/adminvehicles.js}"></script>
 </div>
 

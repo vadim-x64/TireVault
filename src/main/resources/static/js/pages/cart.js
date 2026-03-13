@@ -169,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const stationSelect = document.getElementById('station-select');
     const checkoutBtn = document.getElementById('checkout-btn');
-
     if (stationSelect) stationSelect.addEventListener('change', validateForm);
 
     function validateForm() {

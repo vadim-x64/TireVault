@@ -8,7 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "carts")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart {
@@ -20,8 +21,7 @@ public class Cart {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>();
 
     @Column(nullable = false, precision = 10, scale = 2)

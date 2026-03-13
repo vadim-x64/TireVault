@@ -1,10 +1,7 @@
 package course.project.ua.tirevault.Entities.Models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -45,11 +44,7 @@ public class Product {
     private Integer quantity = 0;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "vehicle_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "vehicle_id")
-    )
+    @JoinTable(name = "vehicle_product", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
     @ToString.Exclude
     private List<Vehicle> vehicles;
 }

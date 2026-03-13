@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -27,6 +26,7 @@ public class AuthService {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new Exception("Користувач з таким логіном вже існує.");
         }
+
         if (customerRepository.findByPhone(phone).isPresent()) {
             throw new Exception("Цей номер телефону вже зареєстровано.");
         }
@@ -36,13 +36,11 @@ public class AuthService {
         customer.setLastName(lastName);
         customer.setMiddleName(middleName);
         customer.setPhone(phone);
-
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(UserRole.USER);
         user.setCustomer(customer);
-
         return userRepository.save(user);
     }
 

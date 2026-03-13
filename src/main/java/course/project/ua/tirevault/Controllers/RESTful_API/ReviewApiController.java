@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reviews")
 @Tag(name = "Відгуки", description = "Модерація відгуків")
 public class ReviewApiController {
-
-    @Autowired private ReviewService reviewService;
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping
     @Operation(summary = "Отримати всі відгуки")
