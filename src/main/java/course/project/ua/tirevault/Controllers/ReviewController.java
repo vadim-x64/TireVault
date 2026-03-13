@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@ResponseBody
 @Controller
 public class ReviewController {
     @Autowired
@@ -45,7 +46,7 @@ public class ReviewController {
         return buildRedirect(targetType, targetId) + "#reviews";
     }
 
-    @PostMapping("/reviews/{id}/delete")
+    @DeleteMapping("/reviews/{id}/delete")
     public String deleteReview(@PathVariable Long id,
                                @RequestParam String targetType,
                                @RequestParam Long targetId,

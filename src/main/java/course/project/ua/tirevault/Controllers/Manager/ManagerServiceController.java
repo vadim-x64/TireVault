@@ -6,13 +6,12 @@ import course.project.ua.tirevault.Services.ServiceRequestService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@ResponseBody
 @Controller
 public class ManagerServiceController {
     @Autowired
@@ -25,7 +24,7 @@ public class ManagerServiceController {
         return "redirect:/manager/services";
     }
 
-    @PostMapping("/manager/services/{id}/delete")
+    @DeleteMapping("/manager/services/{id}/delete")
     public String deleteRequest(@PathVariable Long id, HttpSession session) {
         if (!isManager(session)) return "redirect:/";
         serviceRequestService.delete(id);

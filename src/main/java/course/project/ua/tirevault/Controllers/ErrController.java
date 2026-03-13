@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.webmvc.error.ErrorController;
@@ -7,13 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@ResponseBody
+@Hidden
 @Controller
 public class ErrController implements ErrorController {
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-        String errorMessage = "Виникла невідома помилка";
+        String errorMessage = "Виникла невідома помилка.";
         int statusCode = 0;
 
         if (status != null) {

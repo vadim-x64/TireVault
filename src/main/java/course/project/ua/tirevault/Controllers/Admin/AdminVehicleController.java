@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@ResponseBody
 @Controller
 public class AdminVehicleController {
 
@@ -39,7 +40,7 @@ public class AdminVehicleController {
         return "redirect:/admin/vehicles";
     }
 
-    @PostMapping("/admin/vehicles/{id}/edit")
+    @PutMapping("/admin/vehicles/{id}/edit")
     public String editVehicle(@PathVariable Long id,
                               @RequestParam String brand,
                               @RequestParam String model,
@@ -55,7 +56,7 @@ public class AdminVehicleController {
         return "redirect:/admin/vehicles";
     }
 
-    @PostMapping("/admin/vehicles/{id}/delete")
+    @DeleteMapping("/admin/vehicles/{id}/delete")
     public String deleteVehicle(@PathVariable Long id) {
         vehicleRepository.deleteById(id);
         return "redirect:/admin/vehicles";
@@ -77,7 +78,7 @@ public class AdminVehicleController {
     }
 
     // Відв'язати товар від авто
-    @PostMapping("/admin/vehicles/{vehicleId}/products/remove")
+    @DeleteMapping("/admin/vehicles/{vehicleId}/products/remove")
     public String removeProduct(@PathVariable Long vehicleId,
                                 @RequestParam Long productId) {
         vehicleRepository.findById(vehicleId).ifPresent(vehicle ->

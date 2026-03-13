@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@ResponseBody
 @Controller
 public class AdminReviewController {
     @Autowired private ReviewService reviewService;
@@ -55,7 +55,7 @@ public class AdminReviewController {
         return "index";
     }
 
-    @PostMapping({"/admin/reviews/{id}/delete", "/manager/reviews/{id}/delete"})
+    @DeleteMapping({"/admin/reviews/{id}/delete", "/manager/reviews/{id}/delete"})
     public String deleteReview(@PathVariable Long id, HttpSession session) {
         if (!hasAccess(session)) return "redirect:/";
         reviewService.deleteReview(id);

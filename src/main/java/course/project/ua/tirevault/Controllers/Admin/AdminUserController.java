@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ResponseBody
 @Controller
 public class AdminUserController {
     @Autowired
@@ -59,7 +57,7 @@ public class AdminUserController {
         return "redirect:/admin/users";
     }
 
-    @PostMapping("/admin/users/{id}/delete")
+    @DeleteMapping("/admin/users/{id}/delete")
     @Transactional
     public String deleteUser(@PathVariable Long id) {
         userRepository.findById(id).ifPresent(user -> {
