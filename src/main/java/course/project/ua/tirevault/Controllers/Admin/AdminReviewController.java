@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ResponseBody
 @Controller
 public class AdminReviewController {
     @Autowired private ReviewService reviewService;

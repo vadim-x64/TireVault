@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@ResponseBody
 @Controller
 public class AdminProductController {
     @Autowired

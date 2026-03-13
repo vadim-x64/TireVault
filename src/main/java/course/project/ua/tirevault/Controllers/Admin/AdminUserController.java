@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@ResponseBody
 @Controller
 public class AdminUserController {
     @Autowired

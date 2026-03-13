@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@ResponseBody
 @Controller
 public class SearchController {
     private final SearchService searchService;

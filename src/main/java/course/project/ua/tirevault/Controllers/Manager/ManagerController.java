@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDate;
 import java.util.List;
 
-@ResponseBody
 @Controller
 public class ManagerController {
     @Autowired

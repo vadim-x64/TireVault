@@ -11,7 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@ResponseBody
 @Controller
 public class ManagerServiceController {
     @Autowired

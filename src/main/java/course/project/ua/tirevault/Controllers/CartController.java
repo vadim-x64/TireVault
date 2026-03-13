@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@ResponseBody
 @Controller
 public class CartController {
     @Autowired

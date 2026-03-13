@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
-@ResponseBody
 @Controller
 public class AdminWorkServiceController {
     @Autowired

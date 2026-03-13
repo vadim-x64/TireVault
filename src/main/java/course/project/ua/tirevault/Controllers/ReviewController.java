@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@ResponseBody
 @Controller
 public class ReviewController {
     @Autowired
