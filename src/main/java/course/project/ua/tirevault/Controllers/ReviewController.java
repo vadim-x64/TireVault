@@ -36,8 +36,7 @@ public class ReviewController {
         User user = (User) session.getAttribute("loggedUser");
         if (user == null) return "redirect:/auth";
 
-        String stripped = content.trim().replaceFirst("^@\\S+\\s*", "").trim();
-        if (stripped.isEmpty()) return buildRedirect(targetType, targetId);
+        if (content.trim().isEmpty()) return buildRedirect(targetType, targetId);
 
         ReviewTargetType type = ReviewTargetType.valueOf(targetType);
         reviewService.addReview(user, type, targetId, content.trim(),

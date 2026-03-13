@@ -109,9 +109,7 @@
                               th:data-ref-id="${reply.replyToReview != null ? reply.replyToReview.id : reply.parent.id}"
                               th:text="'@' + ${reply.replyToUser.username}"
                               style="cursor:pointer;"></span>
-                        <span th:text="${reply.replyToUser != null
-                                         ? reply.content.replaceFirst('^@\\S+\\s*','')
-                                         : reply.content}"></span>
+                        <span th:text="${reply.content}"></span>
                     </p>
                     <div class="d-flex align-items-center gap-3 flex-wrap">
                         <button type="button"

@@ -46,9 +46,21 @@ public class ReviewService {
                             String content, Long parentId, Long replyToReviewId, Long replyToUserId) {
         Review review = new Review();
         review.setUser(user);
-        String cleanContent = (parentId != null || replyToReviewId != null)
-                ? content.trim().replaceFirst("^@\\S+\\s*", "").trim()
-                : content.trim();
+        String raw = content.trim();
+        String cleanContent;
+        if (replyToUserId != null) {
+            Optional<User> replyUser = userRepository.findById(replyToUserId);
+            if (replyUser.isPresent()) {
+                String mention = "@" + replyUser.get().getUsername();
+                cleanContent = raw.startsWith(mention)
+                        ? raw.substring(mention.length()).trim()
+                        : raw;
+            } else {
+                cleanContent = raw;
+            }
+        } else {
+            cleanContent = raw;
+        }
         review.setContent(cleanContent);
         review.setTargetType(targetType);
         review.setTargetId(targetId);
