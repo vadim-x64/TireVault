@@ -1,8 +1,11 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Entities.Enums.UserRole;
+import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +38,8 @@ public class ProductApiController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Редагувати товар")
-    public ResponseEntity<?> editProduct(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(defaultValue = "0") Integer quantity, @RequestParam(required = false) String imageUrl) {
+    public ResponseEntity<?> editProduct(@PathVariable Long id, @RequestParam Long categoryId, @RequestParam String name, @RequestParam(required = false) String description, @RequestParam BigDecimal price, @RequestParam(defaultValue = "0") Integer quantity, @RequestParam(required = false) String imageUrl, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return productService.getProductById(id).map(p -> {
             productService.getCategoryById(categoryId).ifPresent(p::setCategory);
             p.setName(name);
@@ -51,15 +55,22 @@ public class ProductApiController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Видалити товар")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         productService.deleteProductById(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/categories/{id}")
     @Operation(summary = "Видалити категорію")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         productService.deleteCategoryById(id);
         return ResponseEntity.ok().build();
+    }
+
+    private boolean isAdmin(HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        return user != null && user.getRole() == UserRole.ADMIN;
     }
 }

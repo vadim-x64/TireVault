@@ -1,12 +1,14 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
 import course.project.ua.tirevault.Entities.Enums.UserRole;
+import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Repositories.ICartRepository;
 import course.project.ua.tirevault.Repositories.IOrderRepository;
 import course.project.ua.tirevault.Repositories.IServiceRequestRepository;
 import course.project.ua.tirevault.Repositories.IUserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,21 +33,24 @@ public class UserApiController {
 
     @GetMapping
     @Operation(summary = "Отримати всіх користувачів (крім адмінів)")
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return ResponseEntity.ok(userRepository.findAllByRoleNotOrderByIdAsc(UserRole.ADMIN));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Отримати користувача за ID")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return userRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/role")
+    @PatchMapping("/{id}/role")
     @Operation(summary = "Змінити роль користувача")
-    public ResponseEntity<?> changeRole(@PathVariable Long id, @RequestParam String role) {
+    public ResponseEntity<?> changeRole(@PathVariable Long id, @RequestParam String role, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return userRepository.findById(id).map(user -> {
             user.setRole(UserRole.valueOf(role));
             userRepository.save(user);
@@ -53,9 +58,10 @@ public class UserApiController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/block")
+    @PatchMapping("/{id}/block")
     @Operation(summary = "Заблокувати / розблокувати користувача")
-    public ResponseEntity<?> toggleBlock(@PathVariable Long id) {
+    public ResponseEntity<?> toggleBlock(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return userRepository.findById(id).map(user -> {
             user.setBlocked(!user.isBlocked());
             userRepository.save(user);
@@ -66,7 +72,8 @@ public class UserApiController {
     @DeleteMapping("/{id}")
     @Transactional
     @Operation(summary = "Видалити користувача разом з його даними")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return userRepository.findById(id).map(user -> {
             cartRepository.findByUserId(id).ifPresent(cartRepository::delete);
             orderRepository.findByUserAndStatusInOrderByCreatedAtDesc(user,
@@ -87,5 +94,10 @@ public class UserApiController {
             userRepository.delete(user);
             return ResponseEntity.ok().build();
         }).orElse(ResponseEntity.notFound().build());
+    }
+
+    private boolean isAdmin(HttpSession session) {
+        User user = (User) session.getAttribute("loggedUser");
+        return user != null && user.getRole() == UserRole.ADMIN;
     }
 }
