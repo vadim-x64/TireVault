@@ -32,4 +32,7 @@ public class Customer implements Serializable {
 
     @Column(nullable = false, unique = true, length = 20)
     private String phone;
+
+    @Column(unique = true, length = 100)
+    private String email;
 }

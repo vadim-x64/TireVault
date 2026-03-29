@@ -32,6 +32,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @Column(unique = true, length = 100)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role = UserRole.USER;

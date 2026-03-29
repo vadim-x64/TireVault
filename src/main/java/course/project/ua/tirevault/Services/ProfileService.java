@@ -34,9 +34,9 @@ public class ProfileService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public User updateProfile(Long userId, String firstName, String lastName, String middleName, String phone) throws Exception {
+    public User updateProfile(Long userId, String firstName, String lastName,
+                              String middleName, String phone, String email) throws Exception {
         Optional<User> userOpt = userRepository.findById(userId);
-
         if (userOpt.isEmpty()) {
             throw new Exception("Користувача не знайдено.");
         }
@@ -46,9 +46,18 @@ public class ProfileService {
 
         if (!customer.getPhone().equals(phone)) {
             Optional<Customer> existingCustomerWithPhone = customerRepository.findByPhone(phone);
-
             if (existingCustomerWithPhone.isPresent() && !existingCustomerWithPhone.get().getId().equals(customer.getId())) {
                 throw new Exception("Цей номер телефону вже використовується іншим користувачем.");
+            }
+        }
+
+        if (email != null && !email.isBlank()) {
+            String currentEmail = user.getEmail();
+            if (!email.equals(currentEmail)) {
+                if (userRepository.findByEmail(email).isPresent()) {
+                    throw new Exception("Ця електронна пошта вже використовується іншим користувачем.");
+                }
+                user.setEmail(email);
             }
         }
 
@@ -86,13 +95,11 @@ public class ProfileService {
         if (userOpt.isEmpty()) throw new Exception("Користувача не знайдено.");
         User user = userOpt.get();
 
-        // ← НОВЕ: OAuth-юзери не мають пароля
         boolean isOAuthUser = "OAUTH2_GOOGLE_NO_PASSWORD".equals(user.getPassword());
         if (!isOAuthUser && !passwordEncoder.matches(password, user.getPassword())) {
             throw new Exception("Невірний пароль! Акаунт не було видалено.");
         }
 
-        // решта коду без змін
         List<ServiceRequest> requests = serviceRequestRepository.findByUser(user);
         requests.forEach(r -> r.setUser(null));
         serviceRequestRepository.saveAll(requests);

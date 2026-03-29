@@ -45,20 +45,25 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String firstName, @RequestParam String lastName, @RequestParam(required = false) String middleName, @RequestParam String phone, @RequestParam String username, @RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String register(@RequestParam String firstName,
+                           @RequestParam String lastName,
+                           @RequestParam(required = false) String middleName,
+                           @RequestParam String phone,
+                           @RequestParam String username,
+                           @RequestParam String email, // ← НОВЕ
+                           @RequestParam String password,
+                           HttpSession session,
+                           RedirectAttributes redirectAttributes) {
         try {
             String cleanDigits = phone.replaceAll("\\D+", "");
-
             if (cleanDigits.startsWith("38")) {
                 cleanDigits = cleanDigits.substring(2);
             }
-
             if (cleanDigits.length() != 10) {
                 throw new IllegalArgumentException("Невірний формат телефону. Має бути рівно 10 цифр (наприклад, 050-123-45-67).");
             }
-
             String fullPhone = "+38" + cleanDigits;
-            User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, password);
+            User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, email, password);
             session.setAttribute("loggedUser", newUser);
             return "redirect:/";
         } catch (Exception e) {
@@ -69,6 +74,7 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("regMiddleName", middleName);
             redirectAttributes.addFlashAttribute("regPhone", phone);
             redirectAttributes.addFlashAttribute("regUsername", username);
+            redirectAttributes.addFlashAttribute("regEmail", email); // ← НОВЕ
             return "redirect:/auth";
         }
     }

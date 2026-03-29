@@ -35,31 +35,26 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        // Дані від Google
         String email = oAuth2User.getAttribute("email");
         String firstName = oAuth2User.getAttribute("given_name");
         String lastName = oAuth2User.getAttribute("family_name");
         if (lastName == null) lastName = "";
 
-        // Шукаємо існуючого юзера за username = email
         Optional<User> existingUser = userRepository.findByUsername(email);
 
         User user;
         if (existingUser.isPresent()) {
             user = existingUser.get();
         } else {
-            // Створюємо нового
             Customer customer = new Customer();
             customer.setFirstName(firstName != null ? firstName : "Google");
             customer.setLastName(lastName);
             customer.setMiddleName(null);
-            // Телефон порожній — юзер заповнить у профілі
-            // Унікальний placeholder, щоб не порушити unique constraint
             customer.setPhone("" + email.hashCode());
 
             User newUser = new User();
             newUser.setUsername(email);
-            // Пароль — заглушка (BCrypt від випадкового UUID), логін паролем неможливий
+            newUser.setEmail(email);
             newUser.setPassword("OAUTH2_GOOGLE_NO_PASSWORD");
             newUser.setRole(UserRole.USER);
             newUser.setCustomer(customer);
@@ -71,10 +66,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-        // Кладемо в сесію — так само як твій AuthController
         HttpSession session = request.getSession(true);
         session.setAttribute("loggedUser", user);
-
         response.sendRedirect("/");
     }
 }

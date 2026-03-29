@@ -33,26 +33,27 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/update")
-    public String updateProfile(@RequestParam String firstName, @RequestParam String lastName, @RequestParam(required = false) String middleName, @RequestParam String phone, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String updateProfile(@RequestParam String firstName,
+                                @RequestParam String lastName,
+                                @RequestParam(required = false) String middleName,
+                                @RequestParam String phone,
+                                @RequestParam(required = false) String email, // ← НОВЕ
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
-
         if (currentUser == null) {
             return "redirect:/auth";
         }
-
         try {
             String cleanDigits = phone.replaceAll("\\D+", "");
-
             if (cleanDigits.startsWith("38")) {
                 cleanDigits = cleanDigits.substring(2);
             }
-
             if (cleanDigits.length() != 10) {
                 throw new IllegalArgumentException("Невірний формат телефону. Має бути рівно 10 цифр (наприклад, 050-123-45-67).");
             }
-
             String fullPhone = "+38" + cleanDigits;
-            User updatedUser = profileService.updateProfile(currentUser.getId(), firstName, lastName, middleName, fullPhone);
+            User updatedUser = profileService.updateProfile(currentUser.getId(), firstName, lastName, middleName, fullPhone, email);
             session.setAttribute("loggedUser", updatedUser);
             redirectAttributes.addFlashAttribute("profileSuccess", "Дані профілю успішно оновлено.");
             redirectAttributes.addFlashAttribute("activeTab", "main");
@@ -60,7 +61,6 @@ public class ProfileController {
             redirectAttributes.addFlashAttribute("profileError", e.getMessage());
             redirectAttributes.addFlashAttribute("activeTab", "main");
         }
-
         return "redirect:/profile";
     }
 
@@ -87,7 +87,7 @@ public class ProfileController {
 
     @PostMapping("/profile/delete")
     public String deleteAccount(
-            @RequestParam(required = false) String password,  // ← було без required = false
+            @RequestParam(required = false) String password,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");

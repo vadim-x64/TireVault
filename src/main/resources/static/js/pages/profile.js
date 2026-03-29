@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         firstName: document.getElementById('profFirstName')?.value || '',
         lastName: document.getElementById('profLastName')?.value || '',
         middleName: document.getElementById('profMiddleName')?.value || '',
-        phone: phoneInput ? phoneInput.value : ''
+        phone: phoneInput ? phoneInput.value : '',
+        email: document.getElementById('profEmail')?.value || '' // ← НОВЕ
     };
 
     function checkProfileChanges() {
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
             firstName: document.getElementById('profFirstName').value,
             lastName: document.getElementById('profLastName').value,
             middleName: document.getElementById('profMiddleName').value,
-            phone: phoneInput.value
+            phone: phoneInput.value,
+            email: document.getElementById('profEmail')?.value || '' // ← НОВЕ
         };
         let hasChanges = false;
         for (const key in initialProfileValues) {

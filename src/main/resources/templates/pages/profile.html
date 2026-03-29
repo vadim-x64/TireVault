@@ -58,6 +58,11 @@
                                                th:value="${session.loggedUser.customer.phone}" required>
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="profEmail" class="form-label fw-bold">Електронна пошта <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="profEmail" name="email"
+                                           th:value="${session.loggedUser.email}" maxlength="100" required>
+                                </div>
                                 <button type="submit" id="saveProfileBtn" class="btn btn-danger btn-lg w-100 fw-bold"
                                         disabled>
                                     Зберегти зміни

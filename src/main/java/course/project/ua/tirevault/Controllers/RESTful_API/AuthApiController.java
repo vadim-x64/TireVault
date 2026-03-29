@@ -47,21 +47,19 @@ public class AuthApiController {
                                       @RequestParam(required = false) String middleName,
                                       @RequestParam String phone,
                                       @RequestParam String username,
+                                      @RequestParam String email, // ← НОВЕ
                                       @RequestParam String password,
                                       HttpSession session) {
         try {
             String cleanDigits = phone.replaceAll("\\D+", "");
-
             if (cleanDigits.startsWith("38") && cleanDigits.length() > 10) {
                 cleanDigits = cleanDigits.substring(2);
             }
-
             if (cleanDigits.length() != 10) {
                 throw new IllegalArgumentException("Невірний формат телефону. Має бути рівно 10 цифр (наприклад, 0501234567).");
             }
-
             String fullPhone = "+38" + cleanDigits;
-            User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, password);
+            User newUser = authService.register(firstName, lastName, middleName, fullPhone, username, email, password);
             session.setAttribute("loggedUser", newUser);
             return ResponseEntity.ok(Map.of(
                     "id", newUser.getId(),
@@ -93,5 +91,28 @@ public class AuthApiController {
     public ResponseEntity<?> logout(HttpSession session) {
         session.invalidate();
         return ResponseEntity.ok(Map.of("message", "Вихід виконано успішно"));
+    }
+
+    @PostMapping("/forgot-password/check")
+    @Operation(summary = "Перевірити email для відновлення пароля")
+    public ResponseEntity<?> forgotPasswordCheck(@RequestParam String email) {
+        try {
+            authService.checkEmailForReset(email);
+            return ResponseEntity.ok(Map.of("ok", true));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/forgot-password/reset")
+    @Operation(summary = "Скинути пароль")
+    public ResponseEntity<?> forgotPasswordReset(@RequestParam String email,
+                                                 @RequestParam String newPassword) {
+        try {
+            authService.resetPassword(email, newPassword);
+            return ResponseEntity.ok(Map.of("message", "Пароль успішно змінено."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 }

@@ -22,7 +22,8 @@ public class AuthService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
-    public User register(String firstName, String lastName, String middleName, String phone, String username, String password) throws Exception {
+    public User register(String firstName, String lastName, String middleName,
+                         String phone, String username, String email, String password) throws Exception {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new Exception("Користувач з таким логіном вже існує.");
         }
@@ -31,13 +32,19 @@ public class AuthService {
             throw new Exception("Цей номер телефону вже зареєстровано.");
         }
 
+        if (email != null && !email.isBlank() && userRepository.findByEmail(email).isPresent()) {
+            throw new Exception("Ця електронна пошта вже зареєстрована.");
+        }
+
         Customer customer = new Customer();
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         customer.setMiddleName(middleName);
         customer.setPhone(phone);
+
         User user = new User();
         user.setUsername(username);
+        user.setEmail(email); // ← НОВЕ
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(UserRole.USER);
         user.setCustomer(customer);
@@ -62,5 +69,32 @@ public class AuthService {
         }
 
         return user;
+    }
+
+    public void checkEmailForReset(String email) throws Exception {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new Exception("Користувача з такою поштою не знайдено.");
+        }
+        if ("OAUTH2_GOOGLE_NO_PASSWORD".equals(userOpt.get().getPassword())) {
+            throw new Exception("Цей акаунт використовує вхід через Google. Зміна пароля недоступна.");
+        }
+    }
+
+    @Transactional
+    public void resetPassword(String email, String newPassword) throws Exception {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new Exception("Користувача з такою поштою не знайдено.");
+        }
+        User user = userOpt.get();
+        if ("OAUTH2_GOOGLE_NO_PASSWORD".equals(user.getPassword())) {
+            throw new Exception("Цей акаунт використовує вхід через Google.");
+        }
+        if (newPassword == null || newPassword.trim().length() < 8) {
+            throw new Exception("Пароль має містити мінімум 8 символів.");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
