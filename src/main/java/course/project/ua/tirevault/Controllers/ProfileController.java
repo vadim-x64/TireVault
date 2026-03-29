@@ -1,6 +1,7 @@
 package course.project.ua.tirevault.Controllers;
 
 import course.project.ua.tirevault.Entities.Models.User;
+import course.project.ua.tirevault.Repositories.IUserRepository;
 import course.project.ua.tirevault.Services.ProfileService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProfileController {
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private IUserRepository userRepository;
 
     @GetMapping("/profile")
     public String profilePage(Model model, HttpSession session) {
@@ -61,19 +65,19 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/security")
-    public String updateSecurity(@RequestParam String username, @RequestParam(required = false) String password, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String updateSecurity(@RequestParam String username,
+                                 @RequestParam(required = false) String password,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
-
-        if (currentUser == null) {
-            return "redirect:/auth";
-        }
+        if (currentUser == null) return "redirect:/auth";
 
         try {
-            profileService.updateSecurity(currentUser.getId(), username, password);
-            session.invalidate();
-            redirectAttributes.addFlashAttribute("loginError", "Дані безпеки успішно змінено. Будь ласка, авторизуйтесь знову з новими даними.");
-            redirectAttributes.addFlashAttribute("enteredUsername", username);
-            return "redirect:/auth";
+            User updatedUser = profileService.updateSecurity(currentUser.getId(), username, password);
+            session.setAttribute("loggedUser", updatedUser); // ← просто оновлюємо
+            redirectAttributes.addFlashAttribute("securitySuccess", "Дані безпеки успішно змінено.");
+            redirectAttributes.addFlashAttribute("activeTab", "security");
+            return "redirect:/profile";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("securityError", e.getMessage());
             redirectAttributes.addFlashAttribute("activeTab", "security");
@@ -82,7 +86,10 @@ public class ProfileController {
     }
 
     @PostMapping("/profile/delete")
-    public String deleteAccount(@RequestParam String password, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String deleteAccount(
+            @RequestParam(required = false) String password,  // ← було без required = false
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("loggedUser");
 
         if (currentUser == null) {

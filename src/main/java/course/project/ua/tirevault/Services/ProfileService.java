@@ -62,28 +62,18 @@ public class ProfileService {
     @Transactional
     public User updateSecurity(Long userId, String username, String newPassword) throws Exception {
         Optional<User> userOpt = userRepository.findById(userId);
-
-        if (userOpt.isEmpty()) {
-            throw new Exception("Користувача не знайдено.");
-        }
-
+        if (userOpt.isEmpty()) throw new Exception("Користувача не знайдено.");
         User user = userOpt.get();
 
         if (!user.getUsername().equals(username)) {
             Optional<User> existingUser = userRepository.findByUsername(username);
-
-            if (existingUser.isPresent()) {
-                throw new Exception("Користувач з таким логіном вже існує.");
-            }
-
+            if (existingUser.isPresent()) throw new Exception("Користувач з таким логіном вже існує.");
             user.setUsername(username);
         }
 
-        if (newPassword != null && !newPassword.trim().isEmpty()) {
-            if (newPassword.length() < 8) {
-                throw new Exception("Пароль має містити мінімум 8 символів.");
-            }
-
+        boolean isOAuthUser = "OAUTH2_GOOGLE_NO_PASSWORD".equals(user.getPassword());
+        if (!isOAuthUser && newPassword != null && !newPassword.trim().isEmpty()) {
+            if (newPassword.length() < 8) throw new Exception("Пароль має містити мінімум 8 символів.");
             user.setPassword(passwordEncoder.encode(newPassword));
         }
 
@@ -95,7 +85,14 @@ public class ProfileService {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) throw new Exception("Користувача не знайдено.");
         User user = userOpt.get();
-        if (!passwordEncoder.matches(password, user.getPassword())) throw new Exception("Невірний пароль! Акаунт не було видалено.");
+
+        // ← НОВЕ: OAuth-юзери не мають пароля
+        boolean isOAuthUser = "OAUTH2_GOOGLE_NO_PASSWORD".equals(user.getPassword());
+        if (!isOAuthUser && !passwordEncoder.matches(password, user.getPassword())) {
+            throw new Exception("Невірний пароль! Акаунт не було видалено.");
+        }
+
+        // решта коду без змін
         List<ServiceRequest> requests = serviceRequestRepository.findByUser(user);
         requests.forEach(r -> r.setUser(null));
         serviceRequestRepository.saveAll(requests);

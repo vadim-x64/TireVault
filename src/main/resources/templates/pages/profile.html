@@ -66,11 +66,11 @@
                         </div>
                         <div class="tab-pane fade" th:classappend="${activeTab == 'security' ? 'show active' : ''}"
                              id="security" role="tabpanel">
+                            <div th:if="${securitySuccess}" class="alert alert-success" role="alert"
+                                 th:text="${securitySuccess}"></div>
                             <div th:if="${securityError}" class="alert alert-danger" role="alert"
                                  th:text="${securityError}"></div>
-                            <div class="alert alert-secondary small mb-4">
-                                <strong>Увага!</strong> При зміні імені користувача або пароля треба авторизація.
-                            </div>
+
                             <form id="securityForm" th:action="@{/profile/security}" method="post" autocomplete="off">
                                 <div class="mb-3">
                                     <label for="secUsername" class="form-label fw-bold">Логін <span
@@ -79,7 +79,7 @@
                                            th:value="${session.loggedUser.username}" maxlength="50" autocomplete="off"
                                            required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="mb-4" th:if="${!session.loggedUser.password.equals('OAUTH2_GOOGLE_NO_PASSWORD')}">
                                     <label for="secPassword" class="form-label fw-bold">Новий пароль <span
                                             class="text-danger">*</span></label>
                                     <input type="password" class="form-control" id="secPassword" name="password"
@@ -91,6 +91,11 @@
                                         <label class="form-check-label text-muted" for="showSecPassword">Показати
                                             пароль</label>
                                     </div>
+                                </div>
+                                <div class="alert alert-info small mb-4"
+                                     th:if="${session.loggedUser.password.equals('OAUTH2_GOOGLE_NO_PASSWORD')}">
+                                    <i class="bi bi-google me-1"></i>
+                                    Зміна пароля недоступна.
                                 </div>
                                 <button type="submit" id="saveSecurityBtn" class="btn btn-danger btn-lg w-100 fw-bold"
                                         disabled>
@@ -130,7 +135,7 @@
                              role="alert" th:text="${deleteAccountError}"></div>
                         <p class="mb-3">Ця дія є незворотною. Для підтвердження видалення облікового запису, будь ласка,
                             введіть ваш поточний пароль.</p>
-                        <div class="mb-4">
+                        <div class="mb-4" th:if="${!session.loggedUser.password.equals('OAUTH2_GOOGLE_NO_PASSWORD')}">
                             <label for="deletePassword" class="form-label fw-bold">Поточний пароль</label>
                             <input type="password" class="form-control form-control-lg" id="deletePassword"
                                    name="password" required>

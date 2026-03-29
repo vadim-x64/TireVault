@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const securityForm = document.getElementById('securityForm');
     const saveSecurityBtn = document.getElementById('saveSecurityBtn');
     const secUsernameInput = document.getElementById('secUsername');
-    const secPasswordInput = document.getElementById('secPassword');
+    const secPasswordInput = document.getElementById('secPassword'); // може бути null для OAuth
 
     if (secPasswordInput) {
         secPasswordInput.value = '';
@@ -77,11 +77,18 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     function checkSecurityChanges() {
-        if (!saveSecurityBtn || !secUsernameInput || !secPasswordInput) return;
+        if (!saveSecurityBtn || !secUsernameInput) return;
+
         const currentUsername = secUsernameInput.value;
-        const currentPassword = secPasswordInput.value;
-        let hasChanges = (currentUsername !== initialSecurityValues.username && currentUsername.trim() !== '') || (currentPassword.length > 0);
-        saveSecurityBtn.disabled = !hasChanges;
+        const currentPassword = secPasswordInput ? secPasswordInput.value : '';
+
+        // Для OAuth-юзера — достатньо змінити логін
+        // Для звичайного — логін або пароль
+        const usernameChanged = currentUsername !== initialSecurityValues.username
+            && currentUsername.trim() !== '';
+        const passwordChanged = currentPassword.length > 0;
+
+        saveSecurityBtn.disabled = !(usernameChanged || passwordChanged);
     }
 
     if (securityForm) {

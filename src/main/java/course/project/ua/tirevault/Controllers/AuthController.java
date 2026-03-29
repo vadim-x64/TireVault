@@ -17,9 +17,14 @@ public class AuthController {
     private AuthService authService;
 
     @GetMapping("/auth")
-    public String authPage(Model model, HttpSession session) {
+    public String authPage(Model model, HttpSession session,
+                           @RequestParam(required = false) String blocked) {
         if (session.getAttribute("loggedUser") != null) {
             return "redirect:/";
+        }
+
+        if ("true".equals(blocked)) {
+            model.addAttribute("loginError", "Ваш акаунт заблоковано адміністратором.");
         }
 
         model.addAttribute("page", "auth");
