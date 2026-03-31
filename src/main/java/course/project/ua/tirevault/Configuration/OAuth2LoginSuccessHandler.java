@@ -53,7 +53,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             customer.setFirstName(firstName != null ? firstName : "Google");
             customer.setLastName(lastName);
             customer.setMiddleName(null);
-            customer.setPhone(null);
+            customer.setPhone("");
+            customer.setEmail(email);
 
             User newUser = new User();
             newUser.setUsername(email);
