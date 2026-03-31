@@ -30,7 +30,7 @@ public class Customer implements Serializable {
     @Column(name = "middle_name", length = 50)
     private String middleName;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(unique = true, length = 20)
     private String phone;
 
     @Column(unique = true, length = 100)

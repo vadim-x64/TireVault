@@ -44,7 +44,7 @@ public class ProfileService {
         User user = userOpt.get();
         Customer customer = user.getCustomer();
 
-        if (!customer.getPhone().equals(phone)) {
+        if (!phone.equals(customer.getPhone())) {
             Optional<Customer> existingCustomerWithPhone = customerRepository.findByPhone(phone);
             if (existingCustomerWithPhone.isPresent() && !existingCustomerWithPhone.get().getId().equals(customer.getId())) {
                 throw new Exception("Цей номер телефону вже використовується іншим користувачем.");

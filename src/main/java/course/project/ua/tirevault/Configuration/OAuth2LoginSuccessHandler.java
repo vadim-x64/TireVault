@@ -41,6 +41,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (lastName == null) lastName = "";
 
         Optional<User> existingUser = userRepository.findByUsername(email);
+        if (existingUser.isEmpty()) {
+            existingUser = userRepository.findByEmail(email);
+        }
 
         User user;
         if (existingUser.isPresent()) {
@@ -50,7 +53,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             customer.setFirstName(firstName != null ? firstName : "Google");
             customer.setLastName(lastName);
             customer.setMiddleName(null);
-            customer.setPhone("" + email.hashCode());
+            customer.setPhone(null);
 
             User newUser = new User();
             newUser.setUsername(email);
