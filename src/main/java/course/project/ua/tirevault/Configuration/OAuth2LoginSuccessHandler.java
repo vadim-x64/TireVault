@@ -53,7 +53,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             customer.setFirstName(firstName != null ? firstName : "Google");
             customer.setLastName(lastName);
             customer.setMiddleName(null);
-            customer.setPhone("");
+            customer.setPhone(generateRandomPhone());
             customer.setEmail(email);
 
             User newUser = new User();
@@ -73,5 +73,17 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = request.getSession(true);
         session.setAttribute("loggedUser", user);
         response.sendRedirect("/");
+    }
+
+    private String generateRandomPhone() {
+        String[] mobileCodes = {"067", "068", "096", "097", "098", "050", "066", "095", "099", "063", "073", "093"};
+        java.util.Random random = new java.util.Random();
+        String phone;
+        do {
+            String code = mobileCodes[random.nextInt(mobileCodes.length)];
+            String number = String.format("%07d", random.nextInt(10_000_000));
+            phone = "+38" + code + number;
+        } while (customerRepository.findByPhone(phone).isPresent());
+        return phone;
     }
 }
