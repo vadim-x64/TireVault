@@ -25,10 +25,8 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler)
                 )
-                .logout(logout -> logout
-                        .disable()  // ← вимикаємо Spring Security logout, твій AuthController сам керує
+                .logout(logout -> logout.disable()
                 );
         return http.build();
     }
-
 }
