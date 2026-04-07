@@ -8,7 +8,6 @@ function togglePassword(inputId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Форматування телефону при реєстрації
     const phoneInput = document.getElementById('regPhone');
     if (phoneInput) {
         phoneInput.addEventListener('input', function (e) {
@@ -21,10 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // ← НОВЕ: логіка модалки "Забули пароль?"
     const forgotModal = document.getElementById('forgotPasswordModal');
     if (forgotModal) {
-        // Скидаємо стан при закритті
         forgotModal.addEventListener('hidden.bs.modal', function () {
             document.getElementById('forgotStep1').classList.remove('d-none');
             document.getElementById('forgotStep2').classList.add('d-none');
@@ -35,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Крок 1: перевірка email
     const forgotCheckBtn = document.getElementById('forgotCheckBtn');
     if (forgotCheckBtn) {
         forgotCheckBtn.addEventListener('click', async function () {
@@ -61,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const data = await resp.json();
 
                 if (resp.ok) {
-                    // Переходимо до кроку 2
                     document.getElementById('forgotStep1').classList.add('d-none');
                     document.getElementById('forgotStep2').classList.remove('d-none');
                 } else {
@@ -78,7 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Крок 2: встановити новий пароль
     const forgotResetBtn = document.getElementById('forgotResetBtn');
     if (forgotResetBtn) {
         forgotResetBtn.addEventListener('click', async function () {
@@ -106,10 +100,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 const data = await resp.json();
 
                 if (resp.ok) {
-                    // Закриваємо модалку і показуємо успіх на сторінці входу
                     const modal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
                     modal.hide();
-                    // Показуємо повідомлення про успіх
+
                     const loginTab = document.getElementById('login');
                     const successAlert = document.createElement('div');
                     successAlert.className = 'alert alert-success';

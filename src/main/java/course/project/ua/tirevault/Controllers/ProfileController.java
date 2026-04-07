@@ -74,7 +74,7 @@ public class ProfileController {
 
         try {
             User updatedUser = profileService.updateSecurity(currentUser.getId(), username, password);
-            session.setAttribute("loggedUser", updatedUser); // ← просто оновлюємо
+            session.setAttribute("loggedUser", updatedUser);
             redirectAttributes.addFlashAttribute("securitySuccess", "Дані безпеки успішно змінено.");
             redirectAttributes.addFlashAttribute("activeTab", "security");
             return "redirect:/profile";

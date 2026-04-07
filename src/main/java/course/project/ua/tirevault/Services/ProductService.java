@@ -32,11 +32,11 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAllByOrderByIdAsc(); // було findAll()
+        return productRepository.findAllByOrderByIdAsc();
     }
 
     public List<Product> getProductsByCategory(Long categoryId) {
-        return productRepository.findByCategoryIdOrderByIdAsc(categoryId); // було findByCategoryId()
+        return productRepository.findByCategoryIdOrderByIdAsc(categoryId);
     }
 
     public Optional<Product> getProductById(Long id) {

@@ -50,7 +50,7 @@ public class AuthController {
                            @RequestParam(required = false) String middleName,
                            @RequestParam String phone,
                            @RequestParam String username,
-                           @RequestParam String email, // ← НОВЕ
+                           @RequestParam String email,
                            @RequestParam String password,
                            HttpSession session,
                            RedirectAttributes redirectAttributes) {
@@ -74,7 +74,7 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("regMiddleName", middleName);
             redirectAttributes.addFlashAttribute("regPhone", phone);
             redirectAttributes.addFlashAttribute("regUsername", username);
-            redirectAttributes.addFlashAttribute("regEmail", email); // ← НОВЕ
+            redirectAttributes.addFlashAttribute("regEmail", email);
             return "redirect:/auth";
         }
     }

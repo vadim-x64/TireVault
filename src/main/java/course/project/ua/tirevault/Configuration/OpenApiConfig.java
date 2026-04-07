@@ -12,7 +12,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("TireVault - OpenAPI системи СТО")
-                        .description("Документація до курсової роботи")
-                        .version("1.0.0"));
+                        .description("Документація API до курсової роботи")
+                        .version("version is up to date"));
     }
 }

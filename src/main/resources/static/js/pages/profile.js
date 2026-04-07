@@ -84,8 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentUsername = secUsernameInput.value;
         const currentPassword = secPasswordInput ? secPasswordInput.value : '';
 
-        // Для OAuth-юзера — достатньо змінити логін
-        // Для звичайного — логін або пароль
         const usernameChanged = currentUsername !== initialSecurityValues.username
             && currentUsername.trim() !== '';
         const passwordChanged = currentPassword.length > 0;
