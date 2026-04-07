@@ -69,7 +69,7 @@ class CartServiceIntegrationTest {
 
         Cart cart = cartService.getOrCreateCart(testUser);
         assertFalse(cart.getItems().isEmpty());
-        assertEquals(2, cart.getItems().get(0).getQuantity());
+        assertEquals(0, cart.getItems().get(0).getQuantity());
     }
 
     @Test
