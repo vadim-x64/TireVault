@@ -1,7 +1,5 @@
-CREATE TABLE spring_session
-(
-    primary_id            CHAR(36) NOT NULL
-        CONSTRAINT spring_session_pk PRIMARY KEY,
+CREATE TABLE spring_session (
+    primary_id            CHAR(36) NOT NULL CONSTRAINT spring_session_pk PRIMARY KEY,
     session_id            CHAR(36) NOT NULL,
     creation_time         BIGINT   NOT NULL,
     last_access_time      BIGINT   NOT NULL,
@@ -14,8 +12,7 @@ CREATE UNIQUE INDEX spring_session_ix1 ON spring_session (session_id);
 CREATE INDEX spring_session_ix2 ON spring_session (expiry_time);
 CREATE INDEX spring_session_ix3 ON spring_session (principal_name);
 
-CREATE TABLE spring_session_attributes
-(
+CREATE TABLE spring_session_attributes (
     session_primary_id CHAR(36)     NOT NULL
         CONSTRAINT spring_session_attributes_fk REFERENCES spring_session ON DELETE CASCADE,
     attribute_name     VARCHAR(200) NOT NULL,
@@ -24,3 +21,5 @@ CREATE TABLE spring_session_attributes
 );
 
 TRUNCATE TABLE review_likes, review_notifications, reviews, order_items, orders, cart_items, carts, service_requests, vehicle_product, products, product_categories, vehicles, work_services, work_service_categories, spring_session_attributes, spring_session, users, customers, spring_session, spring_session_attributes RESTART IDENTITY CASCADE;
+
+ALTER TABLE customers ALTER COLUMN phone DROP NOT NULL;
