@@ -106,4 +106,46 @@ class ServiceRequestServiceIntegrationTest {
                 serviceRequestService.deleteByUser(request.getId(), testUser)
         );
     }
+
+    @Test
+    void getAllActive_shouldReturnRequests() {
+        serviceRequestService.create("Іван", "+380501234567", "Київ", "Тест", testUser);
+        assertFalse(serviceRequestService.getAllActive().isEmpty());
+    }
+
+    @Test
+    void accept_shouldChangeStatusToAccepted() {
+        ServiceRequest request = serviceRequestService.create(
+                "Іван", "+380501234567", "Київ", "Тест", testUser
+        );
+        serviceRequestService.accept(request.getId());
+        ServiceRequest fromDb = serviceRequestRepository.findById(request.getId()).orElseThrow();
+        assertEquals(ServiceRequestStatus.ACCEPTED, fromDb.getStatus());
+    }
+
+    @Test
+    void schedule_shouldSetScheduledStatus() {
+        ServiceRequest request = serviceRequestService.create(
+                "Іван", "+380501234567", "Київ", "Тест", testUser
+        );
+        request.setStatus(ServiceRequestStatus.ACCEPTED);
+        serviceRequestRepository.save(request);
+
+        LocalDateTime monday = LocalDateTime.of(2025, 4, 7, 10, 0);
+        serviceRequestService.schedule(request.getId(), monday);
+
+        ServiceRequest fromDb = serviceRequestRepository.findById(request.getId()).orElseThrow();
+        assertEquals(ServiceRequestStatus.SCHEDULED, fromDb.getStatus());
+    }
+
+    @Test
+    void complete_shouldChangeStatusToCompleted() {
+        ServiceRequest request = serviceRequestService.create(
+                "Іван", "+380501234567", "Київ", "Тест", testUser
+        );
+        serviceRequestService.complete(request.getId(),
+                course.project.ua.tirevault.Entities.Enums.PaymentMethod.CARD);
+        ServiceRequest fromDb = serviceRequestRepository.findById(request.getId()).orElseThrow();
+        assertEquals(ServiceRequestStatus.COMPLETED, fromDb.getStatus());
+    }
 }

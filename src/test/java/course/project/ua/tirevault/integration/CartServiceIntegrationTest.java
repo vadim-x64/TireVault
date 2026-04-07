@@ -18,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -80,5 +79,29 @@ class CartServiceIntegrationTest {
 
         Product updated = productRepository.findById(testProduct.getId()).orElseThrow();
         assertEquals(7, updated.getQuantity());
+    }
+
+    @Test
+    void addToCart_shouldThrow_whenOutOfStock() {
+        testProduct.setQuantity(0);
+        productRepository.save(testProduct);
+
+        assertThrows(RuntimeException.class, () ->
+                cartService.addToCart(testUser, testProduct.getId(), 1)
+        );
+    }
+
+    @Test
+    void addToCart_shouldThrow_whenQuantityExceedsStock() {
+        assertThrows(RuntimeException.class, () ->
+                cartService.addToCart(testUser, testProduct.getId(), 999)
+        );
+    }
+
+    @Test
+    void checkout_shouldThrow_whenCartIsEmpty() {
+        assertThrows(RuntimeException.class, () ->
+                cartService.checkout(testUser, "Київ", "CARD")
+        );
     }
 }

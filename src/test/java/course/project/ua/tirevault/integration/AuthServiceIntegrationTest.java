@@ -51,4 +51,23 @@ class AuthServiceIntegrationTest {
                         "+380509999999", "vadim3", "other@gmail.com", "11111111")
         );
     }
+
+    @Test
+    void login_shouldThrow_whenUserIsBlocked() throws Exception {
+        authService.register("Петро", "Іваненко", null,
+                "+380502222222", "blockeduser", "blocked@gmail.com", "password123");
+        User user = userRepository.findByUsername("blockeduser").orElseThrow();
+        user.setBlocked(true);
+        userRepository.save(user);
+
+        assertThrows(Exception.class, () -> authService.login("blockeduser", "password123"));
+    }
+
+    @Test
+    void login_shouldThrow_whenWrongPassword() throws Exception {
+        authService.register("Іван", "Петренко", null,
+                "+380502222222", "loginuser2", "login2@gmail.com", "password123");
+
+        assertThrows(Exception.class, () -> authService.login("loginuser2", "wrongpass"));
+    }
 }
