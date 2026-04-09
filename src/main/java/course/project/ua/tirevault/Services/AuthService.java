@@ -44,7 +44,7 @@ public class AuthService {
 
         User user = new User();
         user.setUsername(username);
-        user.setEmail(email); // ← НОВЕ
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(UserRole.USER);
         user.setCustomer(customer);
