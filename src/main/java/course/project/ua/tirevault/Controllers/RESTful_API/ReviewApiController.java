@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
 import course.project.ua.tirevault.Entities.Enums.ReviewTargetType;
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
@@ -19,6 +20,7 @@ public class ReviewApiController {
     @Autowired
     private ReviewService reviewService;
 
+    @ApiRole(UserRole.USER)
     @PostMapping
     @Operation(summary = "Написати відгук (targetType: PRODUCT або SERVICE)")
     public ResponseEntity<?> addReview(@RequestParam String targetType,
@@ -42,18 +44,21 @@ public class ReviewApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/product/{targetId}")
     @Operation(summary = "Відгуки на товар за ID товару")
     public ResponseEntity<?> getProductReviews(@PathVariable Long targetId) {
         return ResponseEntity.ok(reviewService.getTopLevelReviews(ReviewTargetType.PRODUCT, targetId));
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/service/{targetId}")
     @Operation(summary = "Відгуки на послугу за ID послуги")
     public ResponseEntity<?> getServiceReviews(@PathVariable Long targetId) {
         return ResponseEntity.ok(reviewService.getTopLevelReviews(ReviewTargetType.SERVICE, targetId));
     }
 
+    @ApiRole(UserRole.USER)
     @DeleteMapping("/{id}/my")
     @Operation(summary = "Видалити свій відгук")
     public ResponseEntity<?> deleteMy(@PathVariable Long id, HttpSession session) {
@@ -69,6 +74,7 @@ public class ReviewApiController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @GetMapping
     @Operation(summary = "Отримати всі відгуки (менеджер/адмін)")
     public ResponseEntity<?> getAll(HttpSession session) {
@@ -76,6 +82,7 @@ public class ReviewApiController {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @DeleteMapping("/{id}")
     @Operation(summary = "Видалити будь-який відгук (менеджер/адмін)")
     public ResponseEntity<?> delete(@PathVariable Long id, HttpSession session) {

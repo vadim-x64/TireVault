@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
 import course.project.ua.tirevault.Entities.Enums.PaymentMethod;
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
@@ -21,6 +22,7 @@ public class ServiceRequestApiController {
     @Autowired
     private ServiceRequestService serviceRequestService;
 
+    @ApiRole(UserRole.USER)
     @PostMapping
     @Operation(summary = "Створити заявку на СТО")
     public ResponseEntity<?> create(@RequestParam String customerName,
@@ -45,6 +47,7 @@ public class ServiceRequestApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/my/active")
     @Operation(summary = "Мої активні заявки")
     public ResponseEntity<?> myActive(HttpSession session) {
@@ -53,6 +56,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok(serviceRequestService.getActiveByUser(user));
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/my/completed")
     @Operation(summary = "Мої завершені заявки")
     public ResponseEntity<?> myCompleted(HttpSession session) {
@@ -61,6 +65,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok(serviceRequestService.getCompletedByUser(user));
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/{id}/cancel")
     @Operation(summary = "Скасувати свою заявку")
     public ResponseEntity<?> cancel(@PathVariable Long id, HttpSession session) {
@@ -75,6 +80,7 @@ public class ServiceRequestApiController {
         }
     }
 
+    @ApiRole(UserRole.MANAGER)
     @GetMapping("/active")
     @Operation(summary = "Активні заявки (менеджер/адмін)")
     public ResponseEntity<?> getActive(HttpSession session) {
@@ -82,6 +88,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok(serviceRequestService.getAllActive());
     }
 
+    @ApiRole(UserRole.MANAGER)
     @GetMapping("/completed")
     @Operation(summary = "Завершені заявки (менеджер/адмін)")
     public ResponseEntity<?> getCompleted(HttpSession session) {
@@ -89,6 +96,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok(serviceRequestService.getAllCompleted());
     }
 
+    @ApiRole(UserRole.MANAGER)
     @PatchMapping("/{id}/accept")
     @Operation(summary = "Прийняти заявку")
     public ResponseEntity<?> accept(@PathVariable Long id, HttpSession session) {
@@ -97,6 +105,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiRole(UserRole.MANAGER)
     @PatchMapping("/{id}/schedule")
     @Operation(summary = "Запланувати заявку (формат: yyyy-MM-dd'T'HH:mm)")
     public ResponseEntity<?> schedule(@PathVariable Long id,
@@ -108,6 +117,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiRole(UserRole.MANAGER)
     @PatchMapping("/{id}/complete")
     @Operation(summary = "Завершити заявку")
     public ResponseEntity<?> complete(@PathVariable Long id,
@@ -118,6 +128,7 @@ public class ServiceRequestApiController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiRole(UserRole.MANAGER)
     @DeleteMapping("/{id}")
     @Operation(summary = "Видалити заявку (менеджер/адмін)")
     public ResponseEntity<?> delete(@PathVariable Long id, HttpSession session) {

@@ -1,5 +1,7 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
+import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +19,7 @@ public class AuthApiController {
     @Autowired
     private AuthService authService;
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/login")
     @Operation(summary = "Увійти в систему")
     public ResponseEntity<?> login(@RequestParam String username,
@@ -40,6 +43,7 @@ public class AuthApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/register")
     @Operation(summary = "Зареєструватись")
     public ResponseEntity<?> register(@RequestParam String firstName,
@@ -71,6 +75,7 @@ public class AuthApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/me")
     @Operation(summary = "Отримати поточного авторизованого користувача")
     public ResponseEntity<?> me(HttpSession session) {
@@ -86,6 +91,7 @@ public class AuthApiController {
         ));
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/logout")
     @Operation(summary = "Вийти з системи")
     public ResponseEntity<?> logout(HttpSession session) {
@@ -93,6 +99,7 @@ public class AuthApiController {
         return ResponseEntity.ok(Map.of("message", "Вихід виконано успішно"));
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/forgot-password/check")
     @Operation(summary = "Перевірити email для відновлення пароля")
     public ResponseEntity<?> forgotPasswordCheck(@RequestParam String email) {
@@ -104,6 +111,7 @@ public class AuthApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/forgot-password/reset")
     @Operation(summary = "Скинути пароль")
     public ResponseEntity<?> forgotPasswordReset(@RequestParam String email,

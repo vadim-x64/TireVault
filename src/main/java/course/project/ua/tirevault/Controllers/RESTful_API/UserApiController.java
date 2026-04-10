@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Repositories.ICartRepository;
@@ -31,6 +32,7 @@ public class UserApiController {
     @Autowired
     private IServiceRequestRepository serviceRequestRepository;
 
+    @ApiRole(UserRole.ADMIN)
     @GetMapping
     @Operation(summary = "Отримати всіх користувачів (крім адмінів)")
     public ResponseEntity<?> getAll(HttpSession session) {
@@ -38,6 +40,7 @@ public class UserApiController {
         return ResponseEntity.ok(userRepository.findAllByRoleNotOrderByIdAsc(UserRole.ADMIN));
     }
 
+    @ApiRole(UserRole.ADMIN)
     @GetMapping("/{id}")
     @Operation(summary = "Отримати користувача за ID")
     public ResponseEntity<?> getById(@PathVariable Long id, HttpSession session) {
@@ -47,6 +50,7 @@ public class UserApiController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @PatchMapping("/{id}/role")
     @Operation(summary = "Змінити роль користувача")
     public ResponseEntity<?> changeRole(@PathVariable Long id, @RequestParam String role, HttpSession session) {
@@ -58,6 +62,7 @@ public class UserApiController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @PatchMapping("/{id}/block")
     @Operation(summary = "Заблокувати / розблокувати користувача")
     public ResponseEntity<?> toggleBlock(@PathVariable Long id, HttpSession session) {
@@ -69,6 +74,7 @@ public class UserApiController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @DeleteMapping("/{id}")
     @Transactional
     @Operation(summary = "Видалити користувача разом з його даними")

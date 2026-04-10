@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
 import course.project.ua.tirevault.Repositories.IVehicleRepository;
@@ -17,18 +18,21 @@ public class VehicleApiController {
     @Autowired
     private IVehicleRepository vehicleRepository;
 
+    @ApiRole(UserRole.USER)
     @GetMapping
     @Operation(summary = "Отримати всі автомобілі")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(vehicleRepository.findAllByOrderByBrandAscModelAscYearAsc());
     }
 
+    @ApiRole(UserRole.USER)
     @GetMapping("/{id}")
     @Operation(summary = "Отримати автомобіль за ID")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         return vehicleRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiRole(UserRole.ADMIN)
     @DeleteMapping("/{id}")
     @Operation(summary = "Видалити автомобіль")
     public ResponseEntity<?> delete(@PathVariable Long id, HttpSession session) {

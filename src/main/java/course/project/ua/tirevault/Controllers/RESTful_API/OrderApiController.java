@@ -1,5 +1,6 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
 import course.project.ua.tirevault.Entities.Enums.OrderStatus;
 import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.User;
@@ -18,6 +19,7 @@ public class OrderApiController {
     @Autowired
     private OrderService orderService;
 
+    @ApiRole(UserRole.MANAGER)
     @GetMapping("/active")
     @Operation(summary = "Отримати активні замовлення")
     public ResponseEntity<?> getActive(HttpSession session) {
@@ -25,6 +27,7 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getAllActive());
     }
 
+    @ApiRole(UserRole.MANAGER)
     @GetMapping("/completed")
     @Operation(summary = "Отримати завершені замовлення")
     public ResponseEntity<?> getCompleted(HttpSession session) {
@@ -32,6 +35,7 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.getAllCompleted());
     }
 
+    @ApiRole(UserRole.MANAGER)
     @PatchMapping("/{id}/status")
     @Operation(summary = "Змінити статус замовлення")
     public ResponseEntity<?> setStatus(@PathVariable Long id, @RequestParam String status, HttpSession session) {
@@ -40,6 +44,7 @@ public class OrderApiController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiRole(UserRole.MANAGER)
     @DeleteMapping("/{id}")
     @Operation(summary = "Видалити замовлення")
     public ResponseEntity<?> delete(@PathVariable Long id, HttpSession session) {

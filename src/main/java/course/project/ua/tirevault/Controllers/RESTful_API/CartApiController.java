@@ -1,5 +1,7 @@
 package course.project.ua.tirevault.Controllers.RESTful_API;
 
+import course.project.ua.tirevault.Configuration.ApiRole;
+import course.project.ua.tirevault.Entities.Enums.UserRole;
 import course.project.ua.tirevault.Entities.Models.Cart;
 import course.project.ua.tirevault.Entities.Models.CartItem;
 import course.project.ua.tirevault.Entities.Models.User;
@@ -19,6 +21,7 @@ public class CartApiController {
     @Autowired
     private CartService cartService;
 
+    @ApiRole(UserRole.USER)
     @GetMapping
     @Operation(summary = "Отримати вміст кошика")
     public ResponseEntity<?> getCart(HttpSession session) {
@@ -28,6 +31,7 @@ public class CartApiController {
         return ResponseEntity.ok(cart);
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/add")
     @Operation(summary = "Додати товар у кошик")
     public ResponseEntity<?> addToCart(@RequestParam Long productId,
@@ -45,6 +49,7 @@ public class CartApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @PatchMapping("/update")
     @Operation(summary = "Змінити кількість товару в кошику")
     public ResponseEntity<?> updateItem(@RequestParam Long itemId,
@@ -68,6 +73,7 @@ public class CartApiController {
         }
     }
 
+    @ApiRole(UserRole.USER)
     @DeleteMapping("/remove")
     @Operation(summary = "Видалити товар з кошика")
     public ResponseEntity<?> removeItem(@RequestParam Long itemId,
@@ -85,6 +91,7 @@ public class CartApiController {
         ));
     }
 
+    @ApiRole(UserRole.USER)
     @PostMapping("/checkout")
     @Operation(summary = "Оформити замовлення з кошика")
     public ResponseEntity<?> checkout(@RequestParam(required = false) String station,
